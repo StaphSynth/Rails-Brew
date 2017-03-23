@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170323234848) do
+ActiveRecord::Schema.define(version: 20170323235128) do
+
+  create_table "hops", force: :cascade do |t|
+    t.string   "name"
+    t.string   "use"
+    t.string   "origin"
+    t.float    "aa"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "malts", force: :cascade do |t|
     t.string   "name"
