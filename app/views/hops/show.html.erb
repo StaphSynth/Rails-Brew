@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @hop.name %>
+</p>
+
+<p>
+  <strong>Use:</strong>
+  <%= @hop.use %>
+</p>
+
+<p>
+  <strong>Origin:</strong>
+  <%= @hop.origin %>
+</p>
+
+<p>
+  <strong>Aa:</strong>
+  <%= @hop.aa %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @hop.description %>
+</p>
+
+<%= link_to 'Edit', edit_hop_path(@hop) %> |
+<%= link_to 'Back', hops_path %>
