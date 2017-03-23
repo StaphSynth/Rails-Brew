@@ -1,0 +1,47 @@
+<%= form_for(malt) do |f| %>
+  <% if malt.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(malt.errors.count, "error") %> prohibited this malt from being saved:</h2>
+
+      <ul>
+      <% malt.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :type %>
+    <%= f.text_field :type %>
+  </div>
+
+  <div class="field">
+    <%= f.label :use %>
+    <%= f.text_field :use %>
+  </div>
+
+  <div class="field">
+    <%= f.label :EBC %>
+    <%= f.text_field :EBC %>
+  </div>
+
+  <div class="field">
+    <%= f.label :GPK %>
+    <%= f.text_field :GPK %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @malt.name %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @malt.type %>
+</p>
+
+<p>
+  <strong>Use:</strong>
+  <%= @malt.use %>
+</p>
+
+<p>
+  <strong>Ebc:</strong>
+  <%= @malt.EBC %>
+</p>
+
+<p>
+  <strong>Gpk:</strong>
+  <%= @malt.GPK %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @malt.description %>
+</p>
+
+<%= link_to 'Edit', edit_malt_path(@malt) %> |
+<%= link_to 'Back', malts_path %>
