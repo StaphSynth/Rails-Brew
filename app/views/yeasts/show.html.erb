@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @yeast.name %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @yeast.type %>
+</p>
+
+<p>
+  <strong>Temp range:</strong>
+  <%= @yeast.temp_range %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @yeast.description %>
+</p>
+
+<%= link_to 'Edit', edit_yeast_path(@yeast) %> |
+<%= link_to 'Back', yeasts_path %>

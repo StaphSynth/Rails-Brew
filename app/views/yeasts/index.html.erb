@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Yeasts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Temp range</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @yeasts.each do |yeast| %>
+      <tr>
+        <td><%= yeast.name %></td>
+        <td><%= yeast.type %></td>
+        <td><%= yeast.temp_range %></td>
+        <td><%= yeast.description %></td>
+        <td><%= link_to 'Show', yeast %></td>
+        <td><%= link_to 'Edit', edit_yeast_path(yeast) %></td>
+        <td><%= link_to 'Destroy', yeast, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Yeast', new_yeast_path %>
