@@ -69,6 +69,6 @@ class YeastsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def yeast_params
-      params.require(:yeast).permit(:name, :type, :temp_range, :description)
+      params.require(:yeast).permit(:name, :type, :temp_range, :fermentation_type, :description)
     end
 end
