@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170323235128) do
+ActiveRecord::Schema.define(version: 20170323235911) do
 
   create_table "hops", force: :cascade do |t|
     t.string   "name"
@@ -35,11 +35,11 @@ ActiveRecord::Schema.define(version: 20170323235128) do
 
   create_table "yeasts", force: :cascade do |t|
     t.string   "name"
-    t.string   "type"
+    t.string   "fermentation_type"
     t.string   "temp_range"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
 end

@@ -17,7 +17,7 @@
     <% @yeasts.each do |yeast| %>
       <tr>
         <td><%= yeast.name %></td>
-        <td><%= yeast.type %></td>
+        <td><%= yeast.fermentation_type %></td>
         <td><%= yeast.temp_range %></td>
         <td><%= yeast.description %></td>
         <td><%= link_to 'Show', yeast %></td>
