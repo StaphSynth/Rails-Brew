@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170323235911) do
+ActiveRecord::Schema.define(version: 20170324001534) do
 
   create_table "hops", force: :cascade do |t|
     t.string   "name"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20170323235911) do
 
   create_table "malts", force: :cascade do |t|
     t.string   "name"
-    t.string   "type"
+    t.string   "malt_type"
     t.string   "use"
     t.float    "EBC"
     t.float    "GPK"
