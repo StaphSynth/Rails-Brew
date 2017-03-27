@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  get 'static_pages/home'
-
-  get 'static_pages/signup'
-
   root 'static_pages#home'
+
+  get 'signup', to: 'static_pages#signup'
+  get 'home', to: 'static_pages#home'
 
   resources :users
   resources :hops
