@@ -3,11 +3,9 @@ Rails.application.routes.draw do
 
   get 'static_pages/signup'
 
+  root 'static_pages#home'
+
   resources :users
-  get 'home/index'
-
-  root 'home#index'
-
   resources :hops
   resources :yeasts
   resources :malts
