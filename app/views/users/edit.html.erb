@@ -1,4 +1,6 @@
-<h1>Editing User</h1>
+<% provide :title, "Edit #{@user.name}" %>
+
+<h1>Editing <%= "#{@user.name}" %></h1>
 
 <%= render 'form', user: @user %>
 

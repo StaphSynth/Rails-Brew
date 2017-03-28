@@ -1,4 +1,6 @@
-<h1>Editing Hop</h1>
+<% provide :title, "Edit #{@hop.name}" %>
+
+<h1>Editing <%= "#{@hop.name}" %></h1>
 
 <%= render 'form', hop: @hop %>
 

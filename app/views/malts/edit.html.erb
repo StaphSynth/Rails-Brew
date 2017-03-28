@@ -1,4 +1,6 @@
-<h1>Editing Malt</h1>
+<% provide :title, "Edit #{@malt.name}" %>
+
+<h1>Edit <%= "#{@malt.name}" %></h1>
 
 <%= render 'form', malt: @malt %>
 
