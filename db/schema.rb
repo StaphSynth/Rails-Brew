@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328051134) do
+ActiveRecord::Schema.define(version: 20170328052747) do
 
   create_table "hops", force: :cascade do |t|
     t.string   "name"
@@ -40,12 +40,28 @@ ActiveRecord::Schema.define(version: 20170328051134) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "recipe_ingredients", force: :cascade do |t|
+    t.integer  "recipe_id"
+    t.integer  "ingredient_id"
+    t.float    "quantity"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
   create_table "recipes", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name"
     t.string   "method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "stocks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "ingredient_id"
+    t.float    "quantity"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "users", force: :cascade do |t|
