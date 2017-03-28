@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 
+  has_many :recipes
+
   before_save do
     self.email = self.email.downcase
   end
