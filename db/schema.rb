@@ -10,34 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328231349) do
+ActiveRecord::Schema.define(version: 20170329000120) do
 
   create_table "hops", force: :cascade do |t|
-    t.string   "name"
+    t.integer  "ingredient_id"
     t.string   "use"
     t.string   "origin"
     t.float    "aa"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "ingredients", force: :cascade do |t|
-    t.string   "type"
+    t.string   "ingredient_type"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "malts", force: :cascade do |t|
-    t.string   "name"
+    t.integer  "ingredient_id"
     t.string   "malt_type"
     t.string   "use"
     t.float    "EBC"
     t.float    "GPK"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "recipe_ingredients", force: :cascade do |t|
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 20170328231349) do
   end
 
   create_table "yeasts", force: :cascade do |t|
-    t.string   "name"
+    t.integer  "ingredient_id"
     t.string   "fermentation_type"
     t.string   "temp_range"
     t.text     "description"
