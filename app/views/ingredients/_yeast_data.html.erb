@@ -1,3 +1,18 @@
-<td><%= ingredient.fermentation_type %></td>
-<td><%= ingredient.temp_range %></td>
-<td><%= ingredient.description %></td>
+<% if view.eql? "show" %>
+  <p>
+    <strong>Type</strong>
+    <%= ingredient.fermentation_type %>
+  </p>
+  <p>
+    <strong>Temperature Range</strong>
+    <%= "#{ingredient.temp_range} &deg;C" %>
+  </p>
+  <p>
+    <strong>Description</strong>
+    <%= ingredient.description %>
+  </p>
+<% else %>
+  <td><%= ingredient.fermentation_type %></td>
+  <td><%= ingredient.temp_range %></td>
+  <td><%= ingredient.description %></td>
+<% end %>

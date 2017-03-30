@@ -1,4 +1,23 @@
-<td><%= ingredient.use %></td>
-<td><%= ingredient.origin %></td>
-<td><%= ingredient.aa %></td>
-<td><%= ingredient.description %></td>
+<% if view.eql? "show" %>
+  <p>
+    <strong>Use</strong>
+    <%= ingredient.use %>
+  </p>
+  <p>
+    <strong>Origin</strong>
+    <%= ingredient.origin %>
+  </p>
+  <p>
+    <strong>Alpha Acid</strong>
+    <%= "#{ingredient.aa} %" %>
+  </p>
+  <p>
+    <strong>Description</strong>
+    <%= ingredient.description %>
+  </p>
+<% else %>
+  <td><%= ingredient.use %></td>
+  <td><%= ingredient.origin %></td>
+  <td><%= ingredient.aa %></td>
+  <td><%= ingredient.description %></td>
+<% end %>
