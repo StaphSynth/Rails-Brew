@@ -24,16 +24,38 @@ class IngredientsController < ApplicationController
   # POST /ingredients
   # POST /ingredients.json
   def create
-    @ingredient = Ingredient.new(ingredient_params)
+    @ingredient = Ingredient.new(ingredient_params.except(:malt))
 
-    respond_to do |format|
-      if @ingredient.save
-        format.html { redirect_to @ingredient, notice: 'Ingredient was successfully created.' }
-        format.json { render :show, status: :created, location: @ingredient }
-      else
+    if ! @ingredient.save
+      respond_to do |format|
+        puts @ingredient.errors
         format.html { render :new }
         format.json { render json: @ingredient.errors, status: :unprocessable_entity }
       end
+      return
+    end
+
+    case @ingredient.ingredient_type
+      when "malt"
+        @details = Malt.new(ingredient_params[:malt])
+      when "hops"
+        @details = Hop.new(ingredient_params[:hops])
+      when "yeast"
+        @details = Yeast.new(ingredient_params[:yeast])
+    end
+
+    @details[:ingredient_id] = @ingredient.id
+    if ! @details.save
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: @ingredient.errors, status: :unprocessable_entity }
+      end
+      return
+    end
+
+    respond_to do |format|
+      format.html { redirect_to @ingredient, notice: "#{@ingredient.name} was successfully created." }
+      format.json { render :show, status: :created, location: @ingredient }
     end
   end
 
@@ -42,7 +64,7 @@ class IngredientsController < ApplicationController
   def update
     respond_to do |format|
       if @ingredient.update(ingredient_params)
-        format.html { redirect_to @ingredient, notice: 'Ingredient was successfully updated.' }
+        format.html { redirect_to @ingredient, notice: "#{@ingredient.name} successfully updated." }
         format.json { render :show, status: :ok, location: @ingredient }
       else
         format.html { render :edit }
@@ -56,7 +78,7 @@ class IngredientsController < ApplicationController
   def destroy
     @ingredient.destroy
     respond_to do |format|
-      format.html { redirect_to ingredients_url, notice: 'Ingredient was successfully destroyed.' }
+      format.html { redirect_to ingredients_url, notice: "#{@ingredient.name} was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -69,6 +91,6 @@ class IngredientsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ingredient_params
-      params.require(:ingredient).permit(:type, :name)
+      params.require(:ingredient).permit(:ingredient_type, :name, malt: [:malt_type, :use, :EBC, :GPK, :description])
     end
 end

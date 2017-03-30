@@ -69,6 +69,6 @@ class MaltsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def malt_params
-      params.require(:malt).permit(:name, :malt_type, :use, :EBC, :GPK, :description)
+      params.require(:malt).permit(:name, :ingredient_id, :malt_type, :use, :EBC, :GPK, :description)
     end
 end

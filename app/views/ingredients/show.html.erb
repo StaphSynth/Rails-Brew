@@ -1,14 +1,19 @@
+<% provide :title, "#{@ingredient.name}" %>
+
 <p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @ingredient.name %>
+</p>
 
 <p>
   <strong>Type:</strong>
   <%= @ingredient.ingredient_type %>
 </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @ingredient.name %>
-</p>
+<%= render @ingredient.partial, {ingredient: @ingredient.details, view: "show"} %>
+
 
 <%= link_to 'Edit', edit_ingredient_path(@ingredient) %> |
 <%= link_to 'Back', ingredients_path %>

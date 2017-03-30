@@ -12,14 +12,54 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :ingredient_type %>
-    <%= f.text_field :ingredient_type %>
-  </div>
-
-  <div class="field">
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
+
+  <div class="field">
+    <%= f.label "Type" %>
+    <select name="ingredient[ingredient_type]">
+      <option value="malt">Malt</option>
+      <option value="hops">Hops</option>
+      <option value="yeast">Yeast</option>
+    </select>
+  </div>
+
+  <%= f.fields_for :malt, Malt.new do |malt| %>
+
+    <div class="field malt-input">
+      <%= malt.label :malt_type %>
+      <%= malt.select(:malt_type) do %>
+        <% [['Grain', 'grain'], ['DME', 'dme'], ['LME', 'lme']].each do |o| -%>
+          <%= content_tag(:option, o.first, value: o.last) %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="field malt-input">
+      <%= malt.label :use %>
+      <%= malt.select(:use) do %>
+        <% [['Base Malt', 'base'], ['Other', 'other']].each do |o| -%>
+          <%= content_tag(:option, o.first, value: o.last) %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="field malt-input">
+      <%= malt.label :EBC %>
+      <%= malt.text_field :EBC %>
+    </div>
+
+    <div class="field malt-input">
+      <%= malt.label :GPK %>
+      <%= malt.text_field :GPK %>
+    </div>
+
+    <div class="field">
+      <%= malt.label :description %>
+      <%= malt.text_area :description %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= f.submit %>

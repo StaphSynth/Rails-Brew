@@ -1,5 +1,28 @@
-<td><%= ingredient.malt_type %></td>
-<td><%= ingredient.use %></td>
-<td><%= ingredient.EBC %></td>
-<td><%= ingredient.GPK %></td>
-<td><%= ingredient.description %></td>
+<% if view.eql? "show" %>
+  <p>
+    <strong>Malt Type</strong>
+    <%= ingredient.malt_type %>
+  </p>
+  <p>
+    <strong>Use</strong>
+    <%= ingredient.use %>
+  </p>
+  <p>
+    <strong>EBC</strong>
+    <%= ingredient.EBC %>
+  </p>
+  <p>
+    <strong>GPK</strong>
+    <%= ingredient.GPK %>
+  </p>
+  <p>
+    <strong>Desciption</strong>
+    <%= ingredient.description %>
+  </p>
+<% else %>
+  <td><%= ingredient.malt_type %></td>
+  <td><%= ingredient.use %></td>
+  <td><%= ingredient.EBC %></td>
+  <td><%= ingredient.GPK %></td>
+  <td><%= ingredient.description %></td>
+<% end %>
