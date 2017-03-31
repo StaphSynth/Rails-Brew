@@ -8,7 +8,7 @@ class Ingredient < ApplicationRecord
     when "malt"
       return self.malt
     when "hops"
-      return self.hops
+      return self.hop
     when "yeast"
       return self.yeast
     end
