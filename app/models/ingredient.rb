@@ -3,7 +3,8 @@ class Ingredient < ApplicationRecord
   has_one :malt
   has_one :yeast
 
-  validates :name, presence: true
+  validates :name, presence: true,
+                   length: {maximum: 50}
   validates :ingredient_type, presence: true
 
   def details
