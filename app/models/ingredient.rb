@@ -3,6 +3,9 @@ class Ingredient < ApplicationRecord
   has_one :malt
   has_one :yeast
 
+  validates :name, presence: true
+  validates :ingredient_type, presence: true
+
   def details
     case self.ingredient_type
     when "malt"

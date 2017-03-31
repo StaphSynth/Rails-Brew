@@ -47,6 +47,7 @@ class IngredientsController < ApplicationController
 
     @details[:ingredient_id] = @ingredient.id
     if ! @details.save
+      @ingredient.destroy
       respond_to do |format|
         format.html { render :new }
         format.json { render json: @ingredient.errors, status: :unprocessable_entity }
@@ -55,7 +56,7 @@ class IngredientsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to @ingredient, notice: "#{@ingredient.name} was successfully created." }
+      format.html { redirect_to @ingredient, notice: "#{@ingredient.ingredient_type}, #{@ingredient.name}, was successfully created." }
       format.json { render :show, status: :created, location: @ingredient }
     end
   end
