@@ -1,7 +1,7 @@
 class Ingredient < ApplicationRecord
-  has_one :hop
-  has_one :malt
-  has_one :yeast
+  has_one :hop, :dependent => :destroy
+  has_one :malt, :dependent => :destroy
+  has_one :yeast, :dependent => :destroy
 
   validates :name, presence: true,
                    length: {maximum: 50}
