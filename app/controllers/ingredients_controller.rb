@@ -39,7 +39,7 @@ class IngredientsController < ApplicationController
       when "malt"
         @details = Malt.new(ingredient_params[:malt])
       when "hops"
-        @details = Hop.new(ingredient_params[:hops])
+        @details = Hop.new(ingredient_params[:hop])
       when "yeast"
         @details = Yeast.new(ingredient_params[:yeast])
     end

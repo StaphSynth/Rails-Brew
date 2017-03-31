@@ -17,8 +17,8 @@
   </div>
 
   <div class="field">
-    <%= f.label "Type" %>
-    <select name="ingredient[ingredient_type]">
+    <%= f.label "ingredient_type" %>
+    <select id="ingredient_type" name="ingredient[ingredient_type]">
       <option value="malt">Malt</option>
       <option value="hops">Hops</option>
       <option value="yeast">Yeast</option>
@@ -30,7 +30,7 @@
     <div class="field malt-input">
       <%= malt.label :malt_type %>
       <%= malt.select(:malt_type) do %>
-        <% [['Grain', 'grain'], ['DME', 'dme'], ['LME', 'lme']].each do |o| -%>
+        <% [['Grain', 'grain'], ['DME', 'dme'], ['LME', 'lme']].each do |o| %>
           <%= content_tag(:option, o.first, value: o.last) %>
         <% end %>
       <% end %>
@@ -39,7 +39,7 @@
     <div class="field malt-input">
       <%= malt.label :use %>
       <%= malt.select(:use) do %>
-        <% [['Base Malt', 'base'], ['Other', 'other']].each do |o| -%>
+        <% [['Base Malt', 'base'], ['Other', 'other']].each do |o| %>
           <%= content_tag(:option, o.first, value: o.last) %>
         <% end %>
       <% end %>
@@ -55,10 +55,61 @@
       <%= malt.text_field :GPK %>
     </div>
 
-    <div class="field">
+    <div class="field malt-input">
       <%= malt.label :description %>
       <%= malt.text_area :description %>
     </div>
+  <% end %>
+
+  <%= f.fields_for :hop, Hop.new do |hop| %>
+
+    <div class="field hop-input">
+      <%= hop.label :use %>
+      <%= hop.select(:use) do %>
+        <% [['Bittering', 'bittering'], ['Aroma', 'aroma'], ['Both', 'both']].each do |o| %>
+          <%= content_tag(:option, o.first, value: o.last) %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="field hop-input">
+      <%= hop.label :origin %>
+      <%= hop.text_field :origin %>
+    </div>
+
+    <div class="field hop-input">
+      <%= hop.label :aa %>
+      <%= hop.text_field :aa %>
+    </div>
+
+    <div class="field hop-input">
+      <%= hop.label :description %>
+      <%= hop.text_area :description %>
+    </div>
+
+  <% end %>
+
+  <%= f.fields_for :yeast, Yeast.new do |yeast| %>
+
+  <div class="field yeast-input">
+    <%= yeast.label :fermentation_type %>
+    <%= yeast.select(:fermentation_type) do %>
+      <% [['Ale', 'ale'], ['Lager', 'lager']].each do |o| %>
+        <%= content_tag(:option, o.first, value: o.last) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="field yeast-input">
+    <%= yeast.label :temp_range %>
+    <%= yeast.text_field :temp_range %>
+  </div>
+
+  <div class="field yeast-input">
+    <%= yeast.label :description %>
+    <%= yeast.text_area :description %>
+  </div>
+
   <% end %>
 
   <div class="actions">
