@@ -27,5 +27,5 @@ function showIngredientFields() {
   }
 }
 
-$(document).ready(showIngredientFields);
+$(document).on('turbolinks:load', showIngredientFields);
 $(document).on('change', '#ingredient_type', showIngredientFields);
