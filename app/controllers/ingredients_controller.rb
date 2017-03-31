@@ -24,7 +24,8 @@ class IngredientsController < ApplicationController
   # POST /ingredients
   # POST /ingredients.json
   def create
-    @ingredient = Ingredient.new(ingredient_params.except(:malt))
+    hash_exceptions = [:malt, :hop, :yeast]
+    @ingredient = Ingredient.new(ingredient_params.except(*hash_exceptions))
 
     if ! @ingredient.save
       respond_to do |format|
@@ -91,6 +92,9 @@ class IngredientsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ingredient_params
-      params.require(:ingredient).permit(:ingredient_type, :name, malt: [:malt_type, :use, :EBC, :GPK, :description])
+      params.require(:ingredient).permit(:ingredient_type, :name,
+                                        malt: [:malt_type, :use, :EBC, :GPK, :description],
+                                        yeast: [:fermentation_type, :temp_range, :description],
+                                        hop: [:use, :origin, :aa, :description])
     end
 end
