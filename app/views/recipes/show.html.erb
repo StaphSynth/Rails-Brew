@@ -2,13 +2,21 @@
 
 <p>
   <strong>User:</strong>
-  <%= @recipe.user_id %>
+  <%= @recipe.user.name %>
 </p>
 
 <p>
   <strong>Name:</strong>
   <%= @recipe.name %>
 </p>
+
+<% @recipe.recipe_ingredients.all.each do |ingredient| %>
+<p>
+  <strong><%= ingredient.ingredient_type %></strong>
+  <%= ingredient.name %>
+  <%= ingredient.quantity %> grams
+</p>
+<% end %>
 
 <p>
   <strong>Method:</strong>

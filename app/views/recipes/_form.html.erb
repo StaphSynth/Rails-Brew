@@ -1,4 +1,4 @@
-<%= form_for(recipe) do |f| %>
+<%= form_for(setup_recipe(recipe)) do |f| %>
   <% if recipe.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
@@ -20,6 +20,16 @@
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
+
+    <%= f.fields_for :recipe_ingredients do |ri| %>
+
+    <div class="field ingredient-selection">
+      <% options = options_from_collection_for_select(@ingredients, 'id', 'name') %>
+      <%= ri.select :id,  options %>
+      <%= ri.text_field :quantity %> g
+    </div>
+
+    <% end %>
 
   <div class="field">
     <%= f.label :method %>

@@ -1,3 +1,5 @@
+<% provide :title, "Recipes" %>
+
 <p id="notice"><%= notice %></p>
 
 <h1>Recipes</h1>
@@ -15,9 +17,8 @@
   <tbody>
     <% @recipes.each do |recipe| %>
       <tr>
-        <td><%= recipe.user_id %></td>
-        <td><%= recipe.name %></td>
-        <td><%= recipe.method %></td>
+        <td><%= recipe.user.name %></td>
+        <td><%= link_to recipe.name, recipe %></td>
         <td><%= link_to 'Show', recipe %></td>
         <td><%= link_to 'Edit', edit_recipe_path(recipe) %></td>
         <td><%= link_to 'Destroy', recipe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
