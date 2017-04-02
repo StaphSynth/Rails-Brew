@@ -1,4 +1,6 @@
-<h1>Editing Recipe</h1>
+<% provide :title, "Edit #{@recipe.name}" %>
+
+<h1><%= "Editing #{@recipe.name}" %></h1>
 
 <%= render 'form', { recipe: @recipe, ingredients: Ingredient.all } %>
 

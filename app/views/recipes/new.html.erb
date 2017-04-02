@@ -1,3 +1,5 @@
+<% provide :title, "New Recipe" %>
+
 <h1>New Recipe</h1>
 
 <%= render 'form', { recipe: @recipe, ingredients: Ingredient.all } %>
