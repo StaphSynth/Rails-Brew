@@ -29,6 +29,7 @@ class RecipesController < ApplicationController
   def create
 
     @recipe = Recipe.new(recipe_params)
+    @ingredients = Ingredient.all
 
     if ! @recipe.save
       respond_to do |format|

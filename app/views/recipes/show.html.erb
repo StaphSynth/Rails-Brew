@@ -6,14 +6,15 @@
 </p>
 
 <p>
-  <strong>Name:</strong>
+  <strong>Recipe Name:</strong>
   <%= @recipe.name %>
 </p>
 
 <% @recipe.recipe_ingredients.all.each do |ingredient| %>
 <p>
-  <strong><%= ingredient.ingredient_type %></strong>
-  <%= ingredient.name %>
+  <% ingredientData = Ingredient.find(ingredient.ingredient_id) %>
+  <strong><%= ingredientData.ingredient_type %></strong>
+  <%= ingData.name %>
   <%= ingredient.quantity %> grams
 </p>
 <% end %>
