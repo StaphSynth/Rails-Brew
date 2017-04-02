@@ -1,7 +1,5 @@
 console.log('recipes.js');
 
-
-
 $(document).on('turbolinks:load', function() {
   $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
@@ -9,7 +7,7 @@ $(document).on('turbolinks:load', function() {
     var $newIngredient = $($lastIngredient).clone();
     var totalIngredients = $('.ingredient-selection').length.toString();
 
-    $($newIngredient).find('select, input').each(function(elem) {
+    $($newIngredient).find('select, input').each(function() {
       var oldId = $(this).attr('id');
       var newId = oldId.replace(replaceExp, totalIngredients);
       $(this).attr('id', newId);
