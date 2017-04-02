@@ -27,8 +27,6 @@ class RecipesController < ApplicationController
   # POST /recipes
   # POST /recipes.json
   def create
-    puts "RECIPE PARAMS"
-    puts recipe_params.inspect
 
     @recipe = Recipe.new(recipe_params)
 
@@ -39,16 +37,6 @@ class RecipesController < ApplicationController
       end
       return
     end
-
-    puts "RECIPE INGREDIENTS ATTR"
-    puts recipe_params.inspect
-    # recipe_params[:recipe_ingredients_attributes].each do |key, value|
-      # puts key, value.inspect
-      # @recipeIngredient = RecipeIngredient.new(value)
-      # @recipeIngredient.save
-    # end
-
-    # @recipe.destroy
 
     # respond_to do |format|
     #   format.html { redirect_to @recipe, notice: 'Recipe was successfully created.' }
@@ -88,6 +76,6 @@ class RecipesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
-      params.require(:recipe).permit(:user_id, :name, :method, recipe_ingredients_attributes: [:id, :quantity])
+      params.require(:recipe).permit(:user_id, :name, :method, recipe_ingredients_attributes: [:id, :ingredient_id, :quantity])
     end
 end
