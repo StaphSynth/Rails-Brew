@@ -14,7 +14,7 @@
 <p>
   <% ingredientData = Ingredient.find(ingredient.ingredient_id) %>
   <strong><%= ingredientData.ingredient_type %></strong>
-  <%= ingData.name %>
+  <%= ingredientData.name %>
   <%= ingredient.quantity %> grams
 </p>
 <% end %>
