@@ -24,7 +24,7 @@
     <%= f.fields_for :recipe_ingredients do |ri| %>
 
     <div class="field ingredient-selection">
-      <% options = options_from_collection_for_select(@ingredients, 'id', 'name') %>
+      <% options = options_from_collection_for_select(ingredients, 'id', 'name') %>
       <%= ri.select :ingredient_id,  options %>
       <%= ri.text_field :quantity %> g
     </div>
