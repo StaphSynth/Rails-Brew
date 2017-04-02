@@ -23,17 +23,23 @@
 
     <%= f.fields_for :recipe_ingredients do |ri| %>
 
-    <div class="field ingredient-selection">
-      <% options = options_from_collection_for_select(ingredients, 'id', 'name') %>
-      <%= ri.select :ingredient_id,  options %>
-      <%= ri.text_field :quantity %> g
+    <div class="ingredient-selection-container">
+      <div class="selector-container">
+        <div class="field ingredient-selection">
+          <% options = options_from_collection_for_select(ingredients, 'id', 'name') %>
+          <%= ri.select :ingredient_id, options, {}, {:class => 'ingredient-input'} %>
+          <%= ri.text_field :quantity %> g
+        </div>
+      </div>
+      <button type="button" class="add-ingredient-btn">+</button>
     </div>
+
 
     <% end %>
 
   <div class="field">
     <%= f.label :method %>
-    <%= f.text_field :method %>
+    <%= f.text_area :method %>
   </div>
 
   <div class="actions">
