@@ -2,7 +2,7 @@
 
 <h1><%= "Editing #{@recipe.name}" %></h1>
 
-<%= render 'form', { recipe: @recipe, ingredients: Ingredient.all } %>
+<%= render 'form_edit', { recipe: @recipe, ingredients: Ingredient.all } %>
 
 <%= link_to 'Show', @recipe %> |
 <%= link_to 'Back', recipes_path %>
