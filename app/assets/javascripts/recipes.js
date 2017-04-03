@@ -3,9 +3,12 @@ console.log('recipes.js');
 $(document).on('turbolinks:load', function() {
   $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
-    var $lastIngredient = $('.ingredient-selection').last();
+    var selector ='.' + $(this).data('type') + '-selection';
+    console.log('selector ', selector);
+
+    var $lastIngredient = $(selector).last();
     var $newIngredient = $($lastIngredient).clone();
-    var totalIngredients = $('.ingredient-selection').length.toString();
+    var totalIngredients = $(selector).length.toString();
 
     $($newIngredient).find('select, input').each(function() {
       var oldId = $(this).attr('id');
