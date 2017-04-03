@@ -22,41 +22,22 @@
   </div>
 
     <%= f.fields_for :recipe_ingredients do |ri| %>
-
-    <div class="ingredient-selection-container">
-      <h3>Malt</h3>
-      <div class="malt-selection">
-        <div class="field ingredient-selection">
-          <% options = options_from_collection_for_select(getIngredientOptions(ingredients)[:maltOptions], 'id', 'name') %>
-          <%= ri.select :ingredient_id, options %>
-          <%= ri.text_field :quantity %> g
+    <% count = 0 %>
+    <% types = ['malt', 'hops', 'yeast'] %>
+    <% 3.times do %>
+      <div class="ingredient-selection-container">
+        <h3><%= "#{types[count].capitalize}" %></h3>
+        <div class="<%= types[count] %>-selection">
+          <div class="field ingredient-selection">
+            <% options = options_from_collection_for_select(getIngredientOptions(ingredients, types[count]), 'id', 'name') %>
+            <%= ri.select :ingredient_id, options %>
+            <%= ri.text_field :quantity %> g
+          </div>
         </div>
-      </div>
-      <button type="button" class="add-ingredient-btn" data-type="malt">+</button>
-
-      <h3>Hops</h3>
-      <div class="hops-selection">
-        <div class="field ingredient-selection">
-          <% options = options_from_collection_for_select(getIngredientOptions(ingredients)[:hopsOptions], 'id', 'name') %>
-          <%= ri.select :ingredient_id, options %>
-          <%= ri.text_field :quantity %> g
-        </div>
-      </div>
-      <button type="button" class="add-ingredient-btn" data-type="hops">+</button>
-
-
-      <h3>Yeast</h3>
-      <div class="yeast-selection">
-        <div class="field ingredient-selection">
-          <% options = options_from_collection_for_select(getIngredientOptions(ingredients)[:yeastOptions], 'id', 'name') %>
-          <%= ri.select :ingredient_id, options %>
-          <%= ri.text_field :quantity %> sachet
-        </div>
-      </div>
-      <button type="button" class="add-ingredient-btn" data-type="yeast">+</button>
-
+        <button type="button" class="add-ingredient-btn" data-type="<%= types[count] %>">+</button>
+        <% count += 1 %>
+      <% end %>
     </div>
-
     <% end %>
 
   <div class="field">

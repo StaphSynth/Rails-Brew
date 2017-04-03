@@ -1,26 +1,37 @@
-console.log('recipes.js');
+
+function replaceNameId(elem, replaceExp, value) {
+  var oldId = $(elem).attr('id');
+  var newId = oldId.replace(replaceExp, value);
+  $(elem).attr('id', newId);
+
+  var oldName = $(elem).attr('name');
+  var newName = oldName.replace(replaceExp, value);
+  $(elem).attr('name', newName);
+
+  if($(elem).is('input'))
+    $(elem).val('');
+}
 
 $(document).on('turbolinks:load', function() {
-  $('.add-ingredient-btn').click(function() {
-    var replaceExp = new RegExp(/[0-9]+/);
-    var selector ='.' + $(this).data('type') + '-selection';
-    console.log('selector ', selector);
 
+  var replaceExp = new RegExp(/[0-9]+/);
+
+  $('.ingredient-selection').find('select').each(function(index, elem) {
+    replaceNameId(elem, replaceExp, index);
+  });
+
+  $('.ingredient-selection').find('input').each(function(index, elem) {
+    replaceNameId(elem, replaceExp, index);
+  });
+
+  $('.add-ingredient-btn').click(function() {
+    var selector ='.' + $(this).data('type') + '-selection';
     var $lastIngredient = $(selector).last();
     var $newIngredient = $($lastIngredient).clone();
-    var totalIngredients = $(selector).length.toString();
+    var totalIngredients = $('.ingredient-selection').length.toString();
 
-    $($newIngredient).find('select, input').each(function() {
-      var oldId = $(this).attr('id');
-      var newId = oldId.replace(replaceExp, totalIngredients);
-      $(this).attr('id', newId);
-
-      var oldName = $(this).attr('name');
-      var newName = oldName.replace(replaceExp, totalIngredients);
-      $(this).attr('name', newName);
-
-      if($(this).is('input'))
-        $(this).val('');
+    $($newIngredient).find('select, input').each(function(index, elem) {
+      replaceNameId(elem, replaceExp, totalIngredients);
     });
 
     $($newIngredient).insertAfter($lastIngredient);
