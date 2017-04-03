@@ -2,24 +2,27 @@
 
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>User:</strong>
-  <%= @recipe.user.name %>
-</p>
+<div class="header">
+  <h2><%= @recipe.name %></h2>
 
-<p>
-  <strong>Recipe Name:</strong>
-  <%= @recipe.name %>
-</p>
+  <p>By <%= link_to @recipe.user.name, @recipe.user %></p>
+</div>
 
-<% @recipe.recipe_ingredients.all.each do |ingredient| %>
-<p>
-  <% ingredientData = Ingredient.find(ingredient.ingredient_id) %>
-  <strong><%= ingredientData.ingredient_type %></strong>
-  <%= ingredientData.name %>
-  <%= ingredient.quantity %> grams
-</p>
-<% end %>
+<% recipeData = getRecipeIngredients(@recipe) %>
+<table>
+  <tr><td>Malt</td></tr>
+  <% recipeData[:malts].each do |malt| %>
+    <tr><td><%= malt[:name] %></td><td><%= malt[:quantity] %>g</td></tr>
+  <% end %>
+  <tr><td>Hops</td></tr>
+  <% recipeData[:hops].each do |hop| %>
+    <tr><td><%= hop[:name] %></td><td><%= hop[:quantity] %>g</td></tr>
+  <% end %>
+  <tr><td>Yeast</td></tr>
+  <% recipeData[:yeasts].each do |yeast| %>
+    <tr><td><%= yeast[:name] %></td><td><%= yeast[:quantity] %></td></tr>
+  <% end %>
+</table>
 
 <p>
   <strong>Method:</strong>
