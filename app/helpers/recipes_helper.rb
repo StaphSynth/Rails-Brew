@@ -1,30 +1,25 @@
 module RecipesHelper
   def getRecipeIngredients(recipe)
-    malts = []
-    hops = []
-    yeasts = []
+    categories = ['malt', 'hops', 'yeast']
+    finalStruct = []
+
+    categories.each do |category|
+      categoryHash = Hash.new.tap do |hash|
+        hash[:title] = category
+        hash[:list] = []
+      end
+      finalStruct.push(categoryHash)
+    end
 
     recipe.recipe_ingredients.all.each do |ingredient|
       ingredientData = Ingredient.find(ingredient.ingredient_id)
-      tempRow = Hash.new.tap do |hash|
+      item = Hash.new.tap do |hash|
         hash[:name] = ingredientData.name
         hash[:quantity] = ingredient.quantity
       end
 
-      case ingredientData.ingredient_type
-      when 'malt'
-        malts.push tempRow
-      when 'hops'
-        hops.push tempRow
-      when 'yeast'
-        yeasts.push tempRow
-      end
+      finalStruct[categories.index(ingredientData.ingredient_type)][:list].push(item)
     end
-
-    return Hash.new.tap do |hash|
-      hash[:malts] = malts
-      hash[:hops] = hops
-      hash[:yeasts] = yeasts
-    end
+    return finalStruct
   end
 end

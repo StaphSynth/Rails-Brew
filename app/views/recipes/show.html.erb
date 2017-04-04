@@ -8,19 +8,14 @@
   <p>By <%= link_to @recipe.user.name, @recipe.user %></p>
 </div>
 
-<% recipeData = getRecipeIngredients(@recipe) %>
+<h1>new table</h1>
 <table>
-  <tr><td>Malt</td></tr>
-  <% recipeData[:malts].each do |malt| %>
-    <tr><td><%= malt[:name] %></td><td><%= malt[:quantity] %>g</td></tr>
-  <% end %>
-  <tr><td>Hops</td></tr>
-  <% recipeData[:hops].each do |hop| %>
-    <tr><td><%= hop[:name] %></td><td><%= hop[:quantity] %>g</td></tr>
-  <% end %>
-  <tr><td>Yeast</td></tr>
-  <% recipeData[:yeasts].each do |yeast| %>
-    <tr><td><%= yeast[:name] %></td><td><%= yeast[:quantity] %></td></tr>
+  <% categories = getRecipeIngredients(@recipe) %>
+  <% categories.each do |category| %>
+    <tr><td><%= category[:title] %></td></tr>
+    <% category[:list].each do |ingredient| %>
+      <tr><td><%= ingredient[:name] %></td><td><%= ingredient[:quantity] %></td></tr>
+    <% end %>
   <% end %>
 </table>
 
