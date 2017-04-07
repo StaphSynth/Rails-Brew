@@ -8,16 +8,7 @@
   <p>By <%= link_to @recipe.user.name, @recipe.user %></p>
 </div>
 
-<h1>new table</h1>
-<table>
-  <% categories = getRecipeIngredients(@recipe) %>
-  <% categories.each do |category| %>
-    <tr><td><%= category[:title] %></td></tr>
-    <% category[:list].each do |ingredient| %>
-      <tr><td><%= ingredient[:name] %></td><td><%= ingredient[:quantity] %></td></tr>
-    <% end %>
-  <% end %>
-</table>
+
 
 <p>
   <strong>Method:</strong>
