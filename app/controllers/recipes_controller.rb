@@ -4,6 +4,9 @@ class RecipesController < ApplicationController
   # GET /recipes
   # GET /recipes.json
   def index
+        #for when logins are req'd:
+        # current_user.recipes
+        # Recipe.predefined ?
     @recipes = Recipe.all
   end
 
