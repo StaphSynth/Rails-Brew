@@ -1,9 +1,7 @@
 class Recipe < ApplicationRecord
   belongs_to :user
-  has_many :recipe_ingredients, :dependent => :destroy,
-            autosave: true, inverse_of: :recipe
+  has_many :malts
+  has_many :hops
+  has_many :yeasts
 
-  accepts_nested_attributes_for :recipe_ingredients,
-                                :allow_destroy => true,
-                                :reject_if => :all_blank
 end
