@@ -1,5 +1,5 @@
 class Yeast < ApplicationRecord
-  belongs_to :ingredient
+  belongs_to :recipe
 
   def partial
     return :yeast
