@@ -8,6 +8,23 @@
   <p>By <%= link_to @recipe.user.name, @recipe.user %></p>
 </div>
 
+<div>
+  <table>
+    <tr><td><h3>Malt</h3></td></tr>
+    <% @recipe.malts.each do |malt| %>
+      <tr><td><%= malt.name %></td><td><%= malt.quantity %></td></tr>
+    <% end %>
+    <tr><td><h3>Hops</h3></td></tr>
+    <% @recipe.hops.each do |hop| %>
+      <tr><td><%= hop.name %></td><td><%= hop.quantity %></td></tr>
+    <% end %>
+    <tr><td><h3>Yeast</h3></td></tr>
+    <% @recipe.yeasts.each do |yeast| %>
+      <tr><td><%= yeast.name %></td></tr>
+    <% end %>
+  </table>
+
+</div>
 
 
 <p>

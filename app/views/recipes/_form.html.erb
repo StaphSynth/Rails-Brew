@@ -20,8 +20,15 @@
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
+
   <h3>Malts</h3>
     <%= f.fields_for :malts do |malt| %>
+
+    <div class="field">
+      <%= malt.label :name %>
+      <%= malt.text_field :name %>
+    </div>
+
     <div class="field">
       <%= malt.label :malt_type %>
       <% options = options_for_select([['Grain', 'grain'], ['DME', 'dme'], ['LME', 'lme']]) %>
@@ -43,9 +50,22 @@
       <%= malt.label :ppg %>
       <%= malt.text_field :ppg %>
     </div>
+
+    <div class="field">
+      <%= malt.label :quantity %>
+      <%= malt.text_field :quantity %>
+    </div>
+
     <% end %>
+
   <h3>Hops</h3>
     <%= f.fields_for :hops do |hop| %>
+
+    <div class="field">
+      <%= hop.label :name %>
+      <%= hop.text_field :name %>
+    </div>
+
     <div class="field">
       <%= hop.label :use %>
       <% options = options_for_select([['Aroma', 'aroma'], ['Bittering', 'bittering'], ['Both', 'both']]) %>
@@ -61,10 +81,22 @@
       <%= hop.label :aa %>
       <%= hop.text_field :aa %>
     </div>
+
+    <div class="field">
+      <%= hop.label :quantity %>
+      <%= hop.text_field :quantity %>
+    </div>
+
     <% end %>
 
   <h3>Yeast</h3>
     <%= f.fields_for :yeasts do |yeast| %>
+
+    <div class="field">
+      <%= yeast.label :name %>
+      <%= yeast.text_field :name %>
+    </div>
+
     <div class="field">
       <%= yeast.label :fermentation_type %>
       <% options = options_for_select([['Ale', 'ale'], ['Lager', 'larger']]) %>
