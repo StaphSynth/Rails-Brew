@@ -22,4 +22,34 @@ module RecipesHelper
     end
     return finalStruct
   end
+
+  def maltType
+    [
+      ['Grain', 'grain'],
+      ['DME', 'dme'],
+      ['LME', 'lme']
+    ]
+  end
+
+  def maltUse
+    [
+      ['Base Malt', 'base malt'],
+      ['Other', 'other']
+    ]
+  end
+
+  def hopUse
+    [
+      ['Aroma', 'aroma'],
+      ['Bittering', 'bittering'],
+      ['Both', 'both']
+    ]
+  end
+
+  def yeastType
+    [
+      ['Ale', 'ale'],
+      ['Lager', 'larger']
+    ]
+  end
 end

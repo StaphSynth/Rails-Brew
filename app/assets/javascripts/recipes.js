@@ -1,12 +1,11 @@
 
-function replaceNameId(elem, replaceExp, value) {
-  var oldId = $(elem).attr('id');
-  var newId = oldId.replace(replaceExp, value);
-  $(elem).attr('id', newId);
+function replaceAttr(elem, attr, toReplace, replaceVal) {
+  var oldAttr;
+  if(!(oldAttr = $(elem).attr(attr)))
+    return;
 
-  var oldName = $(elem).attr('name');
-  var newName = oldName.replace(replaceExp, value);
-  $(elem).attr('name', newName);
+  var newAttr = oldAttr.replace(toReplace, replaceVal);
+  $(elem).attr(attr, newAttr);
 
   if($(elem).is('input'))
     $(elem).val('');
@@ -14,24 +13,17 @@ function replaceNameId(elem, replaceExp, value) {
 
 $(document).on('turbolinks:load', function() {
 
-  var replaceExp = new RegExp(/[0-9]+/);
-
-  $('.ingredient-selection').find('select').each(function(index, elem) {
-    replaceNameId(elem, replaceExp, index);
-  });
-
-  $('.ingredient-selection').find('input').each(function(index, elem) {
-    replaceNameId(elem, replaceExp, index);
-  });
-
   $('.add-ingredient-btn').click(function() {
-    var selector ='.' + $(this).data('type') + '-selection';
+    var replaceExp = new RegExp(/[0-9]+/);
+    var selector ='.' + $(this).data('type') + '-input';
     var $lastIngredient = $(selector).last();
     var $newIngredient = $($lastIngredient).clone();
-    var totalIngredients = $('.ingredient-selection').length.toString();
+    var uniqueVal = new Date().getTime();
 
-    $($newIngredient).find('select, input').each(function(index, elem) {
-      replaceNameId(elem, replaceExp, totalIngredients);
+    $($newIngredient).find('select, input, label').each(function(index, elem) {
+      replaceAttr(elem, 'id', replaceExp, uniqueVal);
+      replaceAttr(elem, 'name', replaceExp, uniqueVal);
+      replaceAttr(elem, 'for', replaceExp, uniqueVal);
     });
 
     $($newIngredient).insertAfter($lastIngredient);
