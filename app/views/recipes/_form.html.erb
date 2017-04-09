@@ -74,9 +74,19 @@
           <%= malt.label :quantity %>
           <%= malt.text_field :quantity %>
         </div>
+
+        <div class="field">
+          <%= malt.hidden_field :_destroy, :value => false, :class => 'destroy' %>
+        </div>
+
+        <div class="field">
+          <%= malt.label :remove %>
+          <button type="button" class="del-ingredient-btn btn">x</button>
+        </div>
+
       </div>
     <% end %>
-    <button type="button" class="add-ingredient-btn" data-type="malt">+</button>
+    <button type="button" class="add-ingredient-btn btn" data-type="malt">+</button>
   </div>
 
 
@@ -108,6 +118,16 @@
           <%= hop.label :quantity %>
           <%= hop.text_field :quantity %>
         </div>
+
+        <div class="field">
+          <%= hop.hidden_field :_destroy, :value => false, :class => 'destroy' %>
+        </div>
+
+        <div class="field">
+          <%= hop.label :remove %>
+          <button type="button" class="del-ingredient-btn btn">x</button>
+        </div>
+
       </div>
     <% end %>
     <button type="button" class="add-ingredient-btn" data-type="hop">+</button>
@@ -132,6 +152,16 @@
           <%= yeast.label :temp_range %>
           <%= yeast.text_field :temp_range %>
         </div>
+
+        <div class="field">
+          <%= yeast.hidden_field :_destroy, :value => false, :class => 'destroy' %>
+        </div>
+
+        <div class="field">
+          <%= yeast.label :remove %>
+          <button type="button" class="del-ingredient-btn btn">x</button>
+        </div>
+
       </div>
     <% end %>
     <button type="button" class="add-ingredient-btn" data-type="yeast">+</button>
