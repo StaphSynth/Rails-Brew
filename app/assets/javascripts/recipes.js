@@ -1,35 +1,35 @@
 
-function replaceAttr(elem, attr, toReplace, replaceVal) {
-  var oldAttr;
-  if(!(oldAttr = $(elem).attr(attr)))
+function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
+  var oldAttr = $(elem).attr(attr);
+  
+  if(!oldAttr)
     return;
 
-  var newAttr = oldAttr.replace(toReplace, replaceVal);
+  var newAttr = oldAttr.replace(toBeReplaced, replaceVal);
   $(elem).attr(attr, newAttr);
-
-  if($(elem).is('input') && !($(elem).attr('id').includes('_destroy')))
-    $(elem).val('');
 }
 
 $(document).on('turbolinks:load', function() {
 
     $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
-    var selector ='.' + $(this).data('type') + '-input';
-    var $lastIngredient = $(selector).last();
-    var $newIngredient = $($lastIngredient).clone(true);
+    var ingredientSelector ='.' + $(this).data('type') + '-input';
+    var $ingredientsParent = $(ingredientSelector).parent();
+    var $newIngredient = $($(ingredientSelector).last()).clone(true);
     var uniqueVal = new Date().getTime();
 
     $($newIngredient).find('select, input, label').each(function(index, elem) {
       replaceAttr(elem, 'id', replaceExp, uniqueVal);
       replaceAttr(elem, 'name', replaceExp, uniqueVal);
       replaceAttr(elem, 'for', replaceExp, uniqueVal);
+
+      if($(elem).is('input'))
+        $(elem).val('');
     });
 
-    $($newIngredient).children('input').remove(); //remove the rails hidden input field
     $($newIngredient).hide();
-    $($newIngredient).insertAfter($lastIngredient);
-    $($newIngredient).slideDown();
+    $($newIngredient).appendTo($ingredientsParent);
+    $($newIngredient).slideDown('fast');
   });
 
 
@@ -38,6 +38,6 @@ $(document).on('turbolinks:load', function() {
 
     $($itemToRemove).find('.destroy').val(true);
 
-    $($itemToRemove).slideUp();
+    $($itemToRemove).slideUp('fast');
   });
 });
