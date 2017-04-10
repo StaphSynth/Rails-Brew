@@ -18,4 +18,7 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
   validates_confirmation_of :password
+  
+  validates :location, allow_blank: true,
+                       length: {maximum: 100}
 end
