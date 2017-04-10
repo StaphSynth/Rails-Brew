@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
-  resources :ingredients
-  resources :recipes
   root 'static_pages#home'
 
-  get 'signup', to: 'users#new'
-  get 'home', to: 'static_pages#home'
+  get     '/login',   to: 'sessions#new'
+  post    '/login',   to: 'sessions#create'
+  delete  '/logout',  to: 'sessions#destroy'
+  get     '/signup',  to: 'users#new'
+  get     'home',     to: 'static_pages#home'
 
+  resources :recipes
   resources :users
   resources :hops
   resources :yeasts

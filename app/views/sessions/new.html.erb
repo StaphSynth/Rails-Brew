@@ -1,0 +1,26 @@
+<% provide :title, 'Log in' %>
+
+<h1>Log in</h1>
+
+<div>
+  <%= form_for :session, url: login_path do |f| %>
+
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+    </div>
+
+    <div class="field">
+      <%= f.submit 'Log in' %>
+    </div>
+
+  <% end %>
+  <p class="login-error error"><%= flash[:notice] if flash[:notice] %></p>
+
+  <p>New to RubyBrew? <%= link_to 'Sign up now!', signup_path %></p>
+</div>
