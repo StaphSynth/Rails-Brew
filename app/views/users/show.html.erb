@@ -14,5 +14,12 @@
   </p>
 <% end %>
 
+<h3>Recipes by <%= @user.name %></h3>
+<table>
+  <% @user.recipes.each do |recipe| %>
+  <tr><td><%= link_to recipe.name, recipe %></td></tr>
+  <% end %>
+</table>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
