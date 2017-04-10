@@ -19,6 +19,11 @@
       <%= f.submit 'Log in' %>
     </div>
 
+    <%= f.label :remember_me do %>
+      <%= f.check_box :remember_me %>
+      <span>Remember me on this device</span>
+    <% end %>
+
   <% end %>
   <p class="login-error error"><%= flash[:notice] if flash[:notice] %></p>
 

@@ -8,6 +8,8 @@ class SessionsController < ApplicationController
       if(user && user.authenticate(params[:session][:password]))
         #log in
         log_in(user)
+        #set extended session cookies according to user remembrance preferences
+        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
         #redirect to user#show
         format.html { redirect_to user, notice: "Welcome back #{user.name}!" }
       else
@@ -18,7 +20,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    log_out
-    redirect_to root_url
+    log_out if logged_in?
+    
+    respond_to do |format|
+      format.html { redirect_to root_url }
+    end
   end
 end
