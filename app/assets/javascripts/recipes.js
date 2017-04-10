@@ -1,7 +1,7 @@
 
 function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   var oldAttr = $(elem).attr(attr);
-  
+
   if(!oldAttr)
     return;
 
@@ -11,7 +11,7 @@ function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
 
 $(document).on('turbolinks:load', function() {
 
-    $('.add-ingredient-btn').click(function() {
+  $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
     var ingredientSelector ='.' + $(this).data('type') + '-input';
     var $ingredientsParent = $(ingredientSelector).parent();
