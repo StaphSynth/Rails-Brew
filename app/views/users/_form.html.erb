@@ -31,6 +31,22 @@
     <%= f.password_field :password_confirmation %>
   </div>
 
+  <% if mode == :edit %>
+    <div class="optional-user-properties">
+
+      <div class="field">
+        <%= f.label :location %>
+        <%= f.text_field :location %>
+      </div>
+
+      <div class="avatar-edit">
+        <%= gravatar_for user, 'large' %>
+        <a href="http://gravatar.com/emails" target="_blank">change</a>
+      </div>
+
+    </div>
+  <% end %>
+
   <div class="actions">
     <%= f.submit "#{submit_wording(mode)} Account" %>
   </div>

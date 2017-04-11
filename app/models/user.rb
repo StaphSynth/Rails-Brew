@@ -19,8 +19,8 @@ class User < ApplicationRecord
                     uniqueness: {case_sensitive: false}
 
   has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }
-  validates_confirmation_of :password
+  validates :password, presence: true, length: { minimum: 6 }, allow_blank: true
+  validates_confirmation_of :password, allow_blank: true
   validates :location, allow_blank: true,
                        length: {maximum: 100}
 
