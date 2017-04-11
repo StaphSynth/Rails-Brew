@@ -40,4 +40,9 @@ module SessionsHelper
   def logged_in?
     !current_user.nil?
   end
+
+  #returns true if the passed user is the current user, else false
+  def current_user?(user)
+    user == current_user ? true : false
+  end
 end

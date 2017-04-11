@@ -10,16 +10,15 @@
       <th>Name</th>
       <th>Email</th>
       <th>Recipes</th>
-      <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td><%= user.name %></td>
+        <td><%= get_gravatar user, 'small' %><%= " #{user.name}" %></td>
         <td><%= user.email %></td>
-        <td><%= user.recipes.map { |recipe| recipe.name }.join(', ') %></td>
+        <td><%= user.recipes.length %></td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
         <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -29,5 +28,3 @@
 </table>
 
 <br>
-
-<%= link_to 'New User', new_user_path %>
