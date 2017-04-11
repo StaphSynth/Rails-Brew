@@ -48,7 +48,9 @@
           <li><%= link_to 'My profile', current_user %></li>
           <li><%= link_to 'Log out', logout_url, :method => :delete %></li>
         <% else %>
+          <li>Welcome, stranger.</li>
           <li><%= link_to 'Log in', login_url %></li>
+          <li><%= link_to 'Sign up', signup_url %></li>
         <% end %>
       </ul>
     </nav>

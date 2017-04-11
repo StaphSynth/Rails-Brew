@@ -14,12 +14,14 @@
   </p>
 <% end %>
 
-<h3>Recipes by <%= @user.name %></h3>
-<table>
-  <% @user.recipes.each do |recipe| %>
-  <tr><td><%= link_to recipe.name, recipe %></td></tr>
-  <% end %>
-</table>
+<% if @user.recipes.length > 0 %>
+  <h3><%= @user.email == current_user.email ? "Your Recipes" : "Recipes by #{@user.name}" %></h3>
+  <table>
+    <% @user.recipes.each do |recipe| %>
+    <tr><td><%= link_to recipe.name, recipe %></td></tr>
+    <% end %>
+  </table>
+<% end %>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
