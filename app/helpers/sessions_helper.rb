@@ -45,4 +45,16 @@ module SessionsHelper
   def current_user?(user)
     user == current_user ? true : false
   end
+
+  #stores requested URL for redirect after authorization checks complete
+  def store_req_url
+    session[:forwarding_url] = request.original_url if request.get?
+  end
+
+  #returns stored requested URL default if there isn't one.
+  def req_url?(default)
+    url = session[:forwarding_url] || default
+    session.delete(:forwarding_url)
+    return url
+  end
 end

@@ -73,6 +73,7 @@ class UsersController < ApplicationController
 
     def logged_in_user
       if(!logged_in?)
+        store_req_url #for redirecting to the req resource after login
         respond_to do |format|
           format.html { redirect_to login_url, notice: "Login required to perform that action" }
         end

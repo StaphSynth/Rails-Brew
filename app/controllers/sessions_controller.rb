@@ -10,8 +10,8 @@ class SessionsController < ApplicationController
         log_in(user)
         #set extended session cookies according to user remembrance preferences
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-        #redirect to user#show
-        format.html { redirect_to user, notice: "Welcome back #{user.name}!" }
+        #redirect to either the page the non-logged-in user was trying to access, or profile
+        format.html { redirect_to req_url?(user), notice: "Welcome back #{user.name}!" }
       else
         #show error
         format.html { redirect_to login_url, notice: "Username/password incorrect. Please try again." }
@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
 
   def destroy
     log_out if logged_in?
-    
+
     respond_to do |format|
       format.html { redirect_to root_url }
     end
