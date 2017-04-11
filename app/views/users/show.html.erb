@@ -2,10 +2,10 @@
 
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
+<h2>
+  <%= gravatar_for @user, 'large' %>
   <%= @user.name %>
-</p>
+</h2>
 
 <% if @user.location %>
   <p>

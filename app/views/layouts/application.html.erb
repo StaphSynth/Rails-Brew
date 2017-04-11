@@ -26,6 +26,13 @@
       flex-direction: row;
       justify-content: space-between;
     }
+    .avatar {
+      border-radius: 50%;
+    }
+    .avatar-small {
+      width: 22px;
+      height: 22px;
+    }
   </style>
 
   <body>
@@ -37,6 +44,7 @@
       <ul>
         <% if logged_in? %>
           <li>Logged in as <%= current_user.name %></li>
+          <li><%= gravatar_for current_user, 'small' %></li>
           <li><%= link_to 'My profile', current_user %></li>
           <li><%= link_to 'Log out', logout_url, :method => :delete %></li>
         <% else %>
