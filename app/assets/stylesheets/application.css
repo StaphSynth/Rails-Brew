@@ -10,41 +10,6 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
+ *= require main
  *= require_self
  */
-
- ul {
-   list-style: none;
- }
-
- nav {
-   background-color: #eee;
- }
-
- nav {
-   display: flex;
-   flex-direction: row;
-   justify-content: space-between;
- }
-
- nav ul {
-   list-style: none;
- }
-
- nav ul li {
-   display: inline-block;
- }
-
- nav li {
-   padding: 0 0.5em;
- }
-
- .avatar {
-   border-radius: 50%;
- }
-
- .avatar-small {
-   width: 22px;
-   height: 22px;
- }
