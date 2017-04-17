@@ -4,27 +4,8 @@
 
 <h1>Users</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Recipes</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= get_gravatar user, 'small' %><%= " #{user.name}" %></td>
-        <td><%= user.email %></td>
-        <td><%= user.recipes.length %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+<ul>
+  <% @users.each do |user| %>
+    <li><%= render 'user', { user: user, size: 'large', link: true } %></li>
+  <% end %>
+</ul>
