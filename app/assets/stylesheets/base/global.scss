@@ -1,21 +1,37 @@
-nav {
+body {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #eee;
+  flex-direction: column;
+  margin: 1em;
 
-  ul {
-    list-style: none;
-  }
-
-  li {
-    padding: 0 0.5em;
-  }
-
-  ul li {
-    display: inline-block;
+  .content-container {
+    flex-grow: 1;
   }
 }
+
+header {
+  margin-bottom: 1em;
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #eee;
+    padding: 2em;
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      padding: 0 0.5em;
+      vertical-align: middle;
+    }
+
+    ul li {
+      display: inline-block;
+    }
+  } //nav
+} //header
 
 .avatar {
   border-radius: 50%;
@@ -24,4 +40,10 @@ nav {
 .avatar-small {
   width: 22px;
   height: 22px;
+}
+
+footer {
+  margin: 1em 0;
+  padding: 2em;
+  background-color: #eee;
 }
