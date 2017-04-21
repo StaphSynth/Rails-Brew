@@ -5,8 +5,23 @@
 .user-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
+
+  img {
+    vertical-align: middle;
+  }
 
   .user-avatar-container {
     margin-right: 1em;
+  }
+
+  .user-details-container p {
+    padding-top: 0.5rem;
+  }
+}
+
+.user-index {
+  li {
+    margin: 0.5em 0;
   }
 }
