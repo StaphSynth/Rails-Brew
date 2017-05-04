@@ -10,7 +10,7 @@
   </head>
 
   <body>
-    <header class="navbar navbar-fixed-top navbar-inverse">
+    <header class="navbar navbar-static-top navbar-inverse">
       <div class="container">
 
         <nav>
@@ -21,12 +21,12 @@
 
           <ul class="nav navbar-nav navbar-right">
             <% if logged_in? %>
-              <li class="logged-in">Logged in as <%= current_user.name %></li>
-              <li class="logged-in"><%= get_gravatar current_user, 'small' %></li>
+              <li><p class="navbar-text">Logged in as <%= current_user.name %></p></li>
+              <li class="navbar-text"><%= get_gravatar current_user, 'small' %></li>
               <li><%= link_to 'My profile', current_user %></li>
               <li><%= link_to 'Log out', logout_url, :method => :delete %></li>
             <% else %>
-              <li class="logged-in">Welcome, stranger.</li>
+              <li><p class="navbar-text">Welcome, stranger.</p></li>
               <li><%= link_to 'Log in', login_url %></li>
               <li><%= link_to 'Sign up', signup_url %></li>
             <% end %>
