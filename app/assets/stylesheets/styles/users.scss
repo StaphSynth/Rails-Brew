@@ -11,12 +11,16 @@
     vertical-align: middle;
   }
 
+  h3 {
+    margin: 0;
+  }
+
   .user-avatar-container {
     margin-right: 1em;
   }
 
   .user-details-container p {
-    padding-top: 0.5rem;
+    margin: 0.25rem 0 0;
   }
 }
 

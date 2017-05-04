@@ -1,4 +1,6 @@
-@import "base/normalize.scss";
+// @import "base/normalize.scss";
+@import "bootstrap-sprockets";
+@import "bootstrap";
 @import "base/global.scss";
 @import "base/forms.scss";
 @import "styles/users.scss";
