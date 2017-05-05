@@ -129,7 +129,7 @@
       </div>
     <% end %>
   </div>
-  <button type="button" class="add-ingredient-btn" data-type="hop">+</button>
+  <button type="button" class="add-ingredient-btn btn" data-type="hop">+</button>
 
   <h3>Yeast</h3>
   <div class="yeast-inputs">
@@ -163,7 +163,7 @@
       </div>
     <% end %>
   </div>
-  <button type="button" class="add-ingredient-btn" data-type="yeast">+</button>
+  <button type="button" class="add-ingredient-btn btn" data-type="yeast">+</button>
 
   <div class="method field">
     <%= f.label :method %>
@@ -171,6 +171,6 @@
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :class => 'btn btn-primary' %>
   </div>
 <% end %>
