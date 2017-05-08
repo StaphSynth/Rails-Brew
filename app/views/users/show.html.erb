@@ -5,6 +5,7 @@
 <h2>
   <%= get_gravatar @user, 'large' %>
   <%= @user.name %>
+  <%= link_to 'Edit Profile', edit_user_path(@user), :class => 'btn btn-primary' if current_user == @user %>
 </h2>
 
 <% if !(@user.location.nil? || @user.location.empty?) %>
@@ -15,12 +16,10 @@
 <% end %>
 
 <% if @user.recipes.length > 0 %>
-  <h3><%= "Recipes by #{@user.name}" %></h3>
+  <h3><%= @user == current_user ? "Your Recipes" : "Recipes by #{@user.name}" %></h3>
   <table>
     <% @user.recipes.each do |recipe| %>
     <tr><td><%= link_to recipe.name, recipe %></td></tr>
     <% end %>
   </table>
 <% end %>
-
-<%= link_to 'Edit', edit_user_path(@user) if current_user == @user %>
