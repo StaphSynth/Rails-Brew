@@ -32,5 +32,4 @@
   <%= @recipe.method %>
 </p>
 
-<%= link_to 'Edit', edit_recipe_path(@recipe) %> |
-<%= link_to 'Back', recipes_path %>
+<%= link_to 'Edit', edit_recipe_path(@recipe) if current_user == @recipe.user %>
