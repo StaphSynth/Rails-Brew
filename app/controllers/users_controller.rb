@@ -75,7 +75,7 @@ class UsersController < ApplicationController
       if(!logged_in?)
         store_req_url #for redirecting to the req resource after login
         respond_to do |format|
-          format.html { redirect_to login_url, notice: "Login required to perform that action" }
+          format.html { redirect_to login_url, notice: "Login required to perform that action." }
         end
       end
     end
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       if(!current_user?(@user))
-        redirect_to root_url
+        redirect_to root_url, notice: "You may only edit your own profile."
       end
     end
 
