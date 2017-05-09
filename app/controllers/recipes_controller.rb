@@ -25,6 +25,11 @@ class RecipesController < ApplicationController
 
   # GET /recipes/1/edit
   def edit
+    if(!logged_in?)
+      redirect_to login_url, notice: "Login required to complete that action"
+    elsif(current_user != @recipe.user)
+      redirect_to current_user, notice: "You may only edit your own recipes"
+    end
   end
 
   # POST /recipes
