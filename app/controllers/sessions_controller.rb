@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
         format.html { redirect_to req_url?(user), notice: "Welcome back #{user.name}!" }
       else
         #show error
-        format.html { redirect_to login_url, notice: "Username/password incorrect. Please try again." }
+        format.html { redirect_to login_url, notice: "Email address/password incorrect. Please try again." }
       end
     end
   end
