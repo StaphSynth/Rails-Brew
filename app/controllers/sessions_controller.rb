@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
     log_out if logged_in?
 
     respond_to do |format|
-      format.html { redirect_to root_url }
+      format.html { redirect_to root_url, notice: "You have successfully logged out" }
     end
   end
 end
