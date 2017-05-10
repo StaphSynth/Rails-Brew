@@ -17,6 +17,10 @@ class RecipesController < ApplicationController
 
   # GET /recipes/new
   def new
+    if(!logged_in?)
+      redirect_to login_url, :notice => "You must be logged in to create new recipes"
+    end
+    
     @recipe = Recipe.new
     @recipe.malts.build
     @recipe.hops.build
