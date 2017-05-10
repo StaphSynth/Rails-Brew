@@ -27,9 +27,10 @@
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li class="dropdown-item"><%= link_to 'My Profile', current_user, :role => 'menu-item' %></li>
-                  <li class="divider dropdown-item"></li>
-                  <li class="dropdown-item"><%= link_to 'Log out', logout_url, :method => :delete, :role => 'menu-item' %></li>
+                  <li class="dropdown-item profile-id">Logged in as <strong><%= current_user.name %></strong></li>
+                  <li class="dropdown-item divider"></li>
+                  <li class="dropdown-item"><%= link_to 'Your Profile', current_user %></li>
+                  <li class="dropdown-item"><%= link_to 'Log Out', logout_url, :method => :delete %></li>
                 </ul>
               </li>
             <% else %>
