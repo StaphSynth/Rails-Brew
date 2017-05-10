@@ -21,26 +21,6 @@
     <%= f.text_field :name %>
   </div>
 
-  <style>
-  .malt-input {
-    /*border: 1px solid blue;*/
-    display: flex;
-    flex-direction: row;
-  }
-  .hop-input {
-    display: flex;
-    flex-direction: row;
-  }
-  .yeast-input {
-    display: flex;
-    flex-direction: row;
-  }
-  .method textarea {
-    width: 500px;
-    height: 200px;
-  }
-  </style>
-
   <h3>Malts</h3>
   <div class="malt-inputs">
     <%= f.fields_for :malts do |malt| %>
