@@ -83,7 +83,7 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       if(!current_user?(@user))
-        redirect_to root_url, notice: "You may only edit your own profile."
+        redirect_to current_user, notice: "You may only edit your own profile."
       end
     end
 
