@@ -22,7 +22,17 @@
           <ul class="nav navbar-nav navbar-right">
             <% if logged_in? %>
               <li class="dropdown navbar-text">
-                <button class="profile-dropdown dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="loggedin-dropdown dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  +<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li class="dropdown-item"><%= link_to 'New Recipe', new_recipe_path %></li>
+                  <li class="dropdown-item"><a href="#">New Brewing Session</a></li>
+                  <li class="dropdown-item"><a href="#">Calculators</a></li>
+                </ul>
+              </li>
+              <li class="dropdown navbar-text">
+                <button class="loggedin-dropdown dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <%= get_gravatar current_user, 'small' %>
                   <span class="caret"></span>
                 </button>
