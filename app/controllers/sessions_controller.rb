@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
         #set extended session cookies according to user remembrance preferences
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)
         #redirect to either the page the non-logged-in user was trying to access, or profile
-        format.html { redirect_to req_url?(user), notice: "Welcome back #{user.name}!" }
+        format.html { redirect_to req_url?(user), notice: "Welcome back, #{user.name}!" }
       else
         #show error
         format.html { redirect_to login_url, notice: "Email address/password incorrect. Please try again." }
