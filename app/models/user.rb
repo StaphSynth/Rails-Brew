@@ -4,10 +4,7 @@ class User < ApplicationRecord
 
   attr_accessor :remember_token, :activation_token
 
-  before_save do
-    self.email = self.email.downcase
-  end
-
+  before_save :email_downcase
   before_create :create_activation_digest
 
   EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
@@ -60,6 +57,10 @@ class User < ApplicationRecord
     def create_activation_digest
       self.activation_token = User.new_token
       self.activation_digest = User.digest(activation_token)
+    end
+
+    def email_downcase
+      self.email = self.email.downcase
     end
 
 end
