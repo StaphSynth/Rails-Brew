@@ -2,7 +2,7 @@ class User < ApplicationRecord
 
   has_many :recipes
 
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
 
   before_save :email_downcase
   before_create :create_activation_digest
@@ -51,6 +51,23 @@ class User < ApplicationRecord
       return false
     end
     BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  #set password reset attributes.
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  #send password reset email.
+  def send_pw_reset_mail
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  #return true if a password reset has expired.
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
   end
 
   private

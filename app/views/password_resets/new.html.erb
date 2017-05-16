@@ -1,0 +1,25 @@
+<% provide :title, 'Reset Password' %>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <h1>Reset Password</h1>
+    <p>
+      Please enter your email address below
+      and a password reset link will be sent to you.
+    </p>
+
+    <%= form_for :password_reset, url: password_resets_path do |f| %>
+
+      <div class="field form-group">
+        <%= f.label :email %>
+        <%= f.text_field :email, :class => 'form-control' %>
+      </div>
+
+      <div class="field form-group">
+        <%= f.submit 'Get reset link', :class => 'btn btn-primary' %>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>
