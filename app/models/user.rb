@@ -45,11 +45,12 @@ class User < ApplicationRecord
   end
 
   #return true if passed token matches encrypted digest
-  def authenticated?(remember_token)
-    if(remember_digest.nil?)
+  def authenticated?(attribute, token)
+    digest = self.send("#{attribute}_digest")
+    if(digest.nil?)
       return false
     end
-    BCrypt::Password.new(remember_digest.is_password?(remember_token))
+    BCrypt::Password.new(digest).is_password?(token)
   end
 
   private

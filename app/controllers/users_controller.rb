@@ -31,8 +31,11 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        log_in(@user)
-        format.html { redirect_to @user, notice: "Welcome aboard, #{@user.name}!" }
+        UserMailer.account_activation(@user).deliver_now
+        format.html {
+                      redirect_to root_url,
+                      notice: "Welcome aboard, #{@user.name}.Please check your email to activate your account."
+                    }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }

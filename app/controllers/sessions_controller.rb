@@ -6,12 +6,16 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     respond_to do |format|
       if(user && user.authenticate(params[:session][:password]))
-        #log in
-        log_in(user)
-        #set extended session cookies according to user remembrance preferences
-        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-        #redirect to either the page the non-logged-in user was trying to access, or profile
-        format.html { redirect_to req_url?(user), notice: "Welcome back, #{user.name}!" }
+        if(user.activated?)
+          #log in
+          log_in(user)
+          #set extended session cookies according to user remembrance preferences
+          params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+          #redirect to either the page the non-logged-in user was trying to access, or profile
+          format.html { redirect_to req_url?(user), notice: "Welcome, #{user.name}!" }
+        else
+          format.html { redirect_to root_url, notice: "Account not activated. Please check your email for the activation link." }
+        end
       else
         #show error
         format.html { redirect_to login_url, notice: "Email address/password incorrect. Please try again." }
