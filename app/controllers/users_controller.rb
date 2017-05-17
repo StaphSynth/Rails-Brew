@@ -34,7 +34,7 @@ class UsersController < ApplicationController
         UserMailer.account_activation(@user).deliver_now
         format.html {
                       redirect_to root_url,
-                      notice: "Welcome aboard, #{@user.name}.Please check your email to activate your account."
+                      notice: "Welcome aboard, #{@user.name}. Please check your email to activate your account."
                     }
         format.json { render :show, status: :created, location: @user }
       else

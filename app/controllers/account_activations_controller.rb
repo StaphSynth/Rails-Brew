@@ -6,7 +6,7 @@ class AccountActivationsController < ApplicationController
       user.update_attribute(:activated, true)
       user.update_attribute(:activated_at, Time.zone.now)
       log_in(user)
-      flash[:success] = "Account activated. Welcome aboard #{user.name}!"
+      flash[:success] = "Account activated. Welcome to RailsBrew, #{user.name}!"
       redirect_to user
     else
       flash[:danger] = "Invalid activation link"
