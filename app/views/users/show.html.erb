@@ -6,7 +6,7 @@
   <%= link_to 'Edit Profile', edit_user_path(@user), :class => 'btn btn-primary' if current_user == @user %>
 </h2>
 
-<% if !(@user.location.nil? || @user.location.empty?) %>
+<% unless(@user.location.nil? || @user.location.empty?) %>
   <p>
     <strong>Location:</strong>
     <%= @user.location %>
@@ -21,7 +21,7 @@
     <% end %>
   </table>
 <% else %>
-  <% if @user ==  current_user %>
+  <% if @user == current_user %>
     <p>You don't yet have any recipes of your own. <%= link_to 'Click here', new_recipe_url %> to make one.</p>
   <% else %>
     <p><%= "#{@user.name} hasn't added any recipes yet." %></p>
