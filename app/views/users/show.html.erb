@@ -1,7 +1,7 @@
 <% provide :title, @user.name %>
 
 <h2>
-  <%= get_gravatar @user, 'large' %>
+  <%= get_gravatar @user, :large %>
   <%= @user.name %>
   <%= link_to 'Edit Profile', edit_user_path(@user), :class => 'btn btn-primary' if current_user == @user %>
 </h2>
