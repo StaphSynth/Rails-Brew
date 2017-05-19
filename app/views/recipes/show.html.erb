@@ -31,9 +31,9 @@
 
 <%= link_to 'Edit', edit_recipe_path(@recipe) if @recipe.user == current_user %>
 
-<h4>Recipe Rating: <%= get_aggregate_rating(@recipe) %></h4>
+<h4>Community Rating: <%= get_aggregate_rating(@recipe) %></h4>
 
-<% unless current_user == @recipe.user %>
+<% if(logged_in? && !(current_user == @recipe.user)) %>
   <% if rated?(current_user, @recipe) %>
     <% rating = get_user_rating(current_user, @recipe) %>
     <h4>Your rating: <%= rating.rating %></h4>

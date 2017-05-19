@@ -22,6 +22,7 @@ module RatingsHelper
 
   #returns a boolean denoting if the user has left a rating for the passed recipe
   def rated?(user, recipe)
+    return false if !logged_in?
     Rating.find_by(:recipe_id => recipe.id, :user_id => user.id) ? true : false
   end
 
