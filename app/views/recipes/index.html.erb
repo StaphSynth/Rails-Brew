@@ -9,6 +9,7 @@
     <tr>
       <th>User</th>
       <th>Name</th>
+      <th>Rating</th>
     </tr>
   </thead>
 
@@ -17,9 +18,10 @@
       <tr>
         <td><%= recipe.user.name %></td>
         <td><%= link_to recipe.name, recipe %></td>
+        <td><%= get_aggregate_rating recipe %></td>
         <% if current_user == recipe.user %>
           <td><%= link_to 'Edit', edit_recipe_path(recipe) %></td>
-          <td><%= link_to 'Destroy', recipe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to 'Delete', recipe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% end %>
       </tr>
     <% end %>
