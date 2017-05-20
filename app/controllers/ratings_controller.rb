@@ -9,7 +9,7 @@ class RatingsController < ApplicationController
     if(@rating.save)
       redirect_to @recipe, :notice => 'Rating saved!'
     else
-      flash.now[:error] = 'Rating failed to save. Please try again later.'
+      redirect_to @recipe, :notice => "Rating failed to save. #{error_handler(@rating)}"
     end
   end
 
@@ -20,17 +20,22 @@ class RatingsController < ApplicationController
     if(@rating.update_attributes(rating_params))
       redirect_to @recipe, :notice => 'Your rating has been updated.'
     else
-      if(@rating.errors.any?)
-        @rating.errors.full_messages.each do |message|
-          error_messages += message + ". "
-        end
-      end
-      redirect_to @recipe, :notice => "Rating failed to update. #{error_messages}"
+      redirect_to @recipe, :notice => "Rating failed to update. #{error_handler(@rating)}"
     end
 
   end
 
   private
+
+    def error_handler(rating)
+      error_messages = ""
+      if(rating.errors.any?)
+        rating.errors.full_messages.each do |message|
+          error_messages += message + ". "
+        end
+      end
+      return error_messages
+    end
 
     def rating_params
       params.require(:rating).permit(:user_id, :recipe_id, :rating)

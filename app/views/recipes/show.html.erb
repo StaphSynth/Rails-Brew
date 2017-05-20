@@ -40,6 +40,6 @@
     <%= render 'rating_form', rating: rating, type: :edit %>
   <% else %>
     <h4>Rate this recipe</h4>
-    <%= render 'rating_form', rating: nil, type: :create %>
+    <%= render 'rating_form', rating: :rating, type: :create %>
   <% end %>
 <% end %>
