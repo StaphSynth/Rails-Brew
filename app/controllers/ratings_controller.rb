@@ -15,7 +15,6 @@ class RatingsController < ApplicationController
 
   def update
     @rating = Rating.find_by(:recipe_id => rating_params[:recipe_id], :user_id => rating_params[:user_id])
-    error_messages = ""
 
     if(@rating.update_attributes(rating_params))
       redirect_to @recipe, :notice => 'Your rating has been updated.'
