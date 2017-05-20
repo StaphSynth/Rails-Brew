@@ -1,4 +1,5 @@
 <%= form_for rating, get_options_hash(type, rating) do |f| %>
+
   <%= f.hidden_field :user_id, :value => current_user.id %>
   <%= f.hidden_field :recipe_id, :value => @recipe.id %>
 

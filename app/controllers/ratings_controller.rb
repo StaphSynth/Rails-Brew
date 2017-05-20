@@ -15,11 +15,17 @@ class RatingsController < ApplicationController
 
   def update
     @rating = Rating.find_by(:recipe_id => rating_params[:recipe_id], :user_id => rating_params[:user_id])
+    error_messages = ""
 
     if(@rating.update_attributes(rating_params))
       redirect_to @recipe, :notice => 'Your rating has been updated.'
     else
-      flash.now[:error] = 'Rating failed to update. Please try again later.'
+      if(@rating.errors.any?)
+        @rating.errors.full_messages.each do |message|
+          error_messages += message + ". "
+        end
+      end
+      redirect_to @recipe, :notice => "Rating failed to update. #{error_messages}"
     end
 
   end
