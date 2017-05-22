@@ -4,30 +4,8 @@
 
 <h1>Recipes</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Name</th>
-      <th>Rating</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @recipes.each do |recipe| %>
-      <tr>
-        <td><%= recipe.user.name %></td>
-        <td><%= link_to recipe.name, recipe %></td>
-        <td><%= get_aggregate_rating recipe %></td>
-        <% if current_user == recipe.user %>
-          <td><%= link_to 'Edit', edit_recipe_path(recipe) %></td>
-          <td><%= link_to 'Delete', recipe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Recipe', new_recipe_path if logged_in? %>
+<ul class="recipe-list">
+<% @recipes.each do |recipe| %>
+    <%= render 'recipe', recipe: recipe, mode: :all %>
+<% end %>
+</ul>

@@ -1,3 +1,7 @@
+/********************
+  RECIPE FORM STYLING
+********************/
+
   .malt-input {
     display: flex;
     flex-direction: row;
@@ -14,3 +18,37 @@
     width: 500px;
     height: 200px;
   }
+
+  /*************************
+  RECIPE LIST OBJECT DISPLAY
+  **************************/
+
+  .recipe-list {
+    list-style: none;
+    padding: 0;
+
+    .recipe-list-item {
+      margin: 0.5em 0;
+
+      a {
+        text-decoration: none;
+      }
+    }
+
+    .recipe-color {
+      display: inline-block;
+      height: 50px;
+      width: 30px;
+      border: 3px solid black;
+      background-color: yellow;
+      border-top: 5px solid white;
+      vertical-align: middle;
+      border-radius: 0px 0px 3px 3px;
+      margin-right: 0.5em;
+    }
+
+    h3 {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  } /* end .recipe-list */
