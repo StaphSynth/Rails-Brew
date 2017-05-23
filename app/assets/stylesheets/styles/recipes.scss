@@ -30,25 +30,44 @@
     .recipe-list-item {
       margin: 0.5em 0;
 
-      a {
+      .recipe-link {
         text-decoration: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .recipe-container {
+        display: flex;
+        flex-direction: column;
       }
     }
 
     .recipe-color {
-      display: inline-block;
-      height: 50px;
-      width: 30px;
+      height: 60px;
+      width: 35px;
       border: 3px solid black;
+      /*The bg-color is a place-holder until the code to predict
+      final beer color based on malt EBC is written*/
       background-color: yellow;
       border-top: 5px solid white;
-      vertical-align: middle;
       border-radius: 0px 0px 3px 3px;
-      margin-right: 0.5em;
+      margin-right: 0.75em;
     }
 
-    h3 {
-      display: inline-block;
-      vertical-align: middle;
+    .recipe-title {
+      div {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      h3 {
+        margin: 0;
+      }
+      p {
+        margin: 0;
+        color: black;
+        padding-top: 0.5rem;
+      }
     }
   } /* end .recipe-list */

@@ -6,17 +6,21 @@
 <li class="recipe-list-item">
   <div class="recipe-container">
 
-    <div class="recipe-title">
-      <a href="<%= recipe_path(recipe) %>">
+    <div class="recipe-title-container">
+      <a class="recipe-link" href="<%= recipe_path(recipe) %>">
         <div class="recipe-color"></div>
-        <h3 class="recipe-name"><%= recipe.name %></h3>
+        <div class="recipe-title">
+          <div>
+            <h3 class="recipe-name"><%= recipe.name %></h3>
+            <% if recipe.style %><p class="recipe-style"><%= recipe.style %></p><% end %>
+          </div>
+        </div>
       </a>
     </div>
 
     <div class="recipe-meta">
-      <% if false %><span class="recipe-style"><%= recipe.style %> &nbsp; &bull; &nbsp;</span><% end %>
       <% unless mode == :user_only %>
-        <span class="recipe-author">By: <%= link_to recipe.user.name %> &nbsp; &bull; &nbsp;</span>
+        <span class="recipe-author">By: <%= link_to recipe.user.name %> &bull;</span>
       <% end %>
       <span class="recipe-rating">Rating: <%= get_aggregate_rating recipe %></span>
     </div>
