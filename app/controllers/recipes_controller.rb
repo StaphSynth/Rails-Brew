@@ -20,7 +20,7 @@ class RecipesController < ApplicationController
     if(!logged_in?)
       redirect_to login_url, :notice => "You must be logged in to create new recipes"
     end
-    
+
     @recipe = Recipe.new
     @recipe.malts.build
     @recipe.hops.build
@@ -84,8 +84,9 @@ class RecipesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
-      params.require(:recipe).permit(:user_id, :name, :method, :malts_attributes => [:id, :name, :malt_type, :use, :EBC, :ppg, :quantity, :_destroy],
-                                                               :hops_attributes => [:id, :name, :use, :origin, :aa, :quantity, :_destroy],
-                                                               :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy])
+      params.require(:recipe).permit(:user_id, :name, :method, :style,
+                                    :malts_attributes => [:id, :name, :malt_type, :use, :EBC, :ppg, :quantity, :_destroy],
+                                    :hops_attributes => [:id, :name, :use, :origin, :aa, :quantity, :_destroy],
+                                    :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy])
     end
 end

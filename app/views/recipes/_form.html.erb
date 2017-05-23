@@ -20,6 +20,11 @@
     <%= f.text_field :name %>
   </div>
 
+  <div class="field">
+    <%= f.label :style %>
+    <%= f.text_field :style %>
+  </div>
+
   <h3>Malts</h3>
   <div class="malt-inputs">
     <%= f.fields_for :malts do |malt| %>
