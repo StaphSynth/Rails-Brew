@@ -28,10 +28,14 @@ RECIPE LIST OBJECT DISPLAY
   padding: 0;
 
   .recipe-list-item {
-    margin: 0.5em 0;
+    margin: 1em 0;
 
     .recipe-container {
       display: inline-block;
+      border: solid grey 1px;
+      border-radius: 3px;
+      padding: 1em;
+      width: 330px;
     }
 
     .recipe-link {
