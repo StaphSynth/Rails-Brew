@@ -1,72 +1,72 @@
 /********************
-  RECIPE FORM STYLING
+RECIPE FORM STYLING
 ********************/
 
-  .malt-input {
-    display: flex;
-    flex-direction: row;
-  }
-  .hop-input {
-    display: flex;
-    flex-direction: row;
-  }
-  .yeast-input {
-    display: flex;
-    flex-direction: row;
-  }
-  .method textarea {
-    width: 500px;
-    height: 200px;
-  }
+.malt-input {
+  display: flex;
+  flex-direction: row;
+}
+.hop-input {
+  display: flex;
+  flex-direction: row;
+}
+.yeast-input {
+  display: flex;
+  flex-direction: row;
+}
+.method textarea {
+  width: 500px;
+  height: 200px;
+}
 
-  /*************************
-  RECIPE LIST OBJECT DISPLAY
-  **************************/
+/*************************
+RECIPE LIST OBJECT DISPLAY
+**************************/
 
-  .recipe-list {
-    list-style: none;
-    padding: 0;
+.recipe-list {
+  list-style: none;
+  padding: 0;
 
-    .recipe-list-item {
-      margin: 0.5em 0;
+  .recipe-list-item {
+    margin: 0.5em 0;
 
-      .recipe-container {
-        display: inline-block;
-      }
-
-      .recipe-link {
-        text-decoration: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-bottom: 0.5rem;
-      }
-    } // .recipe-list-item
-
-    .recipe-color {
-      height: 60px;
-      width: 35px;
-      border: 3px solid black;
-      /*The bg-color is a place-holder until the code to predict
-      final beer color based on malt EBC is written*/
-      background-color: yellow;
-      border-top: 5px solid white;
-      border-radius: 0px 0px 3px 3px;
-      margin-right: 0.75em;
+    .recipe-container {
+      display: inline-block;
     }
 
-    .recipe-title {
-      div {
-        display: inline-block;
-        vertical-align: middle;
-      }
-      h3 {
-        margin: 0;
-      }
-      p {
-        margin: 0;
-        color: black;
-        padding-top: 0.5rem;
-      }
+    .recipe-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 0.5rem;
     }
-  } /* end .recipe-list */
+  } // .recipe-list-item
+
+  .recipe-color {
+    height: 60px;
+    width: 35px;
+    border: 3px solid black;
+    /*The bg-color is a place-holder until the code to predict
+    final beer color based on malt EBC is written*/
+    background-color: yellow;
+    border-top: 5px solid white;
+    border-radius: 0px 0px 3px 3px;
+    margin-right: 0.75em;
+  }
+
+  .recipe-title {
+    div {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    h3 {
+      margin: 0;
+    }
+    p {
+      margin: 0;
+      color: black;
+      padding-top: 0.5rem;
+    }
+  }
+} /* end .recipe-list */
