@@ -13,6 +13,10 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
+    #don't add to the view count if user looking at their own recipes
+    if(logged_in? && (@recipe.user != current_user))
+      @recipe.update_attribute(:views, @recipe.views + 1)
+    end
   end
 
   # GET /recipes/new
@@ -84,7 +88,7 @@ class RecipesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
-      params.require(:recipe).permit(:user_id, :name, :method, :style,
+      params.require(:recipe).permit(:user_id, :name, :method, :style, :views,
                                     :malts_attributes => [:id, :name, :malt_type, :use, :EBC, :ppg, :quantity, :_destroy],
                                     :hops_attributes => [:id, :name, :use, :origin, :aa, :quantity, :_destroy],
                                     :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy])

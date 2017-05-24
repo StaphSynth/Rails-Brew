@@ -23,6 +23,7 @@
         <span class="recipe-author">By: <%= link_to recipe.user.name %> &bull;</span>
       <% end %>
       <span class="recipe-rating">Rating: <%= get_aggregate_rating recipe %></span>
+      <span class="recipe-views">Views: <%= recipe.views %></span>
     </div>
 
   </div>
