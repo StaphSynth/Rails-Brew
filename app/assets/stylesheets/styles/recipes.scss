@@ -30,6 +30,10 @@
     .recipe-list-item {
       margin: 0.5em 0;
 
+      .recipe-container {
+        display: inline-block;
+      }
+
       .recipe-link {
         text-decoration: none;
         display: flex;
@@ -37,12 +41,7 @@
         align-items: center;
         margin-bottom: 0.5rem;
       }
-
-      .recipe-container {
-        display: flex;
-        flex-direction: column;
-      }
-    }
+    } // .recipe-list-item
 
     .recipe-color {
       height: 60px;
