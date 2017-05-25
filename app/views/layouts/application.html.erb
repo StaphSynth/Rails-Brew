@@ -43,7 +43,7 @@
                   </li>
                   <li class="dropdown-item divider"></li>
                   <li class="dropdown-item"><%= link_to 'Your Profile', current_user %></li>
-                  <li class="dropdown-item"><a href="#">Settings</a></li>
+                  <li class="dropdown-item"><%= link_to 'Preferences', preferences_url %></li>
                   <li class="dropdown-item divider"></li>
                   <li class="dropdown-item"><%= link_to 'Log Out', logout_url, :method => :delete %></li>
                 </ul>

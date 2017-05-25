@@ -2,6 +2,7 @@ class User < ApplicationRecord
 
   has_many :recipes
   has_many :ratings
+  has_one :user_preference
 
   attr_accessor :remember_token, :activation_token, :reset_token
 

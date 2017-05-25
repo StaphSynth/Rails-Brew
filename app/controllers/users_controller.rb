@@ -31,6 +31,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        UserPreference.create(preference_defaults(@user.id))
         UserMailer.account_activation(@user).deliver_now
         format.html {
                       redirect_to root_url,
@@ -72,6 +73,10 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def preference_defaults(user_id)
+      {:user_id => user_id, :volume => 'L', :temp => 'C', :weight => 'M'}
     end
 
     def logged_in_user
