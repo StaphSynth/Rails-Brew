@@ -2,49 +2,41 @@
 
 <%= form_for current_user.user_preference do |f| %>
 
-  <style>
-    .radio-label {
-      display: inline-block;
-      vertical-align: middle;
-      font-weight: normal;
-    }
-  </style>
-
   <h4>Volume</h4>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :volume, "L" %>
     <%= f.label :volume_l, "Litres", :class => "radio-label" %>
   </div>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :volume, "G" %>
     <%= f.label :volume_g, "US Gallons", :class => "radio-label" %>
   </div>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :volume, "B" %>
     <%= f.label :volume_b, "UK Gallons", :class => "radio-label" %>
   </div>
 
   <h4>Weight</h4>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :weight, "M" %>
     <%= f.label :weight_m, "Metric", :class => "radio-label" %>
   </div>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :weight, "I" %>
     <%= f.label :weight_i, "Imperial", :class => "radio-label" %>
   </div>
 
   <h4>Temperature</h4>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :temp, "C" %>
     <%= f.label :temp_c, "Celcius", :class => "radio-label" %>
   </div>
-  <div class="field form-group">
+  <div class="field form-group radio">
     <%= f.radio_button :temp, "F" %>
     <%= f.label :temp_f, "Fahrenheit", :class => "radio-label" %>
   </div>
 
-  <div class="actions form-group">
+  <div class="actions form-group radio">
     <%= f.submit "Update Settings", :class => 'btn btn-primary' %>
   </div>
 
