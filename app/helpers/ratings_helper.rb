@@ -11,7 +11,7 @@ module RatingsHelper
       ratings.each do |rating|
         rating_sum += rating.rating
       end
-      return rating_sum / ratings.length
+      return "%g" % ("%.2f" % (rating_sum / ratings.length))
     end
   end
 
