@@ -13,9 +13,31 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
-    #don't add to the view count if user looking at their own recipes
+
     if(logged_in? && (@recipe.user != current_user))
+      #don't add to the view count if user looking at their own recipes
       @recipe.update_attribute(:views, @recipe.views + 1)
+
+      #use gon gem to provide parameters for jQ ajax req function
+      if(helpers.rated?(current_user, @recipe))
+        gon.ratingData = {
+          action: "update",
+          rating: {
+            id: Rating.find_by(:recipe_id => @recipe.id, :user_id => current_user.id).id,
+            user_id: current_user.id,
+            recipe_id: @recipe.id
+          }
+        }
+      else  #if not already rated, a rating needs to be created
+        gon.ratingData = {
+          action: "create",
+          rating: {
+            id: nil,
+            user_id: current_user.id,
+            recipe_id: @recipe.id
+          }
+        }
+      end
     end
   end
 

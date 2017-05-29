@@ -17,7 +17,7 @@ module RatingsHelper
 
   #returns the user rating for the passed recipe
   def get_user_rating(user, recipe)
-    return Rating.find_by(:recipe_id => recipe.id, :user_id => user.id)
+    return Rating.find_by(:recipe_id => recipe.id, :user_id => user.id).rating
   end
 
   #returns a boolean denoting if the user has left a rating for the passed recipe

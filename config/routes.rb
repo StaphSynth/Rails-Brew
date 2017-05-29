@@ -5,13 +5,14 @@ Rails.application.routes.draw do
 
   root 'static_pages#home'
 
-  get     '/login',   to: 'sessions#new'
-  post    '/login',   to: 'sessions#create'
-  delete  '/logout',  to: 'sessions#destroy'
-  get     '/signup',  to: 'users#new'
-  get     'home',     to: 'static_pages#home'
-  get     'about',    to: 'static_pages#about'
-  get     '/preferences', to: 'user_preferences#show'
+  get     '/login',          to: 'sessions#new'
+  post    '/login',          to: 'sessions#create'
+  delete  '/logout',         to: 'sessions#destroy'
+  get     '/signup',         to: 'users#new'
+  get     'home',            to: 'static_pages#home'
+  get     'about',           to: 'static_pages#about'
+  get     '/preferences',    to: 'user_preferences#show'
+  post    '/ratings/create', to: 'ratings#create'
 
   resources :account_activations, :only => [:edit]
   resources :password_resets, :only => [:new, :create, :edit, :update]

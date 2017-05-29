@@ -6,38 +6,33 @@ class RatingsController < ApplicationController
   def create
     @rating = Rating.new(rating_params)
 
-    if(@rating.save)
-      redirect_to @recipe, :notice => 'Rating saved!'
-    else
-      redirect_to @recipe, :notice => "Rating failed to save. #{error_handler(@rating)}"
+    respond_to do |format|
+      if(@rating.save)
+        format.json { render :json => json_response }
+      else
+        format.html { redirect_to @recipe, :notice => "Rating failed to save." }
+      end
     end
   end
 
   def update
-    @rating = Rating.find_by(:recipe_id => rating_params[:recipe_id], :user_id => rating_params[:user_id])
+    @rating = Rating.find_by(:id => rating_params[:id])
 
-    if(@rating.update_attributes(rating_params))
-      redirect_to @recipe, :notice => 'Your rating has been updated.'
-    else
-      redirect_to @recipe, :notice => "Rating failed to update. #{error_handler(@rating)}"
+    respond_to do |format|
+      if(@rating.update_attributes(rating_params))
+        format.json { render :json => json_response }
+        # format.html { redirect_to @recipe, notice: 'Rating updated.' }
+      else
+        format.html { redirect_to @recipe, :notice => "Rating failed to update." }
+      end
     end
 
   end
 
   private
 
-    def error_handler(rating)
-      error_messages = ""
-      if(rating.errors.any?)
-        rating.errors.full_messages.each do |message|
-          error_messages += message + ". "
-        end
-      end
-      return error_messages
-    end
-
     def rating_params
-      params.require(:rating).permit(:user_id, :recipe_id, :rating)
+      params.require(:rating).permit(:id, :user_id, :recipe_id, :rating)
     end
 
     def valid_user
@@ -50,6 +45,15 @@ class RatingsController < ApplicationController
 
     def get_recipe
       @recipe = Recipe.find_by(:id => rating_params[:recipe_id])
+    end
+
+    def json_response
+      {
+        aggregateRating: helpers.get_aggregate_rating(@recipe),
+        userRating: @rating.rating,
+        ratingId: @rating.id,
+        notice: 'Rating updated.'
+      }
     end
 
 end
