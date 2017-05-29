@@ -1,6 +1,5 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
-  before_action :set_current_user
 
   # GET /recipes
   # GET /recipes.json
@@ -107,10 +106,6 @@ class RecipesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params[:id])
-    end
-
-    def set_current_user
-      @current_user = current_user if logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
