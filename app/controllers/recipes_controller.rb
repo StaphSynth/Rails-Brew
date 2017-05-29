@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
+  before_action :set_current_user
 
   # GET /recipes
   # GET /recipes.json
@@ -14,17 +15,17 @@ class RecipesController < ApplicationController
   # GET /recipes/1.json
   def show
 
-    if(logged_in? && (@recipe.user != current_user))
+    if(logged_in? && (@recipe.user != @current_user))
       #don't add to the view count if user looking at their own recipes
       @recipe.update_attribute(:views, @recipe.views + 1)
 
       #use gon gem to provide parameters for jQ ajax req function
-      if(helpers.rated?(current_user, @recipe))
+      if(helpers.rated?(@current_user, @recipe))
         gon.ratingData = {
           action: "update",
           rating: {
-            id: Rating.find_by(:recipe_id => @recipe.id, :user_id => current_user.id).id,
-            user_id: current_user.id,
+            id: Rating.find_by(:recipe_id => @recipe.id, :user_id => @current_user.id).id,
+            user_id: @current_user.id,
             recipe_id: @recipe.id
           }
         }
@@ -33,7 +34,7 @@ class RecipesController < ApplicationController
           action: "create",
           rating: {
             id: nil,
-            user_id: current_user.id,
+            user_id: @current_user.id,
             recipe_id: @recipe.id
           }
         }
@@ -57,8 +58,8 @@ class RecipesController < ApplicationController
   def edit
     if(!logged_in?)
       redirect_to login_url, notice: "Login required to complete that action"
-    elsif(current_user != @recipe.user)
-      redirect_to current_user, notice: "You may only edit your own recipes"
+    elsif(@current_user != @recipe.user)
+      redirect_to @current_user, notice: "You may only edit your own recipes"
     end
   end
 
@@ -106,6 +107,10 @@ class RecipesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def set_current_user
+      @current_user = current_user if logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

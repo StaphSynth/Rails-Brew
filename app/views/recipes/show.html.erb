@@ -30,18 +30,18 @@
   <%= @recipe.method %>
 </p>
 
-<%= link_to 'Edit', edit_recipe_path(@recipe) if @recipe.user == current_user %>
+<%= link_to 'Edit', edit_recipe_path(@recipe) if @recipe.user == @current_user %>
 
 <h4>
   <span>Community Rating:</span>
   <span class="aggregate-rating"><%= get_aggregate_rating(@recipe) %><span>
 </h4>
 
-<% if(logged_in? && current_user != @recipe.user) %>
-  <% rated?(current_user, @recipe) ? rating = get_user_rating(current_user, @recipe) : rating = 0 %>
+<% if(logged_in? && @current_user != @recipe.user) %>
+  <% rated?(@current_user, @recipe) ? rating = get_user_rating(@current_user, @recipe) : rating = 0 %>
   <h4>
     <span>Your rating:</span>
-    <span class="user-rating"><%=  rating %></span>
+    <span class="user-rating"><%= rating %></span>
   </h4>
 
   <input id="user-rating"></input>
