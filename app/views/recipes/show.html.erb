@@ -34,7 +34,7 @@
 
 <h4>
   <span>Community Rating:</span>
-  <span class="aggregate-rating"><%= get_aggregate_rating(@recipe) %><span>
+  <span class="aggregate-rating"><%= get_average_rating(@recipe) %><span>
 </h4>
 
 <% if(logged_in? && @current_user != @recipe.user) %>

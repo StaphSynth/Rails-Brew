@@ -1,18 +1,8 @@
 module RatingsHelper
 
-  #returns the aggregate rating of the passed recipe
-  def get_aggregate_rating(recipe)
-    rating_sum = 0
-    ratings = Rating.where(:recipe_id => recipe.id)
-
-    if(ratings.length == 0)
-      return 0
-    else
-      ratings.each do |rating|
-        rating_sum += rating.rating
-      end
-      return "%g" % ("%.2f" % (rating_sum / ratings.length))
-    end
+  #returns the average rating of the passed recipe to 2 decimal places
+  def get_average_rating(recipe)
+    return "%g" % ("%.2f" % (Rating.where(:recipe_id => recipe.id).average(:rating)))
   end
 
   #returns the user rating for the passed recipe

@@ -49,7 +49,7 @@ class RatingsController < ApplicationController
 
     def json_response
       {
-        aggregateRating: helpers.get_aggregate_rating(@recipe),
+        aggregateRating: helpers.get_average_rating(@recipe),
         userRating: @rating.rating,
         ratingId: @rating.id,
         notice: 'Rating updated.'
