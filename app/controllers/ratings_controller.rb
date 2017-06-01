@@ -8,7 +8,7 @@ class RatingsController < ApplicationController
 
     respond_to do |format|
       if(@rating.save)
-        format.json { render :json => json_response('Rating saved!') }
+        format.json { render :json => json_response('Your rating has been added.') }
       else
         format.json { render :json => json_response('Rating failed to save. Please try again later.') }
       end
@@ -20,7 +20,7 @@ class RatingsController < ApplicationController
 
     respond_to do |format|
       if(@rating.update_attributes(rating_params))
-        format.json { render :json => json_response('Rating updated!') }
+        format.json { render :json => json_response('Your rating has been updated.') }
       else
         format.html { render :json => json_response('Rating failed to update. Please try again later.') }
       end
