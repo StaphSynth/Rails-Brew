@@ -1,10 +1,16 @@
 <% provide :title, @recipe.name %>
 
 <div class="header">
-  <h2><%= @recipe.name %></h2>
+  <h2>
+    <%= @recipe.name %>
+    <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' if @recipe.user == @current_user %>
+  </h2>
   <h4><%= @recipe.style %></h4>
 
-  <p>By <%= link_to @recipe.user.name, @recipe.user %></p>
+  <div>
+    <span>By <%= link_to @recipe.user.name, @recipe.user %></span>
+    <span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
+  </div>
 </div>
 
 <div>
@@ -22,22 +28,9 @@
       <tr><td><%= yeast.name %></td></tr>
     <% end %>
   </table>
-
 </div>
 
 <p>
   <strong>Method:</strong>
   <%= @recipe.method %>
 </p>
-
-<%= link_to 'Edit', edit_recipe_path(@recipe) if @recipe.user == @current_user %>
-
-<span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
-
-<% if(logged_in? && @current_user != @recipe.user) %>
-  <% rated?(@current_user, @recipe) ? rating = get_user_rating(@current_user, @recipe) : rating = 0 %>
-  <h4>
-    <span>Your rating:</span>
-    <span class="user-rating"><%= rating %></span>
-  </h4>
-<% end %>
