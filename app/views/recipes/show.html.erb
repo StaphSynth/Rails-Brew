@@ -32,10 +32,7 @@
 
 <%= link_to 'Edit', edit_recipe_path(@recipe) if @recipe.user == @current_user %>
 
-<h4>
-  <span>Community Rating:</span>
-  <span class="average-rating"><%= get_average_rating(@recipe) %><span>
-</h4>
+<span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
 
 <% if(logged_in? && @current_user != @recipe.user) %>
   <% rated?(@current_user, @recipe) ? rating = get_user_rating(@current_user, @recipe) : rating = 0 %>
@@ -43,7 +40,4 @@
     <span>Your rating:</span>
     <span class="user-rating"><%= rating %></span>
   </h4>
-
-  <input id="user-rating"></input>
-  <button class="rating-btn btn btn-primary" type="button">Update Rating</button>
 <% end %>

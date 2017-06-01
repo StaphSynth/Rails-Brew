@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
+  before_action :set_current_user, only: [:show, :edit, :update, :destroy]
 
   # GET /recipes
   # GET /recipes.json
@@ -8,6 +9,11 @@ class RecipesController < ApplicationController
         # current_user.recipes
         # Recipe.predefined ?
     @recipes = Recipe.all
+
+    #set the star ratings to display only for recipe index
+    gon.ratingData = {
+      dispOnly: true
+    }
   end
 
   # GET /recipes/1
@@ -21,6 +27,7 @@ class RecipesController < ApplicationController
       #use gon gem to provide parameters for jQ ajax req function
       if(helpers.rated?(@current_user, @recipe))
         gon.ratingData = {
+          dispOnly: false,
           action: "update",
           rating: {
             id: Rating.find_by(:recipe_id => @recipe.id, :user_id => @current_user.id).id,
@@ -30,6 +37,7 @@ class RecipesController < ApplicationController
         }
       else  #if not already rated, a rating needs to be created
         gon.ratingData = {
+          dispOnly: false,
           action: "create",
           rating: {
             id: nil,
@@ -38,6 +46,13 @@ class RecipesController < ApplicationController
           }
         }
       end
+    else #if not logged in or recipe owner, set ratings to display only
+      puts "****** SET DISP ONLY TO TRUE"
+      puts "****** CURRENT_USER: #{@current_user.name}"
+      puts "****** RECIPE AUTHOR: #{@recipe.user.name}"
+      gon.ratingData = {
+        dispOnly: true
+      }
     end
   end
 
@@ -106,6 +121,10 @@ class RecipesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def set_current_user
+      @current_user = current_user if logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
