@@ -2,7 +2,12 @@ module RatingsHelper
 
   #returns the average rating of the passed recipe to 2 decimal places
   def get_average_rating(recipe)
-    return "%g" % ("%.2f" % (Rating.where(:recipe_id => recipe.id).average(:rating)))
+    average_rating = Rating.where(:recipe_id => recipe.id).average(:rating)
+    if(average_rating)
+      return "%g" % ("%.2f" % (average_rating))
+    else
+      return 0
+    end
   end
 
   #returns the user rating for the passed recipe
