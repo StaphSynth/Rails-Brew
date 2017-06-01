@@ -47,9 +47,6 @@ class RecipesController < ApplicationController
         }
       end
     else #if not logged in or recipe owner, set ratings to display only
-      puts "****** SET DISP ONLY TO TRUE"
-      puts "****** CURRENT_USER: #{@current_user.name}"
-      puts "****** RECIPE AUTHOR: #{@recipe.user.name}"
       gon.ratingData = {
         dispOnly: true
       }
