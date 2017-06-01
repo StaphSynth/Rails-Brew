@@ -8,9 +8,9 @@ class RatingsController < ApplicationController
 
     respond_to do |format|
       if(@rating.save)
-        format.json { render :json => json_response }
+        format.json { render :json => json_response('Rating saved!') }
       else
-        format.html { redirect_to @recipe, :notice => "Rating failed to save." }
+        format.json { render :json => json_response('Rating failed to save. Please try again later.') }
       end
     end
   end
@@ -20,10 +20,9 @@ class RatingsController < ApplicationController
 
     respond_to do |format|
       if(@rating.update_attributes(rating_params))
-        format.json { render :json => json_response }
-        # format.html { redirect_to @recipe, notice: 'Rating updated.' }
+        format.json { render :json => json_response('Rating updated!') }
       else
-        format.html { redirect_to @recipe, :notice => "Rating failed to update." }
+        format.html { render :json => json_response('Rating failed to update. Please try again later.') }
       end
     end
 
@@ -47,12 +46,12 @@ class RatingsController < ApplicationController
       @recipe = Recipe.find_by(:id => rating_params[:recipe_id])
     end
 
-    def json_response
+    def json_response(message)
       {
         aggregateRating: helpers.get_average_rating(@recipe),
         userRating: @rating.rating,
         ratingId: @rating.id,
-        notice: 'Rating updated.'
+        notice: message
       }
     end
 

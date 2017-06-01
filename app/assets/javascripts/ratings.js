@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
 });
 
 function setRatingAjax(value) {
-  if(value === undefined)
+  if(value === undefined || value < 0 || value > 5)
     return;
 
   gon.ratingData.rating.rating = value;
@@ -20,6 +20,10 @@ function setRatingAjax(value) {
         url: '/ratings/' + gon.ratingData.rating.id.toString(),
         success: function(response) {
           updateRatingData(response);
+          message(response);
+        },
+        error: function(response) {
+          message(response);
         }
       }
     );
@@ -33,6 +37,10 @@ function setRatingAjax(value) {
         success: function(response) {
           updateRatingData(response);
           updateGonData(response);
+          message(response);
+        },
+        error: function(response) {
+          message(response);
         }
       }
     );
@@ -40,11 +48,15 @@ function setRatingAjax(value) {
 }
 
 function updateRatingData(data) {
-  $('.aggregate-rating').html(data.aggregateRating);
   $('.user-rating').html(data.userRating);
 }
 
 function updateGonData(data) {
   gon.ratingData.action = 'update';
   gon.ratingData.rating.id = data.ratingId;
+}
+
+function message(data) {
+  var msg = $('.ajax-msg').html(data.notice);
+  msg.css('display', 'block');
 }
