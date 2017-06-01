@@ -58,8 +58,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         if(!dispOnly) {
           attachStarEvents(star);
           star.setAttribute('style', '.c-rating__item:hover { background-position: -24px 0; }');
-          star.setAttribute('style', '.c-rating__item { cursor: pointer; }');
-        } 
+          star.setAttribute('style', 'cursor: pointer;');
+        }
       }
     })();
 
