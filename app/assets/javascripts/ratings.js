@@ -1,5 +1,9 @@
 $(document).on('turbolinks:load', function() {
 
+  //remove any existing star rating items to prevent duplication
+  $('.c-rating__item').remove();
+
+  //instantiate star ratings for each recipe on a page (recipe mark up has <ul class="c-rating">)
   $('.c-rating').each(function() {
     rating(this, parseInt($(this).attr('data-rating')), 5, gon.ratingData.dispOnly, setRatingAjax);
   });
