@@ -7,6 +7,6 @@
     <% unless user.location.nil? || user.location.empty? %>
       <p><%= user.location %></p>
     <% end %>
-    <p><%= user.recipes.length %> Recipes</p>
+    <p><%= pluralize(user.recipes.length, 'Recipe') %></p>
   </div>
 </div>

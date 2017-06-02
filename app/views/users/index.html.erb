@@ -4,6 +4,6 @@
 
 <ul class="user-index">
   <% @users.each do |user| %>
-    <li><%= render 'user', { user: user, size: 'large', link: true } %></li>
+    <li><%= render 'user', { user: user, size: :large, link: true } %></li>
   <% end %>
 </ul>
