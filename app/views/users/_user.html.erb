@@ -3,7 +3,7 @@
     <%= get_gravatar user, size %>
   </div>
   <div class="user-details-container">
-    <h3><%= link ? link_to(user.name, user) : user.name %></h3>
+    <h3><%= link_to(user.name, user) %></h3>
     <% unless user.location.nil? || user.location.empty? %>
       <p><%= user.location %></p>
     <% end %>
