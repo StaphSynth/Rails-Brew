@@ -8,7 +8,7 @@ class RecipesController < ApplicationController
         #for when logins are req'd:
         # current_user.recipes
         # Recipe.predefined ?
-    @recipes = Recipe.all
+    @recipes = Recipe.paginate(page: params[:page])
 
     #set the star ratings to display only for recipe index
     gon.ratingData = {

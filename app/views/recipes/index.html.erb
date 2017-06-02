@@ -4,8 +4,12 @@
 
 <h1>Recipes</h1>
 
+<%= will_paginate %>
+
 <ul class="recipe-list">
 <% @recipes.each do |recipe| %>
     <%= render 'recipe', recipe: recipe, mode: :all %>
 <% end %>
 </ul>
+
+<%= will_paginate %>
