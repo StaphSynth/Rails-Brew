@@ -20,9 +20,9 @@
 
     <div class="recipe-meta">
       <% unless mode == :user_only %>
-        <span class="recipe-author">By: <%= link_to recipe.user.name %> &bull;</span>
+        <span class="recipe-author"><%= fa_icon 'user' %> <%= link_to recipe.user.name %>&#8195;</span>
       <% end %>
-      <span class="recipe-views">Views: <%= recipe.views %></span>
+      <span class="recipe-views"><%= fa_icon 'eye' %> <%= recipe.views %>&#8195;</span>
       <span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating recipe %>"></ul></span>
     </div>
 

@@ -8,7 +8,7 @@
   <h4><%= @recipe.style %></h4>
 
   <div>
-    <span>By <%= link_to @recipe.user.name, @recipe.user %></span>
+    <span><%= fa_icon 'user' %> <%= link_to @recipe.user.name %>&#8195;</span>
     <span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
   </div>
 </div>
