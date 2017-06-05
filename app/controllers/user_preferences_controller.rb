@@ -1,7 +1,7 @@
 class UserPreferencesController < ApplicationController
 
   before_action :get_user
-  before_action :set_preferences, only: [:show, :edit, :update, :destroy]
+  before_action :set_preferences, only: :update
 
   def update
     if(@user_preference.update_attributes(user_preference_params))
