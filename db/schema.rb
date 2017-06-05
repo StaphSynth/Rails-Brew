@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170605041044) do
+ActiveRecord::Schema.define(version: 20170605042716) do
 
   create_table "hops", force: :cascade do |t|
     t.integer  "recipe_id"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20170605041044) do
     t.index ["user_id", "recipe_id"], name: "index_ratings_on_user_id_and_recipe_id", unique: true
   end
 
-  create_table "recipe_ingredients_tables", force: :cascade do |t|
+  create_table "recipe_ingredients", force: :cascade do |t|
     t.integer "recipe_id",  null: false
     t.string  "ingredient", null: false
     t.float   "quantity",   null: false
