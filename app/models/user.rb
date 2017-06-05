@@ -1,8 +1,8 @@
 class User < ApplicationRecord
 
-  has_many :recipes
-  has_many :ratings
-  has_one :user_preference
+  has_many :recipes, dependent: :destroy
+  has_many :ratings, dependent: :destroy
+  has_one :user_preference, dependent: :destroy
 
   attr_accessor :remember_token, :activation_token, :reset_token
 
