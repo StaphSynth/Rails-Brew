@@ -63,6 +63,7 @@ class RecipesController < ApplicationController
     @recipe.malts.build
     @recipe.hops.build
     @recipe.yeasts.build
+    @recipe.recipe_ingredients.build
   end
 
   # GET /recipes/1/edit
@@ -129,6 +130,7 @@ class RecipesController < ApplicationController
       params.require(:recipe).permit(:user_id, :name, :method, :style, :views,
                                     :malts_attributes => [:id, :name, :malt_type, :use, :EBC, :ppg, :quantity, :_destroy],
                                     :hops_attributes => [:id, :name, :use, :origin, :aa, :quantity, :_destroy],
-                                    :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy])
+                                    :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy],
+                                    :recipe_ingredients_attributes => [:id, :ingredient, :quantity, :ingredient_type, :_destroy])
     end
 end

@@ -1,7 +1,23 @@
 module IngredientsHelper
 
-  #system default ingredients are stored here as a hash
+  #generates options array from the ingredients hash for <select> tags in forms
+  #pass it a symbol for the ingredient type (either :malts, :hops, or :yeasts)
+  def options_generator(ingredient_type)
+    return if ingredients[ingredient_type] == nil
 
+    options = Array.new
+
+    ingredients[ingredient_type].each do |key, value|
+      option = Array.new.tap do |option|
+        option.push value[:name]
+        option.push key
+      end
+      options.push option
+    end
+    return options
+  end
+
+  #system default ingredients are stored here as a hash
   def ingredients
     {
       malts: { #colour vals in SRM

@@ -25,7 +25,7 @@
     <%= f.text_field :style %>
   </div>
 
-  <h3>Malts</h3>
+  <!-- <h3>Malts</h3>
   <div class="malt-inputs">
     <%= f.fields_for :malts do |malt| %>
       <div class="malt-input">
@@ -147,7 +147,48 @@
       </div>
     <% end %>
   </div>
-  <button type="button" class="add-ingredient-btn btn" data-type="yeast">+</button>
+  <button type="button" class="add-ingredient-btn btn" data-type="yeast">+</button> -->
+
+  <div class="malt-inputs">
+    <%= f.fields_for :recipe_ingredients do |ri| %>
+      <div class="field">
+        <%= ri.label :ingredient, :value => "Malts and sugars" %>
+        <%= ri.select :ingredient, options_for_select(options_generator(:malts)) %>
+      </div>
+
+      <div class="field">
+        <%= ri.label :quantity %>
+        <%= ri.text_field :quantity %>g
+      </div>
+      <%= ri.hidden_field :ingredient_type, :value => "malts" %>
+    <% end %>
+  </div>
+
+  <div class="hops-inputs">
+    <%= f.fields_for :recipe_ingredients do |ri| %>
+      <div class="field">
+        <%= ri.label :ingredient, :value => "Hops" %>
+        <%= ri.select :ingredient, options_for_select(options_generator(:hops)) %>
+      </div>
+
+      <div class="field">
+        <%= ri.label :quantity %>
+        <%= ri.text_field :quantity %>g
+      </div>
+      <%= ri.hidden_field :ingredient_type, :value => "hops" %>
+    <% end %>
+  </div>
+
+  <div class="yeast-inputs">
+    <%= f.fields_for :recipe_ingredients do |ri| %>
+      <div class="field">
+        <%= ri.label :ingredient, :value => "Yeast" %>
+        <%= ri.select :ingredient, options_for_select(options_generator(:yeasts)) %>
+      </div>
+      <%= ri.hidden_field :ingredient_type, :value => "yeasts" %>
+      <%= ri.hidden_field :quantity, :value => 1 %>
+    <% end %>
+  </div>
 
   <div class="method field">
     <%= f.label :method %>
