@@ -19,6 +19,9 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
+    @malts = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "malts")
+    @hops = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "hops")
+    @yeasts = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "yeasts")
 
     if(logged_in? && (@recipe.user != @current_user))
       #don't add to the view count if user looking at their own recipes
