@@ -5,7 +5,7 @@
     <%= @recipe.name %>
     <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' if @recipe.user == @current_user %>
   </h2>
-  <h4><%= get_style(@recipe.style)['name'] %></h4>
+  <h4><%= get_style(@recipe.style).name %></h4>
 
   <div>
     <span><%= fa_icon 'user' %> <%= link_to @recipe.user.name, @recipe.user %>&#8195;</span>
