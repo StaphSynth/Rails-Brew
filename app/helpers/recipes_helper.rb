@@ -19,4 +19,9 @@ module RecipesHelper
     return options
   end
 
+  #returns a hash containing style data when passed a BJCP subcategory id as a string
+  def get_style(id)
+    get_styles[id]
+  end
+
 end
