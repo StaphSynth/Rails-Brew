@@ -16,16 +16,16 @@
 <div>
   <table>
     <tr><td><h3>Malt</h3></td></tr>
-    <% @malts.each do |malt| %>
-      <tr><td><%= ingredients[:malts][malt.ingredient.to_sym][:name] %></td><td><%= malt.quantity %></td></tr>
+    <% @recipe.recipe_malts.each do |malt| %>
+      <tr><td><%= ingredients[:malts][malt.malt.to_sym][:name] %></td><td><%= malt.quantity %></td></tr>
     <% end %>
     <tr><td><h3>Hops</h3></td></tr>
-    <% @hops.each do |hop| %>
-      <tr><td><%= ingredients[:hops][hop.ingredient.to_sym][:name] %></td><td><%= hop.quantity %></td></tr>
+    <% @recipe.recipe_hops.each do |hop| %>
+      <tr><td><%= ingredients[:hops][hop.hop.to_sym][:name] %></td><td><%= hop.quantity %></td></tr>
     <% end %>
     <tr><td><h3>Yeast</h3></td></tr>
-    <% @yeasts.each do |yeast| %>
-      <tr><td><%= ingredients[:yeasts][yeast.ingredient.to_sym][:name] %></td></tr>
+    <% @recipe.recipe_yeasts.each do |yeast| %>
+      <tr><td><%= ingredients[:yeasts][yeast.yeast.to_sym][:name] %></td></tr>
     <% end %>
   </table>
 </div>

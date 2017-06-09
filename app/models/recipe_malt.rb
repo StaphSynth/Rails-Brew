@@ -1,5 +1,7 @@
-class Malt < ApplicationRecord
+class RecipeMalt < ApplicationRecord
   belongs_to :recipe
+
+  validates :quantity, presence: true, :numericality => {:greater_than => 0}
 
   def partial
     return :malt

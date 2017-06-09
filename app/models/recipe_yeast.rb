@@ -1,4 +1,4 @@
-class Yeast < ApplicationRecord
+class RecipeYeast < ApplicationRecord
   belongs_to :recipe
 
   def partial

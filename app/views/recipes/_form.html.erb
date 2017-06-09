@@ -25,38 +25,18 @@
     <%= f.text_field :style %>
   </div>
 
-  <!-- <h3>Malts</h3>
+  <h3>Malts</h3>
   <div class="malt-inputs">
-    <%= f.fields_for :malts do |malt| %>
+    <%= f.fields_for :recipe_malts do |malt| %>
       <div class="malt-input">
         <div class="field">
-          <%= malt.label :name %>
-          <%= malt.text_field :name %>
-        </div>
-
-        <div class="field">
-          <%= malt.label :malt_type %>
-          <%= malt.select(:malt_type, maltType) %>
-        </div>
-
-        <div class="field">
-          <%= malt.label :use %>
-          <%= malt.select(:use, maltUse) %>
-        </div>
-
-        <div class="field">
-          <%= malt.label :EBC %>
-          <%= malt.text_field :EBC %>
-        </div>
-
-        <div class="field">
-          <%= malt.label :ppg %>
-          <%= malt.text_field :ppg %>
+          <%= malt.label :malt, :value => "Malts and sugars" %>
+          <%= malt.select :malt, options_for_select(options_generator(:malts)) %>
         </div>
 
         <div class="field">
           <%= malt.label :quantity %>
-          <%= malt.text_field :quantity %>
+          <%= malt.text_field :quantity %>g
         </div>
 
         <div class="field">
@@ -74,32 +54,18 @@
 
   <h3>Hops</h3>
   <div class="hop-inputs">
-    <%= f.fields_for :hops do |hop| %>
+    <%= f.fields_for :recipe_hops do |hop| %>
       <div class="hop-input">
-        <div class="field">
-          <%= hop.label :name %>
-          <%= hop.text_field :name %>
-        </div>
 
-        <div class="field">
-          <%= hop.label :use %>
-          <%= hop.select :use, hopUse %>
-        </div>
+            <div class="field">
+              <%= hop.label :hop, :value => "Hops" %>
+              <%= hop.select :hop, options_for_select(options_generator(:hops)) %>
+            </div>
 
-        <div class="field">
-          <%= hop.label :origin %>
-          <%= hop.text_field :origin %>
-        </div>
-
-        <div class="field">
-          <%= hop.label :aa %>
-          <%= hop.text_field :aa %>
-        </div>
-
-        <div class="field">
-          <%= hop.label :quantity %>
-          <%= hop.text_field :quantity %>
-        </div>
+            <div class="field">
+              <%= hop.label :quantity %>
+              <%= hop.text_field :quantity %>g
+            </div>
 
         <div class="field">
           <%= hop.hidden_field :_destroy, :value => false, :class => 'destroy' %>
@@ -117,22 +83,12 @@
 
   <h3>Yeast</h3>
   <div class="yeast-inputs">
-    <%= f.fields_for :yeasts do |yeast| %>
+    <%= f.fields_for :recipe_yeasts do |yeast| %>
       <div class="yeast-input">
 
         <div class="field">
-          <%= yeast.label :name %>
-          <%= yeast.text_field :name %>
-        </div>
-
-        <div class="field">
-          <%= yeast.label :fermentation_type %>
-          <%= yeast.select :fermentation_type, yeastType %>
-        </div>
-
-        <div class="field">
-          <%= yeast.label :temp_range %>
-          <%= yeast.text_field :temp_range %>
+          <%= yeast.label :yeast, :value => "Yeast" %>
+          <%= yeast.select :yeast, options_for_select(options_generator(:yeasts)) %>
         </div>
 
         <div class="field">
@@ -147,48 +103,7 @@
       </div>
     <% end %>
   </div>
-  <button type="button" class="add-ingredient-btn btn" data-type="yeast">+</button> -->
-
-  <div class="malt-inputs">
-    <%= f.fields_for :recipe_ingredients do |ri| %>
-      <div class="field">
-        <%= ri.label :ingredient, :value => "Malts and sugars" %>
-        <%= ri.select :ingredient, options_for_select(options_generator(:malts)) %>
-      </div>
-
-      <div class="field">
-        <%= ri.label :quantity %>
-        <%= ri.text_field :quantity %>g
-      </div>
-      <%= ri.hidden_field :ingredient_type, :value => "malts" %>
-    <% end %>
-  </div>
-
-  <div class="hops-inputs">
-    <%= f.fields_for :recipe_ingredients do |ri| %>
-      <div class="field">
-        <%= ri.label :ingredient, :value => "Hops" %>
-        <%= ri.select :ingredient, options_for_select(options_generator(:hops)) %>
-      </div>
-
-      <div class="field">
-        <%= ri.label :quantity %>
-        <%= ri.text_field :quantity %>g
-      </div>
-      <%= ri.hidden_field :ingredient_type, :value => "hops" %>
-    <% end %>
-  </div>
-
-  <div class="yeast-inputs">
-    <%= f.fields_for :recipe_ingredients do |ri| %>
-      <div class="field">
-        <%= ri.label :ingredient, :value => "Yeast" %>
-        <%= ri.select :ingredient, options_for_select(options_generator(:yeasts)) %>
-      </div>
-      <%= ri.hidden_field :ingredient_type, :value => "yeasts" %>
-      <%= ri.hidden_field :quantity, :value => 1 %>
-    <% end %>
-  </div>
+  <button type="button" class="add-ingredient-btn btn" data-type="yeast">+</button>
 
   <div class="method field">
     <%= f.label :method %>

@@ -10,32 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170608051055) do
-
-  create_table "hops", force: :cascade do |t|
-    t.integer  "recipe_id"
-    t.string   "use"
-    t.string   "origin"
-    t.float    "aa"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "name"
-    t.decimal  "quantity"
-  end
-
-  create_table "malts", force: :cascade do |t|
-    t.integer  "recipe_id"
-    t.string   "malt_type"
-    t.string   "use"
-    t.float    "EBC"
-    t.float    "ppg"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "name"
-    t.decimal  "quantity"
-  end
+ActiveRecord::Schema.define(version: 20170609001320) do
 
   create_table "ratings", force: :cascade do |t|
     t.integer "recipe_id"
@@ -44,11 +19,26 @@ ActiveRecord::Schema.define(version: 20170608051055) do
     t.index ["user_id", "recipe_id"], name: "index_ratings_on_user_id_and_recipe_id", unique: true
   end
 
-  create_table "recipe_ingredients", force: :cascade do |t|
-    t.integer "recipe_id",       null: false
-    t.string  "ingredient",      null: false
-    t.float   "quantity",        null: false
-    t.string  "ingredient_type", null: false
+  create_table "recipe_adjuncts", force: :cascade do |t|
+    t.integer "recipe_id"
+    t.string  "adjunct"
+  end
+
+  create_table "recipe_hops", force: :cascade do |t|
+    t.integer "recipe_id"
+    t.string  "hop"
+    t.float   "quantity"
+  end
+
+  create_table "recipe_malts", force: :cascade do |t|
+    t.integer "recipe_id"
+    t.string  "malt"
+    t.float   "quantity"
+  end
+
+  create_table "recipe_yeasts", force: :cascade do |t|
+    t.integer "recipe_id"
+    t.string  "yeast"
   end
 
   create_table "recipes", force: :cascade do |t|
@@ -95,16 +85,6 @@ ActiveRecord::Schema.define(version: 20170608051055) do
     t.datetime "reset_sent_at"
     t.boolean  "admin",             default: false
     t.index ["email"], name: "index_users_on_email", unique: true
-  end
-
-  create_table "yeasts", force: :cascade do |t|
-    t.integer  "recipe_id"
-    t.string   "fermentation_type"
-    t.string   "temp_range"
-    t.text     "description"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.string   "name"
   end
 
 end

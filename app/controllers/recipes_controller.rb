@@ -19,9 +19,6 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   # GET /recipes/1.json
   def show
-    @malts = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "malts")
-    @hops = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "hops")
-    @yeasts = RecipeIngredient.where(:recipe_id => @recipe.id, :ingredient_type => "yeasts")
 
     if(logged_in? && (@recipe.user != @current_user))
       #don't add to the view count if user looking at their own recipes
@@ -63,10 +60,9 @@ class RecipesController < ApplicationController
     end
 
     @recipe = Recipe.new
-    @recipe.malts.build
-    @recipe.hops.build
-    @recipe.yeasts.build
-    @recipe.recipe_ingredients.build
+    @recipe.recipe_malts.build
+    @recipe.recipe_hops.build
+    @recipe.recipe_yeasts.build
   end
 
   # GET /recipes/1/edit
@@ -131,9 +127,8 @@ class RecipesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
       params.require(:recipe).permit(:user_id, :name, :method, :style, :views,
-                                    :malts_attributes => [:id, :name, :malt_type, :use, :EBC, :ppg, :quantity, :_destroy],
-                                    :hops_attributes => [:id, :name, :use, :origin, :aa, :quantity, :_destroy],
-                                    :yeasts_attributes => [:id, :name, :fermentation_type, :temp_range, :_destroy],
-                                    :recipe_ingredients_attributes => [:id, :ingredient, :quantity, :ingredient_type, :_destroy])
+                                    :recipe_malts_attributes => [:id, :malt, :quantity, :_destroy],
+                                    :recipe_hops_attributes => [:id, :hop, :quantity, :_destroy],
+                                    :recipe_yeasts_attributes => [:id, :yeast, :_destroy])
     end
 end
