@@ -22,7 +22,7 @@
 
   <div class="field">
     <%= f.label :style %>
-    <%= f.text_field :style %>
+    <%= f.select :style, options_for_select(generate_style_options) %>
   </div>
 
   <h3>Malts</h3>
