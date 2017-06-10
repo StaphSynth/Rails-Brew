@@ -22,7 +22,13 @@
 
   <div class="field">
     <%= f.label :style %>
-    <%= f.select :style, options_for_select(generate_style_options, :selected => recipe.style), prompt: 'Select a style' %>
+    <%= f.select :style, options_for_select(generate_style_options, selected: recipe.style), prompt: 'Select a style' %>
+  </div>
+
+  <div class="style-display">
+    <span>OG: </span><span class="min-og"></span> - <span class="max-og"></span>
+    <span>FG: </span><span class="min-fg"></span> - <span class="max-fg"></span>
+    <span>IBUs: </span><span class="min-ibus"></span> - <span class="max-ibus"></span>
   </div>
 
   <h3>Malts</h3>

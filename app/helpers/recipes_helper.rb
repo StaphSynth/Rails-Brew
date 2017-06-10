@@ -19,9 +19,17 @@ module RecipesHelper
     return options
   end
 
-  #returns an containing style data-accessing methods when passed a BJCP subcategory id as a string
-  def get_style(id)
-    return OpenStruct.new(get_styles[id])
+  #returns an object containing style data-accessing methods when passed a BJCP subcategory id as a string
+  #accepts a type symbol (default :ruby). Returns the style info as a ruby object by default, pass :json
+  #for a json response
+  def get_style(id, response = :ruby)
+    if(response == :ruby)
+      return OpenStruct.new(get_styles[id])
+    elsif(response == :json)
+      return get_styles[id]
+    else
+      return false
+    end
   end
 
 end

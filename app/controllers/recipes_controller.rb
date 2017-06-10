@@ -53,6 +53,15 @@ class RecipesController < ApplicationController
     end
   end
 
+  #deals with AJAX req for style properties to display once a style has been selected
+  def styles
+
+    puts params[:style_id]
+    respond_to do |format|
+      format.json{ render :json => helpers.get_style(params[:style_id], :json) }
+    end
+  end
+
   # GET /recipes/new
   def new
     if(!logged_in?)
@@ -126,7 +135,7 @@ class RecipesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
-      params.require(:recipe).permit(:user_id, :name, :method, :style, :views,
+      params.require(:recipe).permit(:user_id, :name, :method, :style, :views, :style_id,
                                     :recipe_malts_attributes => [:id, :malt, :quantity, :_destroy],
                                     :recipe_hops_attributes => [:id, :hop, :quantity, :_destroy],
                                     :recipe_yeasts_attributes => [:id, :yeast, :_destroy])

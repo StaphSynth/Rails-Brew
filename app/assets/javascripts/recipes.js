@@ -9,6 +9,15 @@ function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   $(elem).attr(attr, newAttr);
 }
 
+function updateStyleProperties(data){
+  $('.min-og').html(data.stats.og.low);
+  $('.max-og').html(data.stats.og.high);
+  $('.min-ibus').html(data.stats.ibu.low);
+  $('.max-ibus').html(data.stats.ibu.high);
+  $('.min-fg').html(data.stats.fg.low);
+  $('.max-fg').html(data.stats.fg.high);
+}
+
 $(document).on('turbolinks:load', function() {
 
   $('.add-ingredient-btn').click(function() {
@@ -40,4 +49,30 @@ $(document).on('turbolinks:load', function() {
 
     $($itemToRemove).slideUp('fast');
   });
+
+
+  /* Recipe style AJAX */
+  //ajax req for recipe style paramaters upon user selection of recipe style
+  $('select#recipe_style').change(function(){
+    var value = $(this).val();
+
+    if(value != 'Select a style') {
+      console.log('on change AJAX callback!');
+      $.ajax(
+        {
+          type: 'GET',
+          data: {style_id: value},
+          url: '/recipes/styles',
+          success: function(response) {
+            updateStyleProperties(response);
+          },
+          error: function(response) {
+            message(response);
+          }
+        }
+      );
+    }
+
+  });
+
 });
