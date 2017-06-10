@@ -55,8 +55,6 @@ class RecipesController < ApplicationController
 
   #deals with AJAX req for style properties to display once a style has been selected
   def styles
-
-    puts params[:style_id]
     respond_to do |format|
       format.json{ render :json => helpers.get_style(params[:style_id], :json) }
     end

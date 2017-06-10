@@ -9,7 +9,7 @@ function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   $(elem).attr(attr, newAttr);
 }
 
-function updateStyleProperties(data){
+function updateStyleProperties(data) {
   $('.min-og').html(data.stats.og.low);
   $('.max-og').html(data.stats.og.high);
   $('.min-ibus').html(data.stats.ibu.low);
@@ -52,12 +52,13 @@ $(document).on('turbolinks:load', function() {
 
 
   /* Recipe style AJAX */
-  //ajax req for recipe style paramaters upon user selection of recipe style
-  $('select#recipe_style').change(function(){
+  //ajax req for recipe style parameters upon user selection of recipe style
+  $('select#recipe_style').change(function() {
     var value = $(this).val();
 
-    if(value != 'Select a style') {
-      console.log('on change AJAX callback!');
+    if(value == '') { //if value is empty, user has selected the prompt
+      $('.style-display').hide();
+    } else {
       $.ajax(
         {
           type: 'GET',
@@ -65,14 +66,16 @@ $(document).on('turbolinks:load', function() {
           url: '/recipes/styles',
           success: function(response) {
             updateStyleProperties(response);
+            $('.style-display').show();
           },
           error: function(response) {
-            message(response);
+            console.log('AJAX error retrieving recipe style params\nStatus: ', response.status);
+            console.log(response);
+            $('.style-display').hide();
           }
         }
       );
     }
-
   });
 
-});
+}); //document load
