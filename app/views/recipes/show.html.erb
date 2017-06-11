@@ -5,7 +5,16 @@
     <%= @recipe.name %>
     <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' if @recipe.user == @current_user %>
   </h2>
-  <h4><%= get_style(@recipe.style).name %></h4>
+  <h4 class="recipe-style" data-style-id="<%= @recipe.style %>">
+    <%= get_style(@recipe.style).name %>
+    <%= fa_icon 'info-circle', class: 'get-style-info' %>
+  </h4>
+
+  <div class="style-info-container" style="display: none;">
+    <p><strong>Appearance:</strong> <span class="style-appearance"></span></p>
+    <p><strong>Aroma:</strong> <span class="style-aroma"></span></p>
+    <p><strong>Flavor:</strong> <span class="style-flavor"></span></p>
+  </div>
 
   <div>
     <span><%= fa_icon 'user' %> <%= link_to @recipe.user.name, @recipe.user %>&#8195;</span>

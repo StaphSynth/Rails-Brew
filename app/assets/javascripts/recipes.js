@@ -1,23 +1,3 @@
-
-function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
-  var oldAttr = $(elem).attr(attr);
-
-  if(!oldAttr)
-    return;
-
-  var newAttr = oldAttr.replace(toBeReplaced, replaceVal);
-  $(elem).attr(attr, newAttr);
-}
-
-function setStyleProperties(data) {
-  $('.min-og').html(gon.styleData.stats.og.low);
-  $('.max-og').html(gon.styleData.stats.og.high);
-  $('.min-ibus').html(gon.styleData.stats.ibu.low);
-  $('.max-ibus').html(gon.styleData.stats.ibu.high);
-  $('.min-fg').html(gon.styleData.stats.fg.low);
-  $('.max-fg').html(gon.styleData.stats.fg.high);
-}
-
 $(document).on('turbolinks:load', function() {
 
   $('.add-ingredient-btn').click(function() {
@@ -56,33 +36,115 @@ $(document).on('turbolinks:load', function() {
     $('.style-display').show();
   }
 
+  //when a user clicks on the question mark symbol next to the recipe style,
+  //this function will toggle the appearance of additional style info
+  $('.get-style-info').click(function() {
 
-  /* Recipe style AJAX */
-  //ajax req for recipe style parameters upon user selection of recipe style
-  $('select#recipe_style').change(function() {
-    var value = $(this).val();
+    //if already visible, hide
+    if($('.style-info-container').is(':visible')) {
+      $('.style-info-container').slideUp('fast');
 
-    if(value == '') { //if value is empty, user has selected the prompt
-      $('.style-display').hide();
+      //if not visible, but correct data already in gon object, display
+    } else if($('.recipe-style').attr('data-style-id') == gon.styleData.id) {
+      $('.style-info-container').slideDown('fast');
+
+      //if the style data isn't already there, make ajax req for it, then display
     } else {
-      $.ajax(
-        {
-          type: 'GET',
-          data: {style_id: value},
-          url: '/recipes/styles',
-          success: function(response) {
-            gon.styleData = response;
-            setStyleProperties();
-            $('.style-display').show();
-          },
-          error: function(response) {
-            console.log('AJAX error retrieving recipe style params\nStatus: ', response.status);
-            console.log(response);
-            $('.style-display').hide();
-          }
-        }
-      );
+      getStyleAjax($('.recipe-style').attr('data-style-id'), function() {
+        setStyleProperties();
+        $('.style-info-container').slideDown('fast');
+      });
+    }
+  });
+
+
+  //when creating a recipe, this function will update the displayed recipe style parameters
+  //when the user makes a recipe style selection from the select#recipe_style element
+  $('select#recipe_style').change(function() {
+    var selectedValue = $(this).val();
+
+    //if value is empty, user has selected the prompt, hide the params
+    if(selectedValue == '') {
+      $('.style-display').hide();
+
+    //if not, then ajax for the style data and display
+    } else {
+      getStyleAjax(selectedValue, function(response) {
+        setStyleProperties();
+        $('.style-display').show();
+      }, function(response){
+        $('.style-display').hide();
+      });
     }
   });
 
 }); //document load
+
+
+
+function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
+  var oldAttr = $(elem).attr(attr);
+
+  if(!oldAttr)
+    return;
+
+  var newAttr = oldAttr.replace(toBeReplaced, replaceVal);
+  $(elem).attr(attr, newAttr);
+}
+
+//displays the stat properties (OG, FG, etc) of the beer style to the user
+function setStyleProperties() {
+  //if the gon style data contains no stats or contains a stat exceptions message, then display that and return
+  if(gon.styleData.stats == undefined) {
+    $('.style-exceptions').html('');
+    $('.style-stats').hide();
+    $('.no-stats').show();
+    return;
+  } else if(Object.keys(gon.styleData.stats).length < 3 && gon.styleData.stats.exceptions != undefined) {
+    $('.style-exceptions').html(gon.styleData.stats.exceptions);
+    $('.style-stats').hide();
+    $('.no-stats').show();
+    return;
+  }
+
+  //otherwise, update the html vals of the display with the gon style data stats
+  $('.min-og').html(gon.styleData.stats.og.low);
+  $('.max-og').html(gon.styleData.stats.og.high);
+  $('.min-ibus').html(gon.styleData.stats.ibu.low);
+  $('.max-ibus').html(gon.styleData.stats.ibu.high);
+  $('.min-fg').html(gon.styleData.stats.fg.low);
+  $('.max-fg').html(gon.styleData.stats.fg.high);
+  $('.style-appearance').html(gon.styleData.appearance);
+  $('.style-aroma').html(gon.styleData.aroma);
+  $('.style-flavor').html(gon.styleData.flavor);
+  $('.no-stats').hide();
+  $('.style-stats').show();
+}
+
+//gets the recipe style data via ajax call to the server and copies it to gon.styleData
+//also takes some optional success and failure callback functions
+function getStyleAjax(styleId, successCallback = null, errorCallback = null) {
+  $.ajax(
+    {
+      type: 'GET',
+      data: {style_id: styleId},
+      url: '/recipes/styles',
+      success: function(response) {
+        gon.styleData = response;
+        if(successCallback != null)
+          successCallback(response);
+      },
+      error: function(response) {
+        failSilent(response);
+        if(errorCallback != null)
+          errorCallback(response);
+      }
+    }
+  );
+}
+
+//for non-critical AJAX failures. Log to the console, don't get the user involved
+function failSilent(response) {
+  console.log('AJAX error! Status: ', response.status);
+  console.log(response);
+}
