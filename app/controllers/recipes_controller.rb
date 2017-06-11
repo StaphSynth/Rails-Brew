@@ -1,6 +1,7 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
   before_action :set_current_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_gon
 
   # GET /recipes
   # GET /recipes.json
@@ -79,6 +80,9 @@ class RecipesController < ApplicationController
     elsif(@current_user != @recipe.user)
       redirect_to @current_user, notice: "You may only edit your own recipes"
     end
+
+    #set the current style data for use by page JS.
+    gon.styleData = helpers.get_style(@recipe.style, :json)
   end
 
   # POST /recipes
@@ -125,6 +129,11 @@ class RecipesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def set_gon
+      gon.ratingData = {}
+      gon.styleData = {}
     end
 
     def set_current_user

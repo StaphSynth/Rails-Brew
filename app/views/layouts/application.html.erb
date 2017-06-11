@@ -3,7 +3,6 @@
 
   <head>
     <title><%= yield :title %> | RailsBrew</title>
-    <%= include_gon(:camel_case => true) %>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -11,6 +10,7 @@
   </head>
 
   <body>
+    <%= include_gon(:camel_case => true) %>
     <header class="navbar navbar-static-top navbar-inverse">
       <div class="container">
 

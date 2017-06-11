@@ -9,13 +9,13 @@ function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   $(elem).attr(attr, newAttr);
 }
 
-function updateStyleProperties(data) {
-  $('.min-og').html(data.stats.og.low);
-  $('.max-og').html(data.stats.og.high);
-  $('.min-ibus').html(data.stats.ibu.low);
-  $('.max-ibus').html(data.stats.ibu.high);
-  $('.min-fg').html(data.stats.fg.low);
-  $('.max-fg').html(data.stats.fg.high);
+function setStyleProperties(data) {
+  $('.min-og').html(gon.styleData.stats.og.low);
+  $('.max-og').html(gon.styleData.stats.og.high);
+  $('.min-ibus').html(gon.styleData.stats.ibu.low);
+  $('.max-ibus').html(gon.styleData.stats.ibu.high);
+  $('.min-fg').html(gon.styleData.stats.fg.low);
+  $('.max-fg').html(gon.styleData.stats.fg.high);
 }
 
 $(document).on('turbolinks:load', function() {
@@ -50,6 +50,12 @@ $(document).on('turbolinks:load', function() {
     $($itemToRemove).slideUp('fast');
   });
 
+  //set current recipe style data if the data exists
+  if(!(gon.styleData == undefined || $.isEmptyObject(gon.styleData))) {
+    setStyleProperties();
+    $('.style-display').show();
+  }
+
 
   /* Recipe style AJAX */
   //ajax req for recipe style parameters upon user selection of recipe style
@@ -65,7 +71,8 @@ $(document).on('turbolinks:load', function() {
           data: {style_id: value},
           url: '/recipes/styles',
           success: function(response) {
-            updateStyleProperties(response);
+            gon.styleData = response;
+            setStyleProperties();
             $('.style-display').show();
           },
           error: function(response) {
