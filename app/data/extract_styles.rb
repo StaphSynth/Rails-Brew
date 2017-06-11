@@ -18,7 +18,7 @@ condensed_style_data = Hash.new
 
 style_guide['class'][0]['category'].each do |category|
   category['subcategory'].each do |subcategory|
-    condensed_style_data[subcategory['id']] = subcategory.except!('id')
+    condensed_style_data[subcategory['id']] = subcategory
   end
 end
 
