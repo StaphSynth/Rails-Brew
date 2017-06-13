@@ -8,9 +8,6 @@ class RecipesController < ApplicationController
   # GET /recipes
   # GET /recipes.json
   def index
-        #for when logins are req'd:
-        # current_user.recipes
-        # Recipe.predefined ?
     @recipes = Recipe.paginate(page: params[:page])
 
     #set the star ratings to display only for recipe index
@@ -112,7 +109,7 @@ class RecipesController < ApplicationController
   def destroy
     @recipe.destroy
     respond_to do |format|
-      format.html { redirect_to recipes_url, notice: "#{@recipe.name} deleted." }
+      format.html { redirect_to @current_user, notice: "#{@recipe.name} deleted." }
       format.json { head :no_content }
     end
   end
