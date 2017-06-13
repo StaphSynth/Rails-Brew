@@ -1,6 +1,8 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :edit, :update, :destroy]
   before_action :set_current_user, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy]
+  before_action :valid_user, only: [:edit, :update, :destroy]
   before_action :set_gon
 
   # GET /recipes
@@ -63,10 +65,6 @@ class RecipesController < ApplicationController
 
   # GET /recipes/new
   def new
-    if(!logged_in?)
-      redirect_to login_url, :notice => "You must be logged in to create new recipes"
-    end
-
     @recipe = Recipe.new
     @recipe.recipe_malts.build
     @recipe.recipe_hops.build
@@ -75,12 +73,6 @@ class RecipesController < ApplicationController
 
   # GET /recipes/1/edit
   def edit
-    if(!logged_in?)
-      redirect_to login_url, notice: "Login required to complete that action"
-    elsif(@current_user != @recipe.user)
-      redirect_to @current_user, notice: "You may only edit your own recipes"
-    end
-
     #set the current style data for use by page JS.
     gon.styleData = helpers.get_style(@recipe.style, :json)
   end
@@ -129,6 +121,14 @@ class RecipesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_recipe
       @recipe = Recipe.find(params[:id])
+    end
+
+    def logged_in_user
+      redirect_to login_url, notice: "Login required to complete that action" unless logged_in?
+    end
+
+    def valid_user
+      redirect_to @current_user, notice: "You may only modify or delete your own recipes" unless @current_user == @recipe.user
     end
 
     def set_gon
