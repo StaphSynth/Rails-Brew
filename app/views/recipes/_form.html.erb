@@ -37,6 +37,16 @@
     </p>
   </div>
 
+  <div class="field">
+    <%= f.label :batch_volume, 'Batch Volume' %>
+    <%= f.text_field :batch_volume, type: 'number' %> <span class="unit unit-volume">L</span>
+  </div>
+
+  <div class="field">
+    <label for="lock-to-batch">Lock ingredients to batch size</label>
+    <input id="lock-to-batch" type="checkbox" name="lock" value="lock"/>
+  </div>
+
   <h3>Malts</h3>
   <div class="malt-inputs">
     <%= f.fields_for :recipe_malts do |malt| %>
