@@ -13,4 +13,11 @@ class Recipe < ApplicationRecord
 
   accepts_nested_attributes_for :recipe_yeasts, :allow_destroy => true
 
+  validates :batch_volume, numericality: { greater_than: 0 }
+  validates :views, numericality: { greater_than_or_equal_to: 0 }
+  validates :efficiency, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :OG, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 2 }
+  validates :FG, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 2 }
+  validates :colour, numericality: { greater_than_or_equal_to: 0 }
+
 end
