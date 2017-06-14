@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170613010104) do
+ActiveRecord::Schema.define(version: 20170614231429) do
 
   create_table "ratings", force: :cascade do |t|
     t.integer "recipe_id"
@@ -66,10 +66,10 @@ ActiveRecord::Schema.define(version: 20170613010104) do
 
   create_table "user_preferences", force: :cascade do |t|
     t.integer "user_id"
-    t.string  "volume",             limit: 1, null: false
-    t.string  "temp",               limit: 1, null: false
-    t.string  "weight",             limit: 1, null: false
-    t.integer "default_efficiency"
+    t.string  "volume",             limit: 1,              null: false
+    t.string  "temp",               limit: 1,              null: false
+    t.string  "weight",             limit: 1,              null: false
+    t.integer "default_efficiency",           default: 75
   end
 
   create_table "users", force: :cascade do |t|
