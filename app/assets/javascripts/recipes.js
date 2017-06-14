@@ -109,16 +109,31 @@ function setStyleProperties() {
 
   //otherwise, update the html vals of the display with the gon style data stats
   $('.min-og').html(gon.styleData.stats.og.low);
-  $('.max-og').html(gon.styleData.stats.og.high);
+  $('.max-og').html(formatMaxG(gon.styleData.stats.og.high));
   $('.min-ibus').html(gon.styleData.stats.ibu.low);
   $('.max-ibus').html(gon.styleData.stats.ibu.high);
   $('.min-fg').html(gon.styleData.stats.fg.low);
-  $('.max-fg').html(gon.styleData.stats.fg.high);
+  $('.max-fg').html(formatMaxG(gon.styleData.stats.fg.high));
   $('.style-appearance').html(gon.styleData.appearance);
   $('.style-aroma').html(gon.styleData.aroma);
   $('.style-flavor').html(gon.styleData.flavor);
   $('.no-stats').hide();
   $('.style-stats').show();
+}
+
+//formats the value of max OG or max FG for more readable display
+//turns 1.064 into 64, or 1.112 into 112 so that you get 'OG: 1.043-53' instead of 'OG 1.043-1.053'
+function formatMaxG(maxG) {
+  maxG = maxG.toString();
+
+  if(maxG.indexOf('.0') == -1) {
+    return maxG.split('.')[1];
+  } else {
+    return maxG.split('.0')[1];
+  }
+
+  //this should never run, but in case it does, just return the original val
+  return maxG;
 }
 
 //gets the recipe style data via ajax call to the server and copies it to gon.styleData
