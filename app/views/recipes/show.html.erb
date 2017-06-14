@@ -3,7 +3,10 @@
 <div class="header">
   <h2>
     <%= @recipe.name %>
-    <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' if @recipe.user == @current_user %>
+    <% if @recipe.user == @current_user %>
+      <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' %>
+      <%= link_to 'Delete Recipe', recipe_path, method: :delete, class: 'btn btn-primary', confirm: "Are you sure you want to delete #{@recipe.name}?" %>
+    <% end %>
   </h2>
   <h4 class="recipe-style" data-style-id="<%= @recipe.style %>">
     <%= get_style(@recipe.style).name %>
