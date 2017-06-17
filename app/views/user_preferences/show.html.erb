@@ -36,6 +36,11 @@
     <%= f.label :temp_f, "Fahrenheit", :class => "radio-label" %>
   </div>
 
+  <h4>Default Efficiency</h4>
+  <div class="field form-group">
+    <%= f.number_field :default_efficiency %>%
+  </div>
+
   <div class="actions form-group radio">
     <%= f.submit "Update Settings", :class => 'btn btn-primary' %>
   </div>
