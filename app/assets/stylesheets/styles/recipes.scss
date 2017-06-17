@@ -85,3 +85,15 @@ RECIPE SHOW PAGE
 .get-style-info:hover {
   color: #286090;
 }
+
+.style-list {
+  list-style: none;
+}
+
+.style-info-caret {
+  display: none;
+}
+
+.get-style-info:hover .style-info-caret {
+  display: inline-block;
+}

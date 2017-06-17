@@ -32,4 +32,16 @@ module RecipesHelper
     end
   end
 
+  #takes the hash of styles and generates an array of the values
+  def generate_style_array
+    styles = Array.new
+
+    #extract the styles from the hash
+    get_styles.each do |k,v|
+      styles.push(v)
+    end
+
+    return styles
+  end
+
 end

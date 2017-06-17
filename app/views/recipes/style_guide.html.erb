@@ -1,0 +1,17 @@
+<% provide :title, 'Style Guide' %>
+
+<h1>Beer Style Guide</h1>
+<p>
+  A list of beer styles as defined by the <a target="_blank" href="https://www.bjcp.org/">BJCP</a>.
+  Click on a style to see its characteristics.
+  Keep in mind that this is a only a guide, and we encourage you to experiment and bend the rules.
+  Remember, "if it tastes good, it <i>is</i> good!"
+</p>
+
+<ul class="style-list">
+  <% @styles.each_with_index do |style, index| %>
+    <li class="style-list-item">
+      <%= render 'style_info', style: style, index: index %>
+    </li>
+  <% end %>
+</ul>

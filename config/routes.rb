@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get     '/preferences',    to: 'user_preferences#show'
   post    '/ratings/create', to: 'ratings#create'
   get     '/recipes/styles', to: 'recipes#styles'
+  get     '/style-guide',    to: 'recipes#style_guide'
 
   resources :account_activations, :only => [:edit]
   resources :password_resets, :only => [:new, :create, :edit, :update]

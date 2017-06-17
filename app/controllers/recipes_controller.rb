@@ -60,6 +60,11 @@ class RecipesController < ApplicationController
     end
   end
 
+  #index of BJCP beer styles
+  def style_guide
+    @styles = helpers.generate_style_array
+  end
+
   # GET /recipes/new
   def new
     @recipe = Recipe.new

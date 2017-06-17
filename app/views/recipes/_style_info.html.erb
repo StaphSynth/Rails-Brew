@@ -1,0 +1,15 @@
+<h4 class="recipe-style" data-index="<%= index %>" data-style-id="<%= style['id'] %>">
+  <span class="get-style-info">
+    <%= style['name'] %> <%= fa_icon 'caret-down', class: 'style-info-caret' %>
+  </span>
+</h4>
+
+<div class="style-info-container info-<%= index %>" style="display: none;">
+  <div class="style-info">
+    <p><strong>Appearance:</strong> <span class="style-appearance"></span></p>
+    <p><strong>Aroma:</strong> <span class="style-aroma"></span></p>
+    <p><strong>Flavor:</strong> <span class="style-flavor"></span></p>
+  </div>
+  <strong>Vital Statistics</strong>
+  <%= render 'style_stats' %>
+</div>

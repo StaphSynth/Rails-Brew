@@ -32,27 +32,31 @@ $(document).on('turbolinks:load', function() {
 
   //set current recipe style data if the data exists
   if(!(gon.styleData == undefined || $.isEmptyObject(gon.styleData))) {
-    setStyleProperties();
-    $('.style-display').show();
+    setStyleInfo('.style-stats-container');
+    $('.style-stats-container').show();
   }
 
-  //when a user clicks on the question mark symbol next to the recipe style,
-  //this function will toggle the appearance of additional style info
+  //when a user clicks on recipe style text,
+  //this function will toggle the appearance of a
+  //div containing additional style info
   $('.get-style-info').click(function() {
+    var styleId = $(this).parent().attr('data-style-id');
+    var index = $(this).parent().attr('data-index');
+    var container = '.info-' + index;
 
     //if already visible, hide
-    if($('.style-info-container').is(':visible')) {
-      $('.style-info-container').slideUp('fast');
+    if($(container).is(':visible')) {
+      displayStyleInfo(false, container);
 
       //if not visible, but correct data already in gon object, display
-    } else if($('.recipe-style').attr('data-style-id') == gon.styleData.id) {
-      $('.style-info-container').slideDown('fast');
+    } else if(styleId == gon.styleData.id) {
+      displayStyleInfo(true, container);
 
       //if the style data isn't already there, make ajax req for it, then display
     } else {
-      getStyleAjax($('.recipe-style').attr('data-style-id'), function() {
-        setStyleProperties();
-        $('.style-info-container').slideDown('fast');
+      getStyleAjax(styleId, function() {
+      setStyleInfo(container);
+      displayStyleInfo(true, container);
       });
     }
   });
@@ -65,15 +69,15 @@ $(document).on('turbolinks:load', function() {
 
     //if value is empty, user has selected the prompt, hide the params
     if(selectedValue == '') {
-      $('.style-display').hide();
+      $('.style-stats-container').hide();
 
     //if not, then ajax for the style data and display
     } else {
       getStyleAjax(selectedValue, function(response) {
-        setStyleProperties();
-        $('.style-display').show();
-      }, function(response){
-        $('.style-display').hide();
+        setStyleInfo('.style-stats-container');
+        $('.style-stats-container').show();
+      }, function(response) {
+        $('.style-stats-container').hide();
       });
     }
   });
@@ -92,33 +96,64 @@ function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   $(elem).attr(attr, newAttr);
 }
 
-//displays the stat properties (OG, FG, etc) of the beer style to the user
-function setStyleProperties() {
-  //if the gon style data contains no stats or contains a stat exceptions message, then display that and return
-  if(gon.styleData.stats == undefined) {
-    $('.style-exceptions').html('');
-    $('.style-stats').hide();
-    $('.no-stats').show();
-    return;
-  } else if(Object.keys(gon.styleData.stats).length < 3 && gon.styleData.stats.exceptions != undefined) {
-    $('.style-exceptions').html(gon.styleData.stats.exceptions);
-    $('.style-stats').hide();
-    $('.no-stats').show();
-    return;
+//for showing/hiding the recipe style info container
+//pass action (boolean) TRUE to show, FALSE to hide.
+//Pass container id/class (string) selector for which
+//container to show/hide
+function displayStyleInfo(action, container) {
+  var caret = $(container).parent().find('.style-info-caret');
+
+  if(action) {
+    $(container).slideDown('fast');
+    $(caret).toggleClass('fa-flip-vertical');
+    $(caret).attr('style', 'display: inline-block;');
+  } else {
+    $(container).slideUp('fast');
+    $(caret).toggleClass('fa-flip-vertical');
+    $(caret).removeAttr('style');
   }
+}
+
+//updates the html values of the style and style stat properties (OG, FG, etc) of the beer style
+//accepts a string "container" that gives the class or id handle of the stat container to be updated
+function setStyleInfo(container) {
+
+  if(!container)
+    throw new Error('empty container selector string passed to setStyleInfo');
+
+  //set the style info data
+  $(container).find('.style-appearance').html(gon.styleData.appearance);
+  $(container).find('.style-aroma').html(gon.styleData.aroma);
+  $(container).find('.style-flavor').html(gon.styleData.flavor);
+
+  //after setting style info data, set style stats if present. Check the state of the stats object first.
+
+  //if the gon style data contains no stats, blank it and hide it.
+  if(gon.styleData.stats == undefined) {
+    $(container).find('.style-exceptions').html('');
+    $(container).find('.style-stats').hide();
+    $(container).find('.no-stats').show();
+
+   //if it contains a stat exceptions message, then display that.
+   //if there are stats, there'll be 5 keys in the 'stats' object, so check that
+  } else if(Object.keys(gon.styleData.stats).length < 5 && gon.styleData.stats.exceptions != undefined) {
+    $(container).find('.style-exceptions').html(gon.styleData.stats.exceptions);
+    $(container).find('.style-stats').hide();
+    $(container).find('.no-stats').show();
 
   //otherwise, update the html vals of the display with the gon style data stats
-  $('.min-og').html(gon.styleData.stats.og.low);
-  $('.max-og').html(formatMaxG(gon.styleData.stats.og.high));
-  $('.min-ibus').html(gon.styleData.stats.ibu.low);
-  $('.max-ibus').html(gon.styleData.stats.ibu.high);
-  $('.min-fg').html(gon.styleData.stats.fg.low);
-  $('.max-fg').html(formatMaxG(gon.styleData.stats.fg.high));
-  $('.style-appearance').html(gon.styleData.appearance);
-  $('.style-aroma').html(gon.styleData.aroma);
-  $('.style-flavor').html(gon.styleData.flavor);
-  $('.no-stats').hide();
-  $('.style-stats').show();
+  } else {
+    $(container).find('.min-og').html(gon.styleData.stats.og.low);
+    $(container).find('.max-og').html(formatMaxG(gon.styleData.stats.og.high));
+    $(container).find('.min-ibus').html(gon.styleData.stats.ibu.low);
+    $(container).find('.max-ibus').html(gon.styleData.stats.ibu.high);
+    $(container).find('.min-fg').html(gon.styleData.stats.fg.low);
+    $(container).find('.max-fg').html(formatMaxG(gon.styleData.stats.fg.high));
+    $(container).find('.min-abv').html(gon.styleData.stats.abv.low);
+    $(container).find('.max-abv').html(gon.styleData.stats.abv.high);
+    $(container).find('.no-stats').hide();
+    $(container).find('.style-stats').show();
+  }
 }
 
 //formats the value of max OG or max FG for more readable display
