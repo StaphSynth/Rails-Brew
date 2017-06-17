@@ -1,13 +1,16 @@
 class UserPreferencesController < ApplicationController
 
   before_action :get_user
-  before_action :set_preferences, only: :update
+  before_action :set_preferences
+
+  def edit
+  end
 
   def update
     if(@user_preference.update_attributes(user_preference_params))
       redirect_to preferences_url, :notice => 'Your preferences have been updated.'
     else
-      redirect_to @user, :notice => 'Error updating preferences. Please try again later.'
+      render :edit
     end
   end
 

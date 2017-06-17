@@ -1,6 +1,17 @@
 <% provide :title, "Settings" %>
 
-<%= form_for current_user.user_preference do |f| %>
+<%= form_for @user_preference do |f| %>
+  <% if @user_preference.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user_preference.errors.count, "error") %> prohibited your preferences from being updated:</h2>
+
+      <ul>
+      <% @user_preference.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <h4>Volume</h4>
   <div class="field form-group radio">
@@ -38,7 +49,7 @@
 
   <h4>Default Efficiency</h4>
   <div class="field form-group">
-    <%= f.number_field :default_efficiency %>%
+    <%= f.number_field :default_efficiency, style: 'width: 50px' %>%
   </div>
 
   <div class="actions form-group radio">
