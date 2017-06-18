@@ -45,7 +45,7 @@
       <div class="malt-input">
         <div class="field">
           <%= malt.label :malt, :value => "Malts and sugars" %>
-          <%= malt.select :malt, options_for_select(options_generator(:malts)) %>
+          <%= malt.select :malt, options_for_select(options_generator(:malts)), {}, class: 'ingredient-select', data: 'malts' %>
         </div>
 
         <div class="field">
@@ -73,7 +73,7 @@
 
             <div class="field">
               <%= hop.label :hop, :value => "Hops" %>
-              <%= hop.select :hop, options_for_select(options_generator(:hops)) %>
+              <%= hop.select :hop, options_for_select(options_generator(:hops)), {}, class: 'ingredient-select', data: 'hops' %>
             </div>
 
             <div class="field">

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   post    '/ratings/create', to: 'ratings#create'
   get     '/recipes/styles', to: 'recipes#styles'
   get     '/style-guide',    to: 'recipes#style_guide'
+  get     '/recipes/ingredient_data', to: 'recipes#ingredient_data'
 
   resources :account_activations, :only => [:edit]
   resources :password_resets, :only => [:new, :create, :edit, :update]

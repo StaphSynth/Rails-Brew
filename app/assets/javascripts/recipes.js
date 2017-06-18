@@ -21,6 +21,9 @@ $(document).on('turbolinks:load', function() {
     $($newIngredient).slideDown('fast');
   });
 
+  $('select.ingredient-select').change(function() {
+    fetchIngredientData($(this).attr('data'), $(this).val());
+  });
 
   $('.del-ingredient-btn').click(function() {
     var $itemToRemove = $(this).parent().parent();
@@ -85,6 +88,26 @@ $(document).on('turbolinks:load', function() {
 }); //document load
 
 
+//uses ajax to fetch data on malt and hop ingredients needed for ABV, OG, IBU, colour, etc calc predictions
+//takes two args: type (string), either 'hops' or 'malts' which allows the server to figure out what to return,
+//and ingredient_id, which allows the server to fetch the data.
+function fetchIngredientData(type, id) {
+  $.ajax(
+    {
+      type: 'GET',
+      data: { ingredient_type: type, ingredient_id: id },
+      url: '/recipes/ingredient_data',
+      success: function(response) {
+        //success callback
+        console.log('response from ingredient_data: ', response);
+      },
+      error: function(response) {
+        //error callback
+        failSilent(response);
+      }
+    }
+  );
+}
 
 function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
   var oldAttr = $(elem).attr(attr);

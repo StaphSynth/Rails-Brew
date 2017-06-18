@@ -17,6 +17,11 @@ module IngredientsHelper
     return options
   end
 
+  #returns a hash of the selected ingredient
+  def get_ingredient(ingredient_type, ingredient_id)
+    return ingredients[ingredient_type.to_sym][ingredient_id.to_sym]
+  end
+
   #system default ingredients are stored here as a hash
   def ingredients
     {

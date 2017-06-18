@@ -71,12 +71,25 @@ class RecipesController < ApplicationController
     @recipe.recipe_malts.build
     @recipe.recipe_hops.build
     @recipe.recipe_yeasts.build
+
+    #instantiate empty gon hop and malt arrays.
+    #These will be used on the front-end for storage of malt and hop data required for
+    #various prediction calculations like beer colour, IBUs, OG, ABV, etc.
+    gon.malts = Array.new
+    gon.hops = Array.new
   end
 
   # GET /recipes/1/edit
   def edit
     #set the current style data for use by page JS.
     gon.styleData = helpers.get_style(@recipe.style, :json)
+  end
+
+  #ingredient data retrieval API. Sends ingredient data to the front-end via AJAX
+  def ingredient_data
+    respond_to do |format|
+      format.json { render json: helpers.get_ingredient(params[:ingredient_type], params[:ingredient_id]) }
+    end
   end
 
   # POST /recipes
@@ -144,8 +157,8 @@ class RecipesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recipe_params
-      params.require(:recipe).permit(:user_id, :name, :method, :style, :views, :style_id,
-                                    :batch_volume, :OG, :FG, :colour, :efficiency,
+      params.require(:recipe).permit(:user_id, :name, :method, :style, :views, :style_id, :batch_volume,
+                                    :OG, :FG, :colour, :efficiency, :ingredient_type, :ingredient_id,
                                     :recipe_malts_attributes => [:id, :malt, :quantity, :_destroy],
                                     :recipe_hops_attributes => [:id, :hop, :quantity, :_destroy],
                                     :recipe_yeasts_attributes => [:id, :yeast, :_destroy])
