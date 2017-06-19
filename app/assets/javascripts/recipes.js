@@ -21,16 +21,49 @@ $(document).on('turbolinks:load', function() {
     $($newIngredient).slideDown('fast');
   });
 
-  $('select.ingredient-select').change(function() {
-    fetchIngredientData($(this).attr('data'), $(this).val());
+  $('.ingredient-select').change(function() {
+    var type = $(this).attr('data');
+    var ingredient = $(this).val();
+    var ingredientId = formatCallerId($(this).attr('id'));
+    var quantity = $(this).parent().parent().find('.ingredient-qty').val();
+
+    //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
+    //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
+    if(ingredient) {
+      if(quantity) {//if the related quantity field has a value in it, then pass it through and it will be updated as well.
+        fetchIngredientData(type, ingredient, ingredientId, parseFloat(quantity));
+      } else {
+        fetchIngredientData(type, ingredient, ingredientId);
+      }
+    } else {
+      deleteGonIngredient(type, ingredientId);
+    }
+  });
+
+  $('.ingredient-qty').change(function() {
+    var callerId = formatCallerId($(this).attr('id'));
+    var quantity = parseFloat($(this).val());
+    var type = $(this).attr('data');
+
+    //if the ingredient is present in gon.INGREDIENT, then update the qty, else don't.
+    if(gon[type][callerId] != undefined)
+      setIngredientQty(type, callerId, quantity);
   });
 
   $('.del-ingredient-btn').click(function() {
-    var $itemToRemove = $(this).parent().parent();
+    //cannot remove elem from DOM as Rails needs to know it's being destroyed.
+    //So, set destroy to true and hide element from view.
+    var itemToRemove = $(this).parent().parent();
+    $(itemToRemove).find('.destroy').val(true);
+    $(itemToRemove).slideUp('fast');
 
-    $($itemToRemove).find('.destroy').val(true);
+    //Then, remove its value from the gon.INGREDIENT global so it doesn't affect predictions
+    //traverse to the select elem, get its id and data attr and use them to delete gon.INGR_TYPE.INGREDIENT_ID
+    var ingredientSelect = $(itemToRemove).find('.ingredient-select');
+    var ingredientId = formatCallerId($(ingredientSelect).attr('id'));
+    var ingredientType = $(ingredientSelect).attr('data');
 
-    $($itemToRemove).slideUp('fast');
+    deleteGonIngredient(ingredientType, ingredientId);
   });
 
   //set current recipe style data if the data exists
@@ -88,21 +121,42 @@ $(document).on('turbolinks:load', function() {
 }); //document load
 
 
+function deleteGonIngredient(type, ingredientId) {
+  delete gon[type][ingredientId];
+}
+
+function setIngredientQty(type, ingredientId, quantity) {
+  gon[type][ingredientId]['quantity'] = quantity;
+}
+
+//sets ingredient data in the gon.malts or gon.hops global objects.
+function setIngredientData(type, ingredientData, key) {
+  gon[type][key] = ingredientData;
+}
+
+//removes the last '_PIECE' off the ID tag of the calling element
+function formatCallerId(callerId) {
+  callerId = callerId.split('_');
+  callerId.pop();
+  return callerId.join('_');
+}
+
 //uses ajax to fetch data on malt and hop ingredients needed for ABV, OG, IBU, colour, etc calc predictions
 //takes two args: type (string), either 'hops' or 'malts' which allows the server to figure out what to return,
-//and ingredient_id, which allows the server to fetch the data.
-function fetchIngredientData(type, id) {
+//and ingredient_id, which allows the server to fetch the data. callerId is the CSS id selector of the element
+//causing the function to be called, is required for storage of the returned data in gon.malts.CALLERID
+function fetchIngredientData(type, ingredientId, callerId, quantity = null) {
   $.ajax(
     {
       type: 'GET',
-      data: { ingredient_type: type, ingredient_id: id },
+      data: { ingredient_type: type, ingredient_id: ingredientId },
       url: '/recipes/ingredient_data',
       success: function(response) {
-        //success callback
-        console.log('response from ingredient_data: ', response);
+        setIngredientData(type, response, callerId);
+        if(quantity) //if the related quantity field has a value, then set that as well
+          setIngredientQty(type, callerId, quantity);
       },
       error: function(response) {
-        //error callback
         failSilent(response);
       }
     }

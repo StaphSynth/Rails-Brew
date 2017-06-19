@@ -75,8 +75,8 @@ class RecipesController < ApplicationController
     #instantiate empty gon hop and malt arrays.
     #These will be used on the front-end for storage of malt and hop data required for
     #various prediction calculations like beer colour, IBUs, OG, ABV, etc.
-    gon.malts = Array.new
-    gon.hops = Array.new
+    gon.malts = {}
+    gon.hops = {}
   end
 
   # GET /recipes/1/edit

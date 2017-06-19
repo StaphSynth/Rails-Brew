@@ -45,12 +45,12 @@
       <div class="malt-input">
         <div class="field">
           <%= malt.label :malt, :value => "Malts and sugars" %>
-          <%= malt.select :malt, options_for_select(options_generator(:malts)), {}, class: 'ingredient-select', data: 'malts' %>
+          <%= malt.select :malt, options_for_select(options_generator(:malts)), {prompt: 'Select a malt'}, class: 'ingredient-select', data: 'malts' %>
         </div>
 
         <div class="field">
           <%= malt.label :quantity %>
-          <%= malt.text_field :quantity %>g
+          <%= malt.text_field :quantity, class: 'ingredient-qty', data: 'malts' %>g
         </div>
 
         <div class="field">
@@ -73,12 +73,12 @@
 
             <div class="field">
               <%= hop.label :hop, :value => "Hops" %>
-              <%= hop.select :hop, options_for_select(options_generator(:hops)), {}, class: 'ingredient-select', data: 'hops' %>
+              <%= hop.select :hop, options_for_select(options_generator(:hops)), {prompt: 'Select a hop'}, class: 'ingredient-select', data: 'hops' %>
             </div>
 
             <div class="field">
               <%= hop.label :quantity %>
-              <%= hop.text_field :quantity %>g
+              <%= hop.text_field :quantity, class: 'ingredient-qty', data: 'hops' %>g
             </div>
 
         <div class="field">
@@ -102,7 +102,7 @@
 
         <div class="field">
           <%= yeast.label :yeast, :value => "Yeast" %>
-          <%= yeast.select :yeast, options_for_select(options_generator(:yeasts)) %>
+          <%= yeast.select :yeast, options_for_select(options_generator(:yeasts)), prompt: 'Select a yeast' %>
         </div>
 
         <div class="field">
