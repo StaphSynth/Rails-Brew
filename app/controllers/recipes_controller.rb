@@ -72,6 +72,8 @@ class RecipesController < ApplicationController
     @recipe.recipe_hops.build
     @recipe.recipe_yeasts.build
 
+    @default_batch_volume = UserPreference.find_by(user_id: @current_user.id).default_batch_volume
+
     #instantiate empty gon hop and malt arrays.
     #These will be used on the front-end for storage of malt and hop data required for
     #various prediction calculations like beer colour, IBUs, OG, ABV, etc.

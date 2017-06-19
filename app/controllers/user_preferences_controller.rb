@@ -17,7 +17,8 @@ class UserPreferencesController < ApplicationController
   private
 
     def user_preference_params
-      params.require(:user_preference).permit(:user_id, :volume, :temp, :weight, :default_efficiency)
+      params.require(:user_preference).permit(:user_id, :volume, :temp, :weight,
+                                              :default_efficiency, :default_batch_volume)
     end
 
     def get_user

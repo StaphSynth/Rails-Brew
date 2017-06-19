@@ -31,7 +31,7 @@
 
   <div class="field">
     <%= f.label :batch_volume, 'Batch Volume' %>
-    <%= f.text_field :batch_volume, type: 'number' %> <span class="unit unit-volume">L</span>
+    <%= f.text_field :batch_volume, type: 'number', value: (@default_batch_volume if f.object.new_record?) %> <span class="unit unit-volume">L</span>
   </div>
 
   <div class="field">
