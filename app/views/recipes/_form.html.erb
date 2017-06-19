@@ -39,6 +39,11 @@
     <input id="lock-to-batch" type="checkbox" name="lock" value="lock"/>
   </div>
 
+  <div class="field">
+    <%= f.label :efficiency %>
+    <%= f.text_field :efficiency, type: 'number', value: (@default_efficiency if f.object.new_record?) %>%
+  </div>
+
   <h3>Malts</h3>
   <div class="malt-inputs">
     <%= f.fields_for :recipe_malts do |malt| %>

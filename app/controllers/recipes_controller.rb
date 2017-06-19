@@ -72,7 +72,10 @@ class RecipesController < ApplicationController
     @recipe.recipe_hops.build
     @recipe.recipe_yeasts.build
 
-    @default_batch_volume = UserPreference.find_by(user_id: @current_user.id).default_batch_volume
+    #set up default efficiency and volume to pre-fill the form
+    current_user_pref = UserPreference.find_by(user_id: @current_user.id)
+    @default_batch_volume = current_user_pref.default_batch_volume
+    @default_efficiency = current_user_pref.default_efficiency
 
     #instantiate empty gon hop and malt arrays.
     #These will be used on the front-end for storage of malt and hop data required for
