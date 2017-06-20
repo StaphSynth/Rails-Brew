@@ -4,6 +4,7 @@ class UserPreferencesController < ApplicationController
   before_action :set_preferences
 
   def edit
+    gon.userPref = @user_preference
   end
 
   def update

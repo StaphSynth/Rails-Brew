@@ -49,12 +49,14 @@
 
   <h4>Default Efficiency</h4>
   <div class="field form-group">
-    <%= f.number_field :default_efficiency, style: 'width: 50px' %>%
+    <%= f.number_field :default_efficiency, style: 'width: 50px' %> %
   </div>
 
   <h4>Default Batch Volume</h4>
   <div class="field form-group">
-    <%= f.number_field :default_batch_volume, style: 'width: 50px' %>
+    <%= f.hidden_field :default_batch_volume, id: 'batch-model' %>
+    <input type="number" id="batch-display" style="width: 50px;" />
+    <span><%= get_unit_symbol(@user_preference.volume) %></span>
   </div>
 
   <div class="actions form-group">
