@@ -31,7 +31,8 @@
 
   <div class="field">
     <%= f.label :batch_volume, 'Batch Volume' %>
-    <%= f.text_field :batch_volume, type: 'number', value: (@default_batch_volume if f.object.new_record?) %> <span class="unit unit-volume">L</span>
+    <%= f.text_field :batch_volume, type: 'number', id: 'volume', value: (@current_user_pref.default_batch_volume if f.object.new_record?), unit: @current_user_pref.volume %>
+    <span><%= get_unit_symbol(@current_user_pref.volume) %></span>
   </div>
 
   <div class="field">
@@ -41,8 +42,10 @@
 
   <div class="field">
     <%= f.label :efficiency %>
-    <%= f.text_field :efficiency, type: 'number', value: (@default_efficiency if f.object.new_record?) %>%
+    <%= f.text_field :efficiency, type: 'number', id: 'efficiency', value: (@current_user_pref.default_efficiency if f.object.new_record?) %> %
   </div>
+
+  <strong>OG: </strong><span class="predicted-og"></span>
 
   <h3>Malts</h3>
   <div class="malt-inputs">
@@ -55,7 +58,8 @@
 
         <div class="field">
           <%= malt.label :quantity %>
-          <%= malt.text_field :quantity, class: 'ingredient-qty', data: 'malts' %>g
+          <%= malt.text_field :quantity, class: 'ingredient-qty', data: 'malts', unit: @current_user_pref.weight %>
+          <span><%= get_unit_symbol(@current_user_pref.weight) %></span>
         </div>
 
         <div class="field">
@@ -83,7 +87,8 @@
 
             <div class="field">
               <%= hop.label :quantity %>
-              <%= hop.text_field :quantity, class: 'ingredient-qty', data: 'hops' %>g
+              <%= hop.text_field :quantity, class: 'ingredient-qty', data: 'hops', unit: @current_user_pref.weight %>
+              <span><%= get_unit_symbol(@current_user_pref.weight) %></span>
             </div>
 
         <div class="field">

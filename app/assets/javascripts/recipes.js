@@ -46,8 +46,18 @@ $(document).on('turbolinks:load', function() {
     var type = $(this).attr('data');
 
     //if the ingredient is present in gon.INGREDIENT, then update the qty, else don't.
-    if(gon[type][callerId] != undefined)
+    if(gon[type][callerId] != undefined) {
       setIngredientQty(type, callerId, quantity);
+      updateCalcs();
+    }
+  });
+
+  $('#volume').change(function() {
+    updateCalcs();
+  });
+
+  $('#efficiency').change(function() {
+    updateCalcs();
   });
 
   $('.del-ingredient-btn').click(function() {
@@ -64,10 +74,11 @@ $(document).on('turbolinks:load', function() {
     var ingredientType = $(ingredientSelect).attr('data');
 
     deleteGonIngredient(ingredientType, ingredientId);
+    updateCalcs();
   });
 
   //set current recipe style data if the data exists
-  if(!(gon.styleData == undefined || $.isEmptyObject(gon.styleData))) {
+  if(!(gon != undefined && (gon.styleData == undefined || $.isEmptyObject(gon.styleData)))) {
     setStyleInfo('.style-stats-container');
     $('.style-stats-container').show();
   }
@@ -121,6 +132,88 @@ $(document).on('turbolinks:load', function() {
 }); //document load
 
 
+//unit conversion functions
+var noConv = function(v)        { return v; }
+var celToFar = function(v)      { return (v * 9 / 5) + 32; }
+var farToCel = function(v)      { return (v - 32) * 5 / 9; }
+var litToUsGal = function(v)    { return v / 3.785; }
+var litToImpGal = function(v)   { return v / 4.54609; }
+var impGalToUsGal = function(v) { return v / 0.832674188148; }
+var usGalToImpGal = function(v) { return v * 0.832674188148; }
+var usGalToLit = function(v)    { return v * 3.785; }
+var impGalToLit = function(v)   { return v * 4.546091879; }
+var gramToLbs = function(v)     { return v * 0.00220462262; }
+var lbsToGram = function(v)     { return v * 453.592; }
+
+/*
+Returns a function to convert a value from one unit to another
+Usage: unitConverter['from']['to'](value)
+KEYS: C = Celcius, F = fahrenheit, L = Litre, G = US Gallon, B = Imperial (British) Gallon,
+I = Imperial weight (pounds), M = Metric weight (grams)
+*/
+var unitConverter = {
+  C: {
+        C: noConv,
+        F: celToFar
+      },
+  F: {
+        C: farToCel,
+        F: noConv
+      },
+  L: {
+        G: litToUsGal,
+        B: litToImpGal,
+        L: noConv
+      },
+  G: {
+        G: noConv,
+        B: usGalToImpGal,
+        L: usGalToLit
+      },
+  B: {
+        G: impGalToUsGal,
+        B: noConv,
+        L: impGalToLit
+      },
+  M: {
+        I: gramToLbs,
+        M: noConv
+      },
+  I: {
+        I: noConv,
+        M: lbsToGram
+      }
+};
+
+function updateCalcs() {
+  calculateOg();
+  $('.predicted-og').html(gon.og);
+}
+
+function calculateOg() {
+  var keys = Object.keys(gon.malts);
+  var totalGravPoints = 0;
+  var tempLbs = 0;
+  var efficiency = parseInt($('#efficiency').val()) / 100;
+  var volumeGal = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume').val()));
+
+  for(var i = 0; i < keys.length; i++) {
+    tempLbs = unitConverter[gon.userPref.weight]['I'](gon.malts[keys[i]].quantity);
+
+    if(gon.malts[keys[i]].must_mash)
+      totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg) * efficiency;
+    else
+      totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg)
+  }
+
+  gon.og = ((Math.round(totalGravPoints / volumeGal)) / 1000) + 1;
+}
+
+function ppgToGravPoints(ppg) {
+  return Math.round((ppg - 1) * 1000);
+}
+
+
 function deleteGonIngredient(type, ingredientId) {
   delete gon[type][ingredientId];
 }
@@ -152,9 +245,13 @@ function fetchIngredientData(type, ingredientId, callerId, quantity = null) {
       data: { ingredient_type: type, ingredient_id: ingredientId },
       url: '/recipes/ingredient_data',
       success: function(response) {
+        //set the new data
         setIngredientData(type, response, callerId);
-        if(quantity) //if the related quantity field has a value, then set that as well
+        //if the related quantity field has a value, then set that as well and update the calcs
+        if(quantity) {
           setIngredientQty(type, callerId, quantity);
+          updateCalcs();
+         }
       },
       error: function(response) {
         failSilent(response);

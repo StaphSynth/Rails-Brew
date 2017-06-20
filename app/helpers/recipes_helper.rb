@@ -44,4 +44,17 @@ module RecipesHelper
     return styles
   end
 
+  #get the symbol for the specific unit as stored in user_preferences
+  def get_unit_symbol(unit)
+    symbols = {
+      I: 'lb',
+      M: 'g',
+      L: 'L',
+      G: 'Gal.',
+      B: 'Imp. Gal.',
+      F: '°F',
+      C: '°C'
+    }
+    symbols[unit.to_sym]
+  end
 end
