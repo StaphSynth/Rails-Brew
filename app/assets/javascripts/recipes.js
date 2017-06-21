@@ -1,5 +1,15 @@
 $(document).on('turbolinks:load', function() {
 
+  /*MODEL-DISPLAY LINKING FOR UNIT CONVERSION/STORAGE*/
+  //setup display of recipe volume
+  $('#volume-display').val(unitConverter['L'][gon.userPref.volume]($('#volume-model').val()));
+
+  //link the volume display with the model
+  $('#volume-display').change(function() {
+    $('#volume-model').val(unitConverter[gon.userPref.volume]['L']($(this).val()));
+  });
+  /*END MODEL-DISPLAY LINKING*/
+
   $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
     var ingredientSelector ='.' + $(this).data('type') + '-input';
@@ -52,7 +62,7 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
-  $('#volume').change(function() {
+  $('#volume-display').change(function() {
     updateCalcs();
   });
 
@@ -102,8 +112,8 @@ $(document).on('turbolinks:load', function() {
       //if the style data isn't already there, make ajax req for it, then display
     } else {
       getStyleAjax(styleId, function() {
-      setStyleInfo(container);
-      displayStyleInfo(true, container);
+        setStyleInfo(container);
+        displayStyleInfo(true, container);
       });
     }
   });
@@ -195,7 +205,7 @@ function calculateOg() {
   var totalGravPoints = 0;
   var tempLbs = 0;
   var efficiency = parseInt($('#efficiency').val()) / 100;
-  var volumeGal = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume').val()));
+  var volumeGal = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
   for(var i = 0; i < keys.length; i++) {
     tempLbs = unitConverter[gon.userPref.weight]['I'](gon.malts[keys[i]].quantity);
@@ -206,7 +216,7 @@ function calculateOg() {
       totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg)
   }
 
-  gon.og = ((Math.round(totalGravPoints / volumeGal)) / 1000) + 1;
+  gon.og = (((Math.round(totalGravPoints / volumeGal)) / 1000) + 1).toFixed(3);
 }
 
 function ppgToGravPoints(ppg) {

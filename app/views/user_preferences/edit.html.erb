@@ -49,7 +49,7 @@
 
   <h4>Default Efficiency</h4>
   <div class="field form-group">
-    <%= f.number_field :default_efficiency, style: 'width: 50px' %> %
+    <%= f.number_field :default_efficiency, min: 0, max: 100, style: 'width: 50px' %> %
   </div>
 
   <h4>Default Batch Volume</h4>
