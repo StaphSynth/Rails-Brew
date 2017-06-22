@@ -11,7 +11,8 @@ $(document).on('turbolinks:load', function() {
 
   //setup display of ingredient weights.
   $('.ingredient-qty-display').each(function() {
-    $(this).val(Math.round(unitConverter['M'][gon.userPref.weight](
+    var weightUnit = getWeightUnit($(this).attr('data'));
+    $(this).val(Math.round(unitConverter['M'][weightUnit](
       $(this).siblings('.ingredient-qty-model').val())
     ));
   });
@@ -65,9 +66,12 @@ $(document).on('turbolinks:load', function() {
     var callerId = formatCallerId($(this).siblings('.ingredient-qty-model').attr('id'));
     var quantity = parseFloat($(this).val());
     var type = $(this).attr('data');
+    var weightUnit = getWeightUnit(type);
+
+    //set the weight unit param first (big for MALTS, else small)
 
     //update the ingredient-qty-model with the new value in metric
-    $(this).siblings('.ingredient-qty-model').val(unitConverter[gon.userPref.weight]['M']($(this).val()));
+    $(this).siblings('.ingredient-qty-model').val(unitConverter[weightUnit]['M']($(this).val()));
 
     //if the ingredient is present in gon.INGREDIENT, then update the qty there as well
     //if not, then the ingredient select change event will update both ingredient id and qty
@@ -232,6 +236,11 @@ const unitConverter = {
       }
 };
 
+//return the weight unit (big or small) to be used based on ingredient type
+function getWeightUnit(ingredientType) {
+  return ingredientType == 'malts' ? gon.userPref.weight_big : gon.userPref.weight_small;
+}
+
 function updateCalcs() {
   calculateOg();
   $('.predicted-og').html(gon.og);
@@ -245,7 +254,7 @@ function calculateOg() {
   var volumeGal = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
   for(var i = 0; i < keys.length; i++) {
-    tempLbs = unitConverter[gon.userPref.weight]['I'](gon.malts[keys[i]].quantity);
+    tempLbs = unitConverter[gon.userPref.weight_big]['I'](gon.malts[keys[i]].quantity);
 
     if(gon.malts[keys[i]].must_mash)
       totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg) * efficiency;

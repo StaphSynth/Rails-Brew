@@ -48,7 +48,9 @@ module RecipesHelper
   def get_unit_symbol(unit)
     symbols = {
       I: 'lb',
+      O: 'oz',
       M: 'g',
+      K: 'kg',
       L: 'L',
       G: 'Gal.',
       B: 'Imp. Gal.',
