@@ -8,6 +8,17 @@ $(document).on('turbolinks:load', function() {
   $('#volume-display').change(function() {
     $('#volume-model').val(unitConverter[gon.userPref.volume]['L']($(this).val()));
   });
+
+  //setup display of ingredient weights.
+  $('.ingredient-qty-display').each(function() {
+    $(this).val(Math.round(unitConverter['M'][gon.userPref.weight](
+      $(this).siblings('.ingredient-qty-model').val())
+    ));
+  });
+
+  // $('.ingredient-qty-display').change(function() {
+  //   $(this).siblings('.ingredient-qty-model').val(unitConverter[gon.userPref.weight]['M']($(this).val()));
+  // });
   /*END MODEL-DISPLAY LINKING*/
 
   $('.add-ingredient-btn').click(function() {
@@ -35,7 +46,7 @@ $(document).on('turbolinks:load', function() {
     var type = $(this).attr('data');
     var ingredient = $(this).val();
     var ingredientId = formatCallerId($(this).attr('id'));
-    var quantity = $(this).parent().parent().find('.ingredient-qty').val();
+    var quantity = $(this).parent().parent().find('.ingredient-qty-display').val();
 
     //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
     //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
@@ -50,12 +61,16 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
-  $('.ingredient-qty').change(function() {
-    var callerId = formatCallerId($(this).attr('id'));
+  $('.ingredient-qty-display').change(function() {
+    var callerId = formatCallerId($(this).siblings('.ingredient-qty-model').attr('id'));
     var quantity = parseFloat($(this).val());
     var type = $(this).attr('data');
 
-    //if the ingredient is present in gon.INGREDIENT, then update the qty, else don't.
+    //update the ingredient-qty-model with the new value in metric
+    $(this).siblings('.ingredient-qty-model').val(unitConverter[gon.userPref.weight]['M']($(this).val()));
+
+    //if the ingredient is present in gon.INGREDIENT, then update the qty there as well
+    //if not, then the ingredient select change event will update both ingredient id and qty
     if(gon[type][callerId] != undefined) {
       setIngredientQty(type, callerId, quantity);
       updateCalcs();
@@ -154,14 +169,22 @@ var usGalToLit = function(v)    { return v * 3.785; }
 var impGalToLit = function(v)   { return v * 4.546091879; }
 var gramToLbs = function(v)     { return v * 0.00220462262; }
 var lbsToGram = function(v)     { return v * 453.592; }
+var gramToOz = function(v)      { return v / 28.34952313; }
+var ozToGram = function(v)      { return v * 28.34952313; }
+var ozToLbs = function(v)       { return v / 16; }
+var lbsToOz = function(v)       { return v * 16; }
+var gToKg = function(v)         { return v / 1000; }
+var kgToG = function(v)         { return v * 1000; }
+var lbsToKg = function(v)       { return gToKg(lbsToGram(v)); }
+var kgToLbs = function(v)       { return gramToLbs(kgToG(v)); }
 
 /*
 Returns a function to convert a value from one unit to another
 Usage: unitConverter['from']['to'](value)
 KEYS: C = Celcius, F = fahrenheit, L = Litre, G = US Gallon, B = Imperial (British) Gallon,
-I = Imperial weight (pounds), M = Metric weight (grams)
+I = pounds, O = ounces, M = grams, K = kilograms
 */
-var unitConverter = {
+const unitConverter = {
   C: {
         C: noConv,
         F: celToFar
@@ -187,11 +210,25 @@ var unitConverter = {
       },
   M: {
         I: gramToLbs,
-        M: noConv
+        M: noConv,
+        O: gramToOz,
+        K: gToKg
       },
   I: {
         I: noConv,
-        M: lbsToGram
+        M: lbsToGram,
+        O: lbsToOz,
+        K: lbsToKg
+      },
+  O:  {
+        I: ozToLbs,
+        M: ozToGram,
+        O: noConv
+      },
+  K:  {
+        I: kgToLbs,
+        M: kgToG,
+        K: noConv
       }
 };
 

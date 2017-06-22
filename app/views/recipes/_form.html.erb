@@ -59,7 +59,8 @@
 
         <div class="field">
           <%= malt.label :quantity %>
-          <%= malt.text_field :quantity, class: 'ingredient-qty', data: 'malts', unit: @current_user_pref.weight %>
+          <%= malt.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight %>
+          <input type="number" step="0.5" min="0" class="ingredient-qty-display" data="malts" />
           <span><%= get_unit_symbol(@current_user_pref.weight) %></span>
         </div>
 
@@ -88,7 +89,8 @@
 
             <div class="field">
               <%= hop.label :quantity %>
-              <%= hop.text_field :quantity, class: 'ingredient-qty', data: 'hops', unit: @current_user_pref.weight %>
+              <%= hop.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight %>
+              <input type="number" step="any" min="0" class="ingredient-qty-display" data="hops" />
               <span><%= get_unit_symbol(@current_user_pref.weight) %></span>
             </div>
 
