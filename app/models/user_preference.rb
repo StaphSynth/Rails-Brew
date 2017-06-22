@@ -3,6 +3,7 @@ class UserPreference < ApplicationRecord
 
   validates :volume, length: {is: 1}, format: {with: /[LGB]/} # L = litres, G = US gallons, B = British Gallons
   validates :temp, length: {is: 1}, format: {with: /[CF]/}   # C = celcius, F = fahrenheit
-  validates :weight, length: {is: 1}, format: {with: /[MI]/} # M = metric (g/kg), I = imperial (lbs/oz)
+  validates :weight_big, length: {is: 1}, format: {with: /[KI]/} # K = metric kg, I = imperial lbs
+  validates :weight_small, length: {is: 1}, format: {with: /[MO]/} # M = metric g, O = imperial oz
   validates :default_efficiency, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 end

@@ -8,7 +8,7 @@ class UserPreferencesController < ApplicationController
   end
 
   def update
-    if(@user_preference.update_attributes(user_preference_params))
+    if(@user_preference.update_attributes(finalize_params(user_preference_params)))
       redirect_to preferences_url, :notice => 'Your preferences have been updated.'
     else
       render :edit
@@ -18,7 +18,7 @@ class UserPreferencesController < ApplicationController
   private
 
     def user_preference_params
-      params.require(:user_preference).permit(:user_id, :volume, :temp, :weight,
+      params.require(:user_preference).permit(:user_id, :volume, :temp, :weight_big, :weight_small,
                                               :default_efficiency, :default_batch_volume)
     end
 
@@ -32,5 +32,15 @@ class UserPreferencesController < ApplicationController
 
     def set_preferences
       @user_preference = UserPreference.find_by(:user_id => @user.id)
+    end
+
+    def finalize_params(pref_params)
+      if(pref_params[:weight_big] == 'K')
+        pref_params[:weight_small] = 'M'
+      elsif(pref_params[:weight_big] == 'I')
+        pref_params[:weight_small] = 'O'
+      end
+
+      return pref_params
     end
 end
