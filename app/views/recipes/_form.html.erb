@@ -47,6 +47,7 @@
   </div>
 
   <strong>OG: </strong><span class="predicted-og"></span>
+  <strong>IBUs</strong><span class="predicted-ibu"></span>
 
   <h3>Malts</h3>
   <div class="malt-inputs">
@@ -82,17 +83,17 @@
     <%= f.fields_for :recipe_hops do |hop| %>
       <div class="hop-input">
 
-            <div class="field">
-              <%= hop.label :hop, :value => "Hops" %>
-              <%= hop.select :hop, options_for_select(options_generator(:hops)), {prompt: 'Select a hop'}, class: 'ingredient-select', data: 'hops' %>
-            </div>
+        <div class="field">
+          <%= hop.label :hop, :value => "Hops" %>
+          <%= hop.select :hop, options_for_select(options_generator(:hops)), {prompt: 'Select a hop'}, class: 'ingredient-select', data: 'hops' %>
+        </div>
 
-            <div class="field">
-              <%= hop.label :quantity %>
-              <%= hop.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight_small %>
-              <input type="number" step="any" min="0" class="ingredient-qty-display" data="hops" />
-              <span><%= get_unit_symbol(@current_user_pref.weight_small) %></span>
-            </div>
+        <div class="field">
+          <%= hop.label :quantity %>
+          <%= hop.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight_small %>
+          <input type="number" step="any" min="0" class="ingredient-qty-display" data="hops" />
+          <span><%= get_unit_symbol(@current_user_pref.weight_small) %></span>
+        </div>
 
         <div class="field">
           <%= hop.hidden_field :_destroy, :value => false, :class => 'destroy' %>
