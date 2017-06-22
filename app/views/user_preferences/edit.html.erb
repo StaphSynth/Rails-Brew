@@ -55,8 +55,8 @@
   <h4>Default Batch Volume</h4>
   <div class="field form-group">
     <%= f.hidden_field :default_batch_volume, id: 'batch-model' %>
-    <input type="number" id="batch-display" style="width: 50px;" />
-    <span><%= get_unit_symbol(@user_preference.volume) %></span>
+    <input id="batch-display" style="width: 50px;" />
+    <span class="volume-unit"><%= get_unit_symbol(@user_preference.volume) %></span>
   </div>
 
   <div class="actions form-group">
