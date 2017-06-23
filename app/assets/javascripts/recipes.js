@@ -296,31 +296,41 @@ function getWeightUnit(ingredientType) {
   return ingredientType == 'malts' ? gon.userPref.weight_big : gon.userPref.weight_small;
 }
 
+//calls all the prediction calculation functions and
+//updates the display and model with the new values
 function updateCalcs() {
-  calculateOg();
-  $('.predicted-og').html(gon.og);
-  var srm = calcBeerSrm();
-  $('.predicted-srm').html(srm.toFixed(1));
+  var og = calculateOg();
+  var srm = calcBeerSrm().toFixed(1);
+
+
+  $('.predicted-og').html(og);
+  $('.predicted-srm').html(srm);
   $('.predicted-colour').css('background', srmToHex(srm));
 }
 
+//returns the calculated SG of the beer taking into account the
+//amount of malt, the efficiency of extraction and the batch size.
+//malts are stored as objects in the global object, gon.malts
 function calculateOg() {
-  var keys = Object.keys(gon.malts);
   var totalGravPoints = 0;
-  var tempLbs = 0;
+  var weight;
+  var ppg;
   var efficiency = parseInt($('#efficiency').val()) / 100;
-  var volumeGal = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
+  var batchVolume = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
-  for(var i = 0; i < keys.length; i++) {
-    tempLbs = unitConverter[gon.userPref.weight_big]['I'](gon.malts[keys[i]].quantity);
+  //cycle through malts and add the grav points produced by each to the total
+  Object.keys(gon.malts).forEach(function(key) {
+    weight = unitConverter[gon.userPref.weight_big]['I'](gon.malts[key].quantity);
+    ppg = gon.malts[key].ppg;
 
-    if(gon.malts[keys[i]].must_mash)
-      totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg) * efficiency;
+    if(gon.malts[key].must_mash)
+      totalGravPoints += weight * ppgToGravPoints(ppg) * efficiency;
     else
-      totalGravPoints += tempLbs * ppgToGravPoints(gon.malts[keys[i]].ppg)
-  }
+      totalGravPoints += weight * ppgToGravPoints(ppg);
+  });
 
-  gon.og = (((Math.round(totalGravPoints / volumeGal)) / 1000) + 1).toFixed(3);
+  //convert from grav points to SG (float) and return
+  return (((Math.round(totalGravPoints / batchVolume)) / 1000) + 1).toFixed(3);
 }
 
 function ppgToGravPoints(ppg) {
