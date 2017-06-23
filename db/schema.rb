@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170623073553) do
+ActiveRecord::Schema.define(version: 20170623081721) do
 
   create_table "ratings", force: :cascade do |t|
     t.integer "recipe_id"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20170623073553) do
     t.decimal  "FG"
     t.decimal  "colour"
     t.integer  "IBU"
+    t.integer  "efficiency"
   end
 
   create_table "stock_items", force: :cascade do |t|

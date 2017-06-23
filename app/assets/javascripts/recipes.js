@@ -283,7 +283,7 @@ function calcMcu() {
 //calc beer colour in SRM
 function calcBeerSrm() {
   //SRM = 1.4922 * (MCU ^ 0.6859)
-  return 1.4922 * Math.pow(calcMcu(), 0.6859);
+  return (1.4922 * Math.pow(calcMcu(), 0.6859)).toFixed(1);
 }
 
 //gets returns the hex value from the colour look-up table
@@ -301,10 +301,12 @@ function getWeightUnit(ingredientType) {
 //updates the display and model with the new values
 function updateCalcs() {
   var og = calculateOg();
-  var srm = calcBeerSrm().toFixed(1);
+  var srm = calcBeerSrm();
 
-  $('.predicted-og').html(og);
-  $('.predicted-srm').html(srm);
+  $('.og-display').html(og);
+  $('.og-model').val(og);
+  $('.srm-display').html(srm);
+  $('.srm-model').val(srm);
   $('.predicted-colour').css('background', srmToHex(srm));
 }
 
