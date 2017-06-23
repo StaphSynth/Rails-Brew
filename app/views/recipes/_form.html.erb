@@ -89,6 +89,11 @@
         </div>
 
         <div class="field">
+          <%= hop.label :boil_time %>
+          <%= hop.text_field :boil_time, style: 'width: 50px;' %>
+        </div>
+
+        <div class="field">
           <%= hop.label :quantity %>
           <%= hop.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight_small %>
           <input type="number" step="any" min="0" class="ingredient-qty-display" data="hops" />
