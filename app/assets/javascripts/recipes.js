@@ -160,6 +160,30 @@ $(document).on('turbolinks:load', function() {
 
 }); //document load
 
+const srmColourMap = {
+        1:  '#FFE699',  2: '#FFD878',
+        3:  '#FFCA5A',  4: '#FFBF42',
+        5:  '#FBB123',  6: '#F8A600',
+        7:  '#F39C00',  8: '#EA8F00',
+        9:  '#E58500', 10: '#DE7C00',
+        11: '#D77200', 12: '#CF6900',
+        13: '#CB6200', 14: '#C35900',
+        15: '#BB5100', 16: '#B54C00',
+        17: '#B04500', 18: '#A63E00',
+        19: '#A13700', 20: '#9B3200',
+        21: '#952D00', 22: '#8E2900',
+        23: '#882300', 24: '#821E00',
+        25: '#7B1A00', 26: '#771900',
+        27: '#701400', 28: '#6A0E00',
+        29: '#660D00', 30: '#5E0B00',
+        31: '#5A0A02', 32: '#560A05',
+        33: '#520907', 34: '#4C0505',
+        35: '#470606', 36: '#440607',
+        37: '#3F0708', 38: '#3B0607',
+        39: '#3A070B', 40: '#36080A',
+        'max': '#030403'
+    };
+
 
 //unit conversion functions
 var noConv = function(v)        { return v; }
@@ -236,6 +260,37 @@ const unitConverter = {
       }
 };
 
+//returns the total malt colour units (MCU) of the beer, divided by batch size (in Gal)
+function calcMcu() {
+  var totalMcu = 0;
+  var amount;
+  var colour;
+  var batchVol = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
+
+  //loop through the malts, multiply colour (in SRM)
+  //with amount (in lbs) for each, then add to total mcu
+  Object.keys(gon.malts).forEach(function(key) {
+    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(gon.malts[key].quantity));
+    colour = gon.malts[key].colour || 0;
+
+    totalMcu += amount * colour;
+  });
+
+  return totalMcu / batchVol;
+}
+
+//calc beer colour in SRM
+function calcBeerSrm() {
+  //SRM = 1.4922 * (MCU ^ 0.6859)
+  return 1.4922 * Math.pow(calcMcu(), 0.6859);
+}
+
+//gets returns the hex value from the colour look-up table
+function srmToHex(srm) {
+  srm = Math.round(srm);
+  return srm > 40 ? srmColourMap['max'] : srmColourMap[srm];
+}
+
 //return the weight unit (big or small) to be used based on ingredient type
 function getWeightUnit(ingredientType) {
   return ingredientType == 'malts' ? gon.userPref.weight_big : gon.userPref.weight_small;
@@ -244,6 +299,9 @@ function getWeightUnit(ingredientType) {
 function updateCalcs() {
   calculateOg();
   $('.predicted-og').html(gon.og);
+  var srm = calcBeerSrm();
+  $('.predicted-srm').html(srm.toFixed(1));
+  $('.predicted-colour').css('background', srmToHex(srm));
 }
 
 function calculateOg() {
