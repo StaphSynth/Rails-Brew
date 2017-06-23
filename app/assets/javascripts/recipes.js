@@ -161,6 +161,7 @@ $(document).on('turbolinks:load', function() {
 }); //document load
 
 const srmColourMap = {
+        0:  '#ffffff',
         1:  '#FFE699',  2: '#FFD878',
         3:  '#FFCA5A',  4: '#FFBF42',
         5:  '#FBB123',  6: '#F8A600',
@@ -301,7 +302,6 @@ function getWeightUnit(ingredientType) {
 function updateCalcs() {
   var og = calculateOg();
   var srm = calcBeerSrm().toFixed(1);
-
 
   $('.predicted-og').html(og);
   $('.predicted-srm').html(srm);
