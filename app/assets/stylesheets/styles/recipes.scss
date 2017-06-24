@@ -19,6 +19,32 @@ RECIPE FORM STYLING
   height: 200px;
 }
 
+//input field widths
+#efficiency,
+#volume-display,
+.ingredient-qty-display {
+  width: 55px;
+}
+
+.fg-model {
+  width: 80px;
+}
+
+.prediction-container {
+  display: flex;
+  flex-direction: row;
+
+  border: 1px solid grey;
+  border-radius: 3px;
+  padding: 1em;
+  width: 330px;
+
+  .predictions {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 /*************************
 RECIPE LIST OBJECT DISPLAY
 **************************/
@@ -47,18 +73,6 @@ RECIPE LIST OBJECT DISPLAY
     }
   } // .recipe-list-item
 
-  .recipe-color {
-    height: 60px;
-    width: 35px;
-    border: 3px solid black;
-    /*The bg-color is a place-holder until the code to predict
-    final beer color based on malt EBC is written*/
-    background-color: yellow;
-    border-top: 5px solid white;
-    border-radius: 0px 0px 3px 3px;
-    margin-right: 0.75em;
-  }
-
   .recipe-title {
     div {
       display: inline-block;
@@ -73,7 +87,24 @@ RECIPE LIST OBJECT DISPLAY
       padding-top: 0.5rem;
     }
   }
-} /* end .recipe-list */
+} // .recipe-list
+
+.recipe-colour {
+  // height: 60px;
+  // width: 35px;
+  // border: 3px solid black;
+  /*The bg-color is a place-holder until the code to predict
+  final beer color based on malt EBC is written*/
+  // background-color: yellow;
+  // border-top: 5px solid white;
+  // border-radius: 0px 0px 3px 3px;
+  margin-right: 0.75em;
+
+  .predicted-colour {
+  }
+}
+
+ /* end .recipe-list */
 
 /*************************
 RECIPE SHOW PAGE

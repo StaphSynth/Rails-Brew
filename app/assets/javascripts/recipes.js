@@ -1,165 +1,14 @@
-$(document).on('turbolinks:load', function() {
+/**********************************************
+RECIPES.JS
+==========
+Does all the predictions, AJAXing,
+and display updating required by the
+recipe creation form and recipe index page.
+**********************************************/
 
-  /*MODEL-DISPLAY LINKING FOR UNIT CONVERSION/STORAGE*/
-  //setup display of recipe volume
-  $('#volume-display').val(unitConverter['L'][gon.userPref.volume]($('#volume-model').val()));
-
-  //link the volume display with the model
-  $('#volume-display').change(function() {
-    $('#volume-model').val(unitConverter[gon.userPref.volume]['L']($(this).val()));
-  });
-
-  //setup display of ingredient weights.
-  $('.ingredient-qty-display').each(function() {
-    var weightUnit = getWeightUnit($(this).attr('data'));
-    $(this).val(Math.round(unitConverter['M'][weightUnit](
-      $(this).siblings('.ingredient-qty-model').val())
-    ));
-  });
-
-  // $('.ingredient-qty-display').change(function() {
-  //   $(this).siblings('.ingredient-qty-model').val(unitConverter[gon.userPref.weight]['M']($(this).val()));
-  // });
-  /*END MODEL-DISPLAY LINKING*/
-
-  $('.add-ingredient-btn').click(function() {
-    var replaceExp = new RegExp(/[0-9]+/);
-    var ingredientSelector ='.' + $(this).data('type') + '-input';
-    var $ingredientsParent = $(ingredientSelector).parent();
-    var $newIngredient = $($(ingredientSelector).last()).clone(true);
-    var uniqueVal = new Date().getTime();
-
-    $($newIngredient).find('select, input, label').each(function(index, elem) {
-      replaceAttr(elem, 'id', replaceExp, uniqueVal);
-      replaceAttr(elem, 'name', replaceExp, uniqueVal);
-      replaceAttr(elem, 'for', replaceExp, uniqueVal);
-
-      if($(elem).is('input'))
-        $(elem).val('');
-    });
-
-    $($newIngredient).hide();
-    $($newIngredient).appendTo($ingredientsParent);
-    $($newIngredient).slideDown('fast');
-  });
-
-  $('.ingredient-select').change(function() {
-    var type = $(this).attr('data');
-    var ingredient = $(this).val();
-    var ingredientId = formatCallerId($(this).attr('id'));
-    var quantity = $(this).parent().parent().find('.ingredient-qty-display').val();
-
-    //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
-    //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
-    if(ingredient) {
-      if(quantity) {//if the related quantity field has a value in it, then pass it through and it will be updated as well.
-        fetchIngredientData(type, ingredient, ingredientId, parseFloat(quantity));
-      } else {
-        fetchIngredientData(type, ingredient, ingredientId);
-      }
-    } else {
-      deleteGonIngredient(type, ingredientId);
-    }
-  });
-
-  $('.ingredient-qty-display').change(function() {
-    var callerId = formatCallerId($(this).siblings('.ingredient-qty-model').attr('id'));
-    var quantity = parseFloat($(this).val());
-    var type = $(this).attr('data');
-    var weightUnit = getWeightUnit(type);
-
-    //set the weight unit param first (big for MALTS, else small)
-
-    //update the ingredient-qty-model with the new value in metric
-    $(this).siblings('.ingredient-qty-model').val(unitConverter[weightUnit]['M']($(this).val()));
-
-    //if the ingredient is present in gon.INGREDIENT, then update the qty there as well
-    //if not, then the ingredient select change event will update both ingredient id and qty
-    if(gon[type][callerId] != undefined) {
-      setIngredientQty(type, callerId, quantity);
-      updateCalcs();
-    }
-  });
-
-  $('#volume-display').change(function() {
-    updateCalcs();
-  });
-
-  $('#efficiency').change(function() {
-    updateCalcs();
-  });
-
-  $('.del-ingredient-btn').click(function() {
-    //cannot remove elem from DOM as Rails needs to know it's being destroyed.
-    //So, set destroy to true and hide element from view.
-    var itemToRemove = $(this).parent().parent();
-    $(itemToRemove).find('.destroy').val(true);
-    $(itemToRemove).slideUp('fast');
-
-    //Then, remove its value from the gon.INGREDIENT global so it doesn't affect predictions
-    //traverse to the select elem, get its id and data attr and use them to delete gon.INGR_TYPE.INGREDIENT_ID
-    var ingredientSelect = $(itemToRemove).find('.ingredient-select');
-    var ingredientId = formatCallerId($(ingredientSelect).attr('id'));
-    var ingredientType = $(ingredientSelect).attr('data');
-
-    deleteGonIngredient(ingredientType, ingredientId);
-    updateCalcs();
-  });
-
-  //set current recipe style data if the data exists
-  if(!(gon != undefined && (gon.styleData == undefined || $.isEmptyObject(gon.styleData)))) {
-    setStyleInfo('.style-stats-container');
-    $('.style-stats-container').show();
-  }
-
-  //when a user clicks on recipe style text,
-  //this function will toggle the appearance of a
-  //div containing additional style info
-  $('.get-style-info').click(function() {
-    var styleId = $(this).parent().attr('data-style-id');
-    var index = $(this).parent().attr('data-index');
-    var container = '.info-' + index;
-
-    //if already visible, hide
-    if($(container).is(':visible')) {
-      displayStyleInfo(false, container);
-
-      //if not visible, but correct data already in gon object, display
-    } else if(styleId == gon.styleData.id) {
-      displayStyleInfo(true, container);
-
-      //if the style data isn't already there, make ajax req for it, then display
-    } else {
-      getStyleAjax(styleId, function() {
-        setStyleInfo(container);
-        displayStyleInfo(true, container);
-      });
-    }
-  });
-
-
-  //when creating a recipe, this function will update the displayed recipe style parameters
-  //when the user makes a recipe style selection from the select#recipe_style element
-  $('select#recipe_style').change(function() {
-    var selectedValue = $(this).val();
-
-    //if value is empty, user has selected the prompt, hide the params
-    if(selectedValue == '') {
-      $('.style-stats-container').hide();
-
-    //if not, then ajax for the style data and display
-    } else {
-      getStyleAjax(selectedValue, function(response) {
-        setStyleInfo('.style-stats-container');
-        $('.style-stats-container').show();
-      }, function(response) {
-        $('.style-stats-container').hide();
-      });
-    }
-  });
-
-}); //document load
-
+/**********************************
+*****CONST AND FUNCTION DEFINITIONS
+***********************************/
 const srmColourMap = {
         0:  '#ffffff',
         1:  '#FFE699',  2: '#FFD878',
@@ -286,7 +135,7 @@ function calcBeerSrm() {
   return (1.4922 * Math.pow(calcMcu(), 0.6859)).toFixed(1);
 }
 
-//gets returns the hex value from the colour look-up table
+//returns the hex value from the colour look-up table
 function srmToHex(srm) {
   srm = Math.round(srm);
   return srm > 40 ? srmColourMap['max'] : srmColourMap[srm];
@@ -295,19 +144,6 @@ function srmToHex(srm) {
 //return the weight unit (big or small) to be used based on ingredient type
 function getWeightUnit(ingredientType) {
   return ingredientType == 'malts' ? gon.userPref.weight_big : gon.userPref.weight_small;
-}
-
-//calls all the prediction calculation functions and
-//updates the display and model with the new values
-function updateCalcs() {
-  var og = calculateOg();
-  var srm = calcBeerSrm();
-
-  $('.og-display').html(og);
-  $('.og-model').val(og);
-  $('.srm-display').html(srm);
-  $('.srm-model').val(srm);
-  $('.predicted-colour').css('background', srmToHex(srm));
 }
 
 //returns the calculated SG of the beer taking into account the
@@ -338,7 +174,6 @@ function calculateOg() {
 function ppgToGravPoints(ppg) {
   return Math.round((ppg - 1) * 1000);
 }
-
 
 function deleteGonIngredient(type, ingredientId) {
   delete gon[type][ingredientId];
@@ -498,3 +333,187 @@ function failSilent(response) {
   console.log('AJAX error! Status: ', response.status);
   console.log(response);
 }
+
+//calls all the prediction calculation functions and
+//updates the display and model with the new values
+function updateCalcs() {
+  var og = calculateOg();
+  var srm = calcBeerSrm();
+  var ibu = 0; //will call calcIbu when it's written, for now set to zero
+
+  $('.og-display').html(og);
+  $('.og-model').val(og);
+  $('.srm-display').html(srm);
+  $('.srm-model').val(srm);
+  $('.predicted-colour').css('background', srmToHex(srm));
+  $('.ibu-display').html(ibu);
+  $('.ibu-model').val(ibu);
+}
+
+
+/************************************
+******* CODE EXECUTION  *************
+*************************************/
+$(document).on('turbolinks:load', function() {
+
+  /*MODEL-DISPLAY LINKING FOR UNIT CONVERSION/STORAGE*/
+  //setup display of recipe volume
+  $('#volume-display').val(unitConverter['L'][gon.userPref.volume]($('#volume-model').val()));
+
+  //link the volume display with the model
+  $('#volume-display').change(function() {
+    $('#volume-model').val(unitConverter[gon.userPref.volume]['L']($(this).val()));
+  });
+
+  //setup display of ingredient weights.
+  $('.ingredient-qty-display').each(function() {
+    var weightUnit = getWeightUnit($(this).attr('data'));
+    $(this).val(Math.round(unitConverter['M'][weightUnit](
+      $(this).siblings('.ingredient-qty-model').val())
+    ));
+  });
+
+  //set background colour of glass(es)
+  $('.predicted-colour').each(function() {
+    $(this).css('background', srmToHex($(this).attr('data')));
+  });
+
+  /*END MODEL-DISPLAY LINKING*/
+
+  $('.add-ingredient-btn').click(function() {
+    var replaceExp = new RegExp(/[0-9]+/);
+    var ingredientSelector ='.' + $(this).data('type') + '-input';
+    var $ingredientsParent = $(ingredientSelector).parent();
+    var $newIngredient = $($(ingredientSelector).last()).clone(true);
+    var uniqueVal = new Date().getTime();
+
+    $($newIngredient).find('select, input, label').each(function(index, elem) {
+      replaceAttr(elem, 'id', replaceExp, uniqueVal);
+      replaceAttr(elem, 'name', replaceExp, uniqueVal);
+      replaceAttr(elem, 'for', replaceExp, uniqueVal);
+
+      if($(elem).is('input'))
+        $(elem).val('');
+    });
+
+    $($newIngredient).hide();
+    $($newIngredient).appendTo($ingredientsParent);
+    $($newIngredient).slideDown('fast');
+  });
+
+  $('.ingredient-select').change(function() {
+    var type = $(this).attr('data');
+    var ingredient = $(this).val();
+    var ingredientId = formatCallerId($(this).attr('id'));
+    var quantity = $(this).parent().parent().find('.ingredient-qty-display').val();
+
+    //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
+    //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
+    if(ingredient) {
+      if(quantity) {//if the related quantity field has a value in it, then pass it through and it will be updated as well.
+        fetchIngredientData(type, ingredient, ingredientId, parseFloat(quantity));
+      } else {
+        fetchIngredientData(type, ingredient, ingredientId);
+      }
+    } else {
+      deleteGonIngredient(type, ingredientId);
+    }
+  });
+
+  $('.ingredient-qty-display').change(function() {
+    var callerId = formatCallerId($(this).siblings('.ingredient-qty-model').attr('id'));
+    var quantity = parseFloat($(this).val());
+    var type = $(this).attr('data');
+    var weightUnit = getWeightUnit(type);
+
+    //set the weight unit param first (big for MALTS, else small)
+
+    //update the ingredient-qty-model with the new value in metric
+    $(this).siblings('.ingredient-qty-model').val(unitConverter[weightUnit]['M']($(this).val()));
+
+    //if the ingredient is present in gon.INGREDIENT, then update the qty there as well
+    //if not, then the ingredient select change event will update both ingredient id and qty
+    if(gon[type][callerId] != undefined) {
+      setIngredientQty(type, callerId, quantity);
+      updateCalcs();
+    }
+  });
+
+  $('#volume-display').change(function() {
+    updateCalcs();
+  });
+
+  $('#efficiency').change(function() {
+    updateCalcs();
+  });
+
+  $('.del-ingredient-btn').click(function() {
+    //cannot remove elem from DOM as Rails needs to know it's being destroyed.
+    //So, set destroy to true and hide element from view.
+    var itemToRemove = $(this).parent().parent();
+    $(itemToRemove).find('.destroy').val(true);
+    $(itemToRemove).slideUp('fast');
+
+    //Then, remove its value from the gon.INGREDIENT global so it doesn't affect predictions
+    //traverse to the select elem, get its id and data attr and use them to delete gon.INGR_TYPE.INGREDIENT_ID
+    var ingredientSelect = $(itemToRemove).find('.ingredient-select');
+    var ingredientId = formatCallerId($(ingredientSelect).attr('id'));
+    var ingredientType = $(ingredientSelect).attr('data');
+
+    deleteGonIngredient(ingredientType, ingredientId);
+    updateCalcs();
+  });
+
+  //set current recipe style data if the data exists
+  if(!(gon != undefined && (gon.styleData == undefined || $.isEmptyObject(gon.styleData)))) {
+    setStyleInfo('.style-stats-container');
+    $('.style-stats-container').show();
+  }
+
+  //when a user clicks on recipe style text,
+  //this function will toggle the appearance of a
+  //div containing additional style info
+  $('.get-style-info').click(function() {
+    var styleId = $(this).parent().attr('data-style-id');
+    var index = $(this).parent().attr('data-index');
+    var container = '.info-' + index;
+
+    //if already visible, hide
+    if($(container).is(':visible')) {
+      displayStyleInfo(false, container);
+
+      //if not visible, but correct data already in gon object, display
+    } else if(styleId == gon.styleData.id) {
+      displayStyleInfo(true, container);
+
+      //if the style data isn't already there, make ajax req for it, then display
+    } else {
+      getStyleAjax(styleId, function() {
+        setStyleInfo(container);
+        displayStyleInfo(true, container);
+      });
+    }
+  });
+
+
+  //when creating a recipe, this function will update the displayed recipe style parameters
+  //when the user makes a recipe style selection from the select#recipe_style element
+  $('select#recipe_style').change(function() {
+    var selectedValue = $(this).val();
+
+    //if value is empty, user has selected the prompt, hide the params
+    if(selectedValue == '') {
+      $('.style-stats-container').hide();
+
+    //if not, then ajax for the style data and display
+    } else {
+      getStyleAjax(selectedValue, function(response) {
+        setStyleInfo('.style-stats-container');
+        $('.style-stats-container').show();
+      }, function(response) {
+        $('.style-stats-container').hide();
+      });
+    }
+  });
+
+}); //document load

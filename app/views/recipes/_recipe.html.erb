@@ -8,7 +8,9 @@
 
     <div class="recipe-title-container">
       <a class="recipe-link" href="<%= recipe_path(recipe) %>">
-        <div class="recipe-color"></div>
+        <div class="recipe-colour">
+          <%= image_tag 'glass_small.png', data: (recipe.colour || 0), class: 'predicted-colour' %>
+        </div>
         <div class="recipe-title">
           <div>
             <h3 class="recipe-name"><%= recipe.name %></h3>

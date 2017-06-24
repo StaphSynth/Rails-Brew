@@ -56,15 +56,23 @@
   </div>
 
   <div class="prediction-container">
-    <div><%= image_tag 'glass_small.png', class: 'predicted-colour' %></div>
-    <div class="prediction">
-      <strong>OG: </strong><span class="og-display"><%= new_rec ? '1.000' : recipe.OG %></span>
-      <%= f.hidden_field :OG, class: 'og-model' %>
-      <strong>FG: </strong><%= f.text_field :FG, class: 'fg-model' %>
-      <strong>IBUs: </strong><span class="ibu-display"><%= new_rec ? '0' : recipe.IBU %></span>
-      <%= f.hidden_field :IBU, class: 'ibu-model' %>
-      <strong>SRM: </strong><span class="srm-display"><%= new_rec ? '0' : recipe.colour %></span>
-      <%= f.hidden_field :colour, class: 'srm-model' %>
+    <div class="recipe-colour">
+      <%= image_tag 'glass_small.png', class: 'predicted-colour', data: (new_rec ? 0 : recipe.colour) %>
+    </div>
+
+    <div class="predictions">
+      <div>
+        <strong>OG: </strong><span class="og-display"><%= new_rec ? '1.000' : recipe.OG %></span>
+        <%= f.hidden_field :OG, class: 'og-model' %>
+        <strong>FG: </strong><%= f.text_field :FG, class: 'fg-model' %>
+      </div>
+
+      <div>
+        <strong>IBUs: </strong><span class="ibu-display"><%= new_rec ? '0' : recipe.IBU %></span>
+        <%= f.hidden_field :IBU, class: 'ibu-model', value: (0 if new_rec) %>
+        <strong>SRM: </strong><span class="srm-display"><%= new_rec ? '0' : recipe.colour %></span>
+        <%= f.hidden_field :colour, class: 'srm-model' %>
+      </div>
     </div>
   </div>
 
