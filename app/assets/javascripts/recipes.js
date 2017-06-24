@@ -9,6 +9,18 @@ recipe creation form and recipe index page.
 /**********************************
 *****CONST AND FUNCTION DEFINITIONS
 ***********************************/
+const units = {
+  I: 'lb',
+  O: 'oz',
+  M: 'g',
+  K: 'kg',
+  L: 'L',
+  G: 'Gal.',
+  B: 'Imp. Gal.',
+  F: '°F',
+  C: '°C'
+};
+
 const srmColourMap = {
         0:  '#ffffff',
         1:  '#FFE699',  2: '#FFD878',
@@ -365,7 +377,7 @@ $(document).on('turbolinks:load', function() {
     $('#volume-model').val(unitConverter[gon.userPref.volume]['L']($(this).val()));
   });
 
-  //setup display of ingredient weights.
+  //setup display of ingredient weights in recipe form
   $('.ingredient-qty-display').each(function() {
     var weightUnit = getWeightUnit($(this).attr('data'));
     $(this).val(Math.round(unitConverter['M'][weightUnit](
@@ -376,6 +388,23 @@ $(document).on('turbolinks:load', function() {
   //set background colour of glass(es)
   $('.predicted-colour').each(function() {
     $(this).css('background', srmToHex($(this).attr('data')));
+  });
+
+  //do unit conversion and display qty on recipe show page
+  $('.qty').each(function() {
+    var qty = parseFloat($(this).attr('data'));
+    var weightUnit = getWeightUnit($(this).attr('data-type'));
+    qty = unitConverter['M'][weightUnit](qty);
+
+    //decide on rounding rules
+    if((weightUnit == 'M') || (qty % 1 == 0))
+      qty = Math.round(qty);
+    else
+      qty = qty.toFixed(2);
+
+    //set the display
+    $(this).html(qty);
+    $(this).siblings('.qty-unit').html(units[weightUnit]);
   });
 
   /*END MODEL-DISPLAY LINKING*/

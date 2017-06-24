@@ -21,11 +21,19 @@
   <table>
     <tr><td><h3>Malt</h3></td></tr>
     <% @recipe.recipe_malts.each do |malt| %>
-      <tr><td><%= ingredients[:malts][malt.malt.to_sym][:name] %></td><td><%= malt.quantity %></td></tr>
+      <tr>
+        <td><%= ingredients[:malts][malt.malt.to_sym][:name] %></td>
+        <td class="qty" data-type="malts" data="<%= malt.quantity %>"></td>
+        <td class="qty-unit"></td>
+      </tr>
     <% end %>
     <tr><td><h3>Hops</h3></td></tr>
     <% @recipe.recipe_hops.each do |hop| %>
-      <tr><td><%= ingredients[:hops][hop.hop.to_sym][:name] %></td><td><%= hop.quantity %></td></tr>
+      <tr>
+        <td><%= ingredients[:hops][hop.hop.to_sym][:name] %></td>
+        <td class="qty" data-type="hops" data="<%= hop.quantity %>"></td>
+        <td class="qty-unit"></td>
+      </tr>
     <% end %>
     <tr><td><h3>Yeast</h3></td></tr>
     <% @recipe.recipe_yeasts.each do |yeast| %>
