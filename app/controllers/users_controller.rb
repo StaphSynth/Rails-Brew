@@ -13,11 +13,10 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-
     #set ratings to display only for showing users' recipes
-    gon.ratingData = {
-      dispOnly: true
-    }
+    gon.ratingData = { dispOnly: true }
+    #set gon.userPref required by JS
+    gon.userPref = UserPreference.find_by(:user_id => @user.id)
   end
 
   # GET /users/new
