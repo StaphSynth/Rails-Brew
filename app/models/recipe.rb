@@ -19,5 +19,6 @@ class Recipe < ApplicationRecord
   validates :OG, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 2 }
   validates :FG, allow_blank: true, length: { maximum: 15 }
   validates :colour, numericality: { greater_than_or_equal_to: 0 }
+  validates :IBU, numericality: { greater_than_or_equal_to: 0 }
 
 end

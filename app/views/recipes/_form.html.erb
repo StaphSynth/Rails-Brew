@@ -1,4 +1,6 @@
 <%= form_for(recipe) do |f| %>
+  <% new_rec = f.object.new_record? %>
+
   <% if recipe.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
@@ -33,7 +35,7 @@
     <%= f.label :batch_volume, 'Batch Volume' %>
     <%=
       f.hidden_field :batch_volume, id: 'volume-model',
-      value: (f.object.new_record? ? @current_user_pref.default_batch_volume : recipe.batch_volume),
+      value: (new_rec ? @current_user_pref.default_batch_volume : recipe.batch_volume),
       unit: @current_user_pref.volume
     %>
     <input type="number" id="volume-display" step="0.5" />
@@ -49,17 +51,22 @@
     <%= f.label :efficiency %>
     <%=
       f.text_field :efficiency, type: 'number', id: 'efficiency', min: 0, max: 100,
-      value: (f.object.new_record? ? @current_user_pref.default_efficiency : recipe.efficiency )
+      value: (new_rec ? @current_user_pref.default_efficiency : recipe.efficiency )
     %> %
   </div>
 
-  <strong>OG: </strong><span class="og-display"></span>
-  <%= f.hidden_field :OG, class: 'og-model' %>
-  <strong>IBUs: </strong><span class="ibu-display"></span>
-  <%= f.hidden_field :IBU, class: 'ibu-model' %>
-  <strong>SRM: </strong><span class="srm-display"></span>
-  <%= f.hidden_field :colour, class: 'srm-model' %>
-  <div><%= image_tag 'glass_small.png', class: 'predicted-colour' %></div>
+  <div class="prediction-container">
+    <div><%= image_tag 'glass_small.png', class: 'predicted-colour' %></div>
+    <div class="prediction">
+      <strong>OG: </strong><span class="og-display"><%= new_rec ? '1.000' : recipe.OG %></span>
+      <%= f.hidden_field :OG, class: 'og-model' %>
+      <strong>FG: </strong><%= f.text_field :FG, class: 'fg-model' %>
+      <strong>IBUs: </strong><span class="ibu-display"><%= new_rec ? '0' : recipe.IBU %></span>
+      <%= f.hidden_field :IBU, class: 'ibu-model' %>
+      <strong>SRM: </strong><span class="srm-display"><%= new_rec ? '0' : recipe.colour %></span>
+      <%= f.hidden_field :colour, class: 'srm-model' %>
+    </div>
+  </div>
 
   <h3>Malts</h3>
   <div class="malt-inputs">
