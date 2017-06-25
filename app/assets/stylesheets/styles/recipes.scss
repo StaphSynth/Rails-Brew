@@ -110,6 +110,19 @@ RECIPE LIST OBJECT DISPLAY
 RECIPE SHOW PAGE
 **************************/
 
+.header {
+  display: flex;
+  flex-direction: row;
+
+  img {
+    margin-top: 1.125em;
+  }
+}
+
+.recipe-info {
+  margin-left: 1em;
+}
+
 .get-style-info {
   cursor: pointer;
 }

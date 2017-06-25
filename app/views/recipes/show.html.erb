@@ -1,23 +1,31 @@
 <% provide :title, @recipe.name %>
 
 <div class="header">
-  <h2>
-    <%= @recipe.name %>
-    <% if @recipe.user == @current_user %>
-      <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' %>
-      <%= link_to 'Delete Recipe', recipe_path, method: :delete, class: 'btn btn-primary', data: { confirm: "Are you sure you want to delete #{@recipe.name}?" } %>
-    <% end %>
-  </h2>
-
-  <%= render 'style_info', style: get_style(@recipe.style, :json), index: 0 %>
-
+  <div class="recipe-colour">
+    <%= image_tag 'glass_small.png', data: (@recipe.colour || 0), class: 'predicted-colour' %>
+  </div>
   <div>
-    <span><%= fa_icon 'user' %> <%= link_to @recipe.user.name, @recipe.user %>&#8195;</span>
-    <span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
+    <h2>
+      <%= @recipe.name %>
+      <% if @recipe.user == @current_user %>
+        <%= link_to 'Edit Recipe', edit_recipe_path(@recipe), :class => 'btn btn-primary' %>
+        <%=
+          link_to 'Delete Recipe', recipe_path, method: :delete, class: 'btn btn-primary',
+          data: { confirm: "Are you sure you want to delete #{@recipe.name}?" }
+        %>
+      <% end %>
+    </h2>
+
+    <%= render 'style_info', style: get_style(@recipe.style, :json), index: 0 %>
+
+    <div>
+      <span><%= fa_icon 'user' %> <%= link_to @recipe.user.name, @recipe.user %>&#8195;</span>
+      <span class="recipe-rating"><ul class="c-rating" data-rating="<%= get_average_rating @recipe %>"></ul><span>
+    </div>
   </div>
 </div>
 
-<div>
+<div class="recipe-info">
   <table>
     <tr><td><h3>Malt</h3></td></tr>
     <% @recipe.recipe_malts.each do |malt| %>
@@ -37,12 +45,14 @@
     <% end %>
     <tr><td><h3>Yeast</h3></td></tr>
     <% @recipe.recipe_yeasts.each do |yeast| %>
-      <tr><td><%= ingredients[:yeasts][yeast.yeast.to_sym][:name] %></td></tr>
+      <tr>
+        <td><%= ingredients[:yeasts][yeast.yeast.to_sym][:name] %></td>
+      </tr>
     <% end %>
   </table>
-</div>
 
-<p>
-  <strong>Method:</strong>
-  <%= @recipe.method %>
-</p>
+  <p>
+    <h3>Method</h3>
+    <%= @recipe.method %>
+  </p>
+</div>
