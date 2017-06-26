@@ -183,6 +183,64 @@ function calculateOg() {
   return (((Math.round(totalGravPoints / batchVolume)) / 1000) + 1).toFixed(3);
 }
 
+//parses the text in the FG field and returns an array containing
+//up to two FG numbers (as floats), the lower and upper bound in reverse order
+//EG: [1.012, 1.008] or if only one val is present, [1.012]
+//The user may enter up to two values in the field, separated by a '-'
+//if these conditions are not met, returns [0].
+function parseFg() {
+  var fg = $('.fg-model').val();
+  var fgExp = new RegExp(/^\s*1.[0-9]{3}\s*(\-\s*1.[0-9]{3}\s*)?$/);
+
+  if(!fg)
+    return [0]; //is empty so return default zero
+  else if(!fg.match(fgExp))
+    //do something to warn the user their FG string is badly formatted
+
+    //then return default zero
+    return [0];
+  else { //if the fg string is present and correct
+    //split it by '-', turn it into floats, sort it and return it
+    fg = fg.split('-');
+    fg.forEach(function(val, index, array) { array[index] = parseFloat(val); });
+    return fg.sort(function(a, b) { return b - a; });
+  }
+}
+
+//returns predicted alcohol by volume
+//pass OG and FG (original grav, final grav, both floats)
+function calcAbv(og, fg) {
+  return (fg > og) ? 0 : (76.08 * (og - fg) / (1.775 - og)) * (fg / 0.794);
+}
+
+/*generates a string detailing the predicted ABV of the final beer as dictated by
+the OG and FG values. Since FG can be a range (eg: FG = 1.008 - 1.011),
+this function will return a ranged ABV string if this is so.
+Accepts two args: og, a float; and fgArray, an array containing the
+FG range boundaries as floats in reverse order (eg [1.012, 1.009])
+The FG array may contain either one or two elements and should be generated
+using the function parseFg().
+If the ABV calcs make no sense, then getAbv will return "0"*/
+function getAbv(og, fgArray) {
+  var output = "0";
+  var fg = fgArray[0];
+  var abv = calcAbv(og, fg);
+
+
+  if(abv > 0)
+    output = abv.toFixed(1);
+
+  if(fgArray.length > 1) {
+    fg = fgArray[1];
+    abv = calcAbv(og, fg);
+
+    if(abv > 0)
+      output += '-' + abv.toFixed(1);
+  }
+
+  return output;
+}
+
 function ppgToGravPoints(ppg) {
   return Math.round((ppg - 1) * 1000);
 }
@@ -346,13 +404,53 @@ function failSilent(response) {
   console.log(response);
 }
 
+//used to pre-fill the FG input elem on change
+//of style select drop-down
+function preFillFg() {
+  var fg = "";
+
+  //only if the pre-defined stats for the style exist
+  if(gon.styleData.stats != undefined && gon.styleData.stats.fg != undefined) {
+    fg = gon.styleData.stats.fg.low.toString() +
+    '-' + gon.styleData.stats.fg.high.toString();
+  }
+
+  $('.fg-model').val(fg);
+}
+
+//this function will update the displayed recipe style parameters
+//when the user makes a recipe style selection from the select#recipe_style element
+//takes optional callback function (used for calling preFillFg if req'd)
+function getRecipeStyleInfo(callback = false) {
+  var selectedValue = $('#recipe_style').val();
+
+  //if value is empty, user has selected the prompt, hide the params
+  if(selectedValue == '') {
+    $('.style-stats-container').hide();
+
+  //if not, then ajax for the style data and display
+  } else {
+    getStyleAjax(selectedValue, function(response) {
+      setStyleInfo('.style-stats-container');
+      if(callback != false)
+        callback();
+      $('.style-stats-container').show();
+    }, function(response) {
+      $('.style-stats-container').hide();
+    });
+  }
+}
+
 //calls all the prediction calculation functions and
 //updates the display and model with the new values
 function updateCalcs() {
   var og = calculateOg();
   var srm = calcBeerSrm();
   var ibu = 0; //will call calcIbu when it's written, for now set to zero
+  var abv = getAbv(og, parseFg());
 
+  //update the displays and models with
+  //the new values
   $('.og-display').html(og);
   $('.og-model').val(og);
   $('.srm-display').html(srm);
@@ -360,6 +458,7 @@ function updateCalcs() {
   $('.predicted-colour').css('background', srmToHex(srm));
   $('.ibu-display').html(ibu);
   $('.ibu-model').val(ibu);
+  $('.abv-display').html(abv);
 }
 
 
@@ -368,7 +467,11 @@ function updateCalcs() {
 *************************************/
 $(document).on('turbolinks:load', function() {
 
-  /*MODEL-DISPLAY LINKING FOR UNIT CONVERSION/STORAGE*/
+  /*SETUP DISPLAY, LINK MODELS TO DISPLAYS FOR UNIT CONVERSION/STORAGE, ETC*/
+
+  //set display of any pre-selected recipe style
+  getRecipeStyleInfo();
+
   //setup display of recipe volume
   $('#volume-display').val(unitConverter['L'][gon.userPref.volume]($('#volume-model').val()));
 
@@ -408,6 +511,8 @@ $(document).on('turbolinks:load', function() {
   });
 
   /*END MODEL-DISPLAY LINKING*/
+
+  /*BEGIN FORM CHANGE EVENTS*/
 
   $('.add-ingredient-btn').click(function() {
     var replaceExp = new RegExp(/[0-9]+/);
@@ -468,13 +573,11 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
-  $('#volume-display').change(function() {
-    updateCalcs();
-  });
+  $('#recipe_FG').change(updateCalcs);
 
-  $('#efficiency').change(function() {
-    updateCalcs();
-  });
+  $('#volume-display').change(updateCalcs);
+
+  $('#efficiency').change(updateCalcs);
 
   $('.del-ingredient-btn').click(function() {
     //cannot remove elem from DOM as Rails needs to know it's being destroyed.
@@ -524,25 +627,12 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
-
-  //when creating a recipe, this function will update the displayed recipe style parameters
-  //when the user makes a recipe style selection from the select#recipe_style element
   $('select#recipe_style').change(function() {
-    var selectedValue = $(this).val();
-
-    //if value is empty, user has selected the prompt, hide the params
-    if(selectedValue == '') {
-      $('.style-stats-container').hide();
-
-    //if not, then ajax for the style data and display
-    } else {
-      getStyleAjax(selectedValue, function(response) {
-        setStyleInfo('.style-stats-container');
-        $('.style-stats-container').show();
-      }, function(response) {
-        $('.style-stats-container').hide();
-      });
-    }
+    //get the style info and pre-fill the FG input element
+    getRecipeStyleInfo(preFillFg);
+    //if the FG has changed, the calcs need to be updated again
+    updateCalcs();
   });
 
+  /*END FORM CHANGE EVENTS*/
 }); //document load

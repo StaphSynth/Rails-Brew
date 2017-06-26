@@ -72,6 +72,7 @@
         <%= f.hidden_field :IBU, class: 'ibu-model', value: (0 if new_rec) %>
         <strong>SRM: </strong><span class="srm-display"><%= new_rec ? '0' : recipe.colour %></span>
         <%= f.hidden_field :colour, class: 'srm-model' %>
+        <strong>ABV: </strong><span class="abv-display"></span>%
       </div>
     </div>
   </div>
