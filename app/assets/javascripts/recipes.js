@@ -275,7 +275,7 @@ function formatCallerId(callerId) {
 //takes two args: type (string), either 'hops' or 'malts' which allows the server to figure out what to return,
 //and ingredient_id, which allows the server to fetch the data. callerId is the CSS id selector of the element
 //causing the function to be called, is required for storage of the returned data in gon.malts.CALLERID
-function fetchIngredientData(type, ingredientId, callerId, qty = null) {
+function fetchIngredientData(type, ingredientId, callerId, qty = null, lsCallback = null) {
   $.ajax(
     {
       type: 'GET',
@@ -288,6 +288,8 @@ function fetchIngredientData(type, ingredientId, callerId, qty = null) {
           setIngredientQty(type, callerId, qty);
           updateCalcs();
         }
+        if(lsCallback)
+          lsCallback(type, ingredientId, response);
       },
       error: function(response) {
         failSilent(response);
@@ -466,6 +468,91 @@ function updateCalcs() {
   $('.abv-display').html(abv);
 }
 
+//checks if local browser storage is available. Lifted from MDN
+//https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+//pass 'localStorage' or 'sessionStorage' to check either.
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
+
+/*wraps access to the localStorage subsystem.
+
+ localStorage.rb = {
+  "type" : {"name": "{your data}", "name": "{your data}"},
+  "type" : {"name": "{your data}", "name": "{your data}"}
+}
+arg: type (string), access first level of data
+arg: name (string), access the second level of data
+arg: object (object, optional), the object to be stored
+*/
+function accessLocalStorage(type, name = null, object = null) {
+  if(storageAvailable('localStorage')) {
+    var rb = JSON.parse(localStorage.getItem('rb')) || {};
+
+    if(object == null) {//if passed obj == null, then get from rb
+
+      if(!name)
+        return rb[type] || undefined
+      else if(!(name && rb[type]))
+        return undefined;
+      else
+        return rb[type][name] || undefined;
+
+    } else if(object && type && name) { //if obj has been passed, then add it to rb
+      if(!rb[type])
+        rb[type] = {};
+
+      rb[type][name] = object;
+      try {
+        localStorage.setItem('rb', JSON.stringify(rb));
+      } catch(e) {
+        console.log('localStorage write error!', e);
+      }
+    } else {
+      throw new Error('accessLocalStorage setter requires all args to be truthy');
+    }
+  } else {
+    return undefined;
+  }
+}
+
+//retrieves ingredient data from localStorage, applies it to the gon global object
+function getIngredientData(type, ingredientId, callerId, qty = null) {
+  var ingredient = accessLocalStorage(type, ingredientId);
+  console.log('ingredient pulled from LS: ', ingredient);
+
+  if(ingredient == undefined) {
+    //call fetchIngredientData to ajax for it, then store the result in gon AND localStorage
+    fetchIngredientData(type, ingredientId, callerId, qty, accessLocalStorage);
+  } else if(qty) {
+    setIngredientData(type, callerId, ingredient);
+    setIngredientQty(type, ingredientId, qty);
+    updateCalcs();
+  } else {
+    setIngredientData(type, callerId, ingredient);
+  }
+}
+
 
 /************************************
 ******* CODE EXECUTION  *************
@@ -551,9 +638,9 @@ $(document).on('turbolinks:load', function() {
     //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
     if(ingredient) {
       if(quantity)
-        fetchIngredientData(type, ingredient, callerId, parseFloat(quantity));
+        getIngredientData(type, ingredient, callerId, parseFloat(quantity));
       else
-        fetchIngredientData(type, ingredient, callerId);
+        getIngredientData(type, ingredient, callerId);
     } else {
       //if ingredient empty, del from gon
       deleteGonIngredient(type, ingredient);
