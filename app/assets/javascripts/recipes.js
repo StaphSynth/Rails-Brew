@@ -129,10 +129,13 @@ function calcMcu() {
   var colour;
   var batchVol = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
+  if(batchVol == 0 || isNaN(batchVol))
+    return 0;
+
   //loop through the malts, multiply colour (in SRM)
   //with amount (in lbs) for each, then add to total mcu
   Object.keys(gon.malts).forEach(function(key) {
-    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(gon.malts[key].quantity));
+    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(gon.malts[key].quantity)) || 0;
     colour = gon.malts[key].colour || 0;
 
     totalMcu += amount * colour;
@@ -168,10 +171,13 @@ function calculateOg() {
   var efficiency = parseInt($('#efficiency').val()) / 100;
   var batchVolume = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
+  if(batchVolume == 0 || isNaN(batchVolume) || isNaN(efficiency))
+    return '1.000';
+
   //cycle through malts and add the grav points produced by each to the total
   Object.keys(gon.malts).forEach(function(key) {
-    weight = unitConverter[gon.userPref.weight_big]['I'](gon.malts[key].quantity);
-    ppg = gon.malts[key].ppg;
+    weight = unitConverter[gon.userPref.weight_big]['I'](gon.malts[key].quantity) || 0;
+    ppg = gon.malts[key].ppg || 1;
 
     if(gon.malts[key].must_mash)
       totalGravPoints += weight * ppgToGravPoints(ppg) * efficiency;
@@ -254,7 +260,7 @@ function setIngredientQty(type, ingredientId, quantity) {
 }
 
 //sets ingredient data in the gon.malts or gon.hops global objects.
-function setIngredientData(type, ingredientData, key) {
+function setIngredientData(type, key, ingredientData) {
   gon[type][key] = ingredientData;
 }
 
@@ -269,20 +275,19 @@ function formatCallerId(callerId) {
 //takes two args: type (string), either 'hops' or 'malts' which allows the server to figure out what to return,
 //and ingredient_id, which allows the server to fetch the data. callerId is the CSS id selector of the element
 //causing the function to be called, is required for storage of the returned data in gon.malts.CALLERID
-function fetchIngredientData(type, ingredientId, callerId, quantity = null) {
+function fetchIngredientData(type, ingredientId, callerId, qty = null) {
   $.ajax(
     {
       type: 'GET',
       data: { ingredient_type: type, ingredient_id: ingredientId },
       url: '/recipes/ingredient_data',
       success: function(response) {
-        //set the new data
-        setIngredientData(type, response, callerId);
-        //if the related quantity field has a value, then set that as well and update the calcs
-        if(quantity) {
-          setIngredientQty(type, callerId, quantity);
+        //set the new data for each returned ingredient
+        setIngredientData(type, callerId, response);
+        if(qty) { //if qty is passed, set that as well and update the calcs
+          setIngredientQty(type, callerId, qty);
           updateCalcs();
-         }
+        }
       },
       error: function(response) {
         failSilent(response);
@@ -536,21 +541,22 @@ $(document).on('turbolinks:load', function() {
   });
 
   $('.ingredient-select').change(function() {
+    var queryObject = {};
     var type = $(this).attr('data');
     var ingredient = $(this).val();
-    var ingredientId = formatCallerId($(this).attr('id'));
+    var callerId = formatCallerId($(this).attr('id')); //the ID of the select element that called the function
     var quantity = $(this).parent().parent().find('.ingredient-qty-display').val();
 
     //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
     //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
     if(ingredient) {
-      if(quantity) {//if the related quantity field has a value in it, then pass it through and it will be updated as well.
-        fetchIngredientData(type, ingredient, ingredientId, parseFloat(quantity));
-      } else {
-        fetchIngredientData(type, ingredient, ingredientId);
-      }
+      if(quantity)
+        fetchIngredientData(type, ingredient, callerId, parseFloat(quantity));
+      else
+        fetchIngredientData(type, ingredient, callerId);
     } else {
-      deleteGonIngredient(type, ingredientId);
+      //if ingredient empty, del from gon
+      deleteGonIngredient(type, ingredient);
     }
   });
 
@@ -573,7 +579,7 @@ $(document).on('turbolinks:load', function() {
     }
   });
 
-  $('#recipe_FG').change(updateCalcs);
+  $('.fg-model').change(updateCalcs);
 
   $('#volume-display').change(updateCalcs);
 
