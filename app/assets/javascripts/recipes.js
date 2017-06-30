@@ -212,14 +212,19 @@ function parseFg() {
   var fg = $('.fg-model').val();
   var fgExp = new RegExp(/^\s*1.[0-9]{3}\s*(\-\s*1.[0-9]{3}\s*)?$/);
 
-  if(!fg)
+  if(!fg) {
+    $('.fg-model').removeClass('input-error');
     return [0]; //is empty so return default zero
-  else if(!fg.match(fgExp))
-    //do something to warn the user their FG string is badly formatted
 
+  } else if(!fg.match(fgExp)) {
+    //warn the user their FG string is badly formatted
+    $('.fg-model').addClass('input-error');
     //then return default zero
     return [0];
-  else { //if the fg string is present and correct
+
+  } else { //if the fg string is present and correct
+    //remove any previous warning
+    $('.fg-model').removeClass('input-error');
     //split it by '-', turn it into floats, sort it and return it
     fg = fg.split('-');
     fg.forEach(function(val, index, array) { array[index] = parseFloat(val); });

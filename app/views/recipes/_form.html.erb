@@ -64,7 +64,7 @@
       <div>
         <strong>OG: </strong><span class="og-display"><%= new_rec ? '1.000' : recipe.OG %></span>
         <%= f.hidden_field :OG, class: 'og-model' %>
-        <strong>FG: </strong><%= f.text_field :FG, class: 'fg-model' %>
+        <strong>FG: </strong><%= f.text_field :FG, class: 'fg-model', title: 'You may enter up to two gravity values, separated by a \'-\'. Eg: 1.009-1.012', data: 'tooltip' %>
       </div>
 
       <div>

@@ -2,6 +2,10 @@
 RECIPE FORM STYLING
 ********************/
 
+.input-error {
+  box-shadow: 0px 0px 4px red;
+}
+
 .malt-input {
   display: flex;
   flex-direction: row;
