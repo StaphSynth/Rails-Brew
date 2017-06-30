@@ -151,7 +151,7 @@ function calcMcu(malts) {
   //loop through the malts, multiply colour (in SRM)
   //with amount (in lbs) for each, then add to total mcu
   malts.forEach(function(malt) {
-    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(malt.qty) || 0);
+    amount = unitConverter[gon.userPref.weight_big]['I'](malt.qty);
     colour = malt.colour || 0;
 
     totalMcu += amount * colour;
@@ -191,8 +191,7 @@ function calculateOg(malts) {
     return '1.000';
 
   malts.forEach(function(malt) {
-    weight = parseFloat(malt.qty) || 0;
-    weight = unitConverter[gon.userPref.weight_big]['I'](weight);
+    weight = unitConverter[gon.userPref.weight_big]['I'](malt.qty);
 
     if(malt.must_mash)
       totalGravPoints += weight * ppgToGravPoints(malt.ppg || 0) * efficiency;
@@ -535,10 +534,11 @@ function getIngredientList(type) {
     if($(this).find('.destroy').val() == 'true' || !ingredient.id)
       return;
 
+    ingredient.formId = $(this).find('.ingredient-select').attr('id');
     ingredient.type = $(this).find('.ingredient-select').attr('data');
-    ingredient.qty = $(this).find('.ingredient-qty-display').val();
+    ingredient.qty = parseFloat(($(this).find('.ingredient-qty-display').val()) || 0);
     if(ingredient.type == 'hops')
-      ingredient.boilTime = $(this).find('.boil-time').val();
+      ingredient.boilTime = parseInt($(this).find('.boil-time').val() || 0);
 
     //push ingredient obj to ingredients array
     ingredients.push(ingredient);
