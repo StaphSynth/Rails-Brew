@@ -123,7 +123,7 @@ const unitConverter = {
 };
 
 //returns the total malt colour units (MCU) of the beer, divided by batch size (in Gal)
-function calcMcu() {
+function calcMcu(malts) {
   var totalMcu = 0;
   var amount;
   var colour;
@@ -134,9 +134,9 @@ function calcMcu() {
 
   //loop through the malts, multiply colour (in SRM)
   //with amount (in lbs) for each, then add to total mcu
-  Object.keys(gon.malts).forEach(function(key) {
-    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(gon.malts[key].quantity)) || 0;
-    colour = gon.malts[key].colour || 0;
+  malts.forEach(function(malt) {
+    amount = unitConverter[gon.userPref.weight_big]['I'](parseFloat(malt.qty) || 0);
+    colour = malt.colour || 0;
 
     totalMcu += amount * colour;
   });
@@ -145,9 +145,9 @@ function calcMcu() {
 }
 
 //calc beer colour in SRM
-function calcBeerSrm() {
+function calcBeerSrm(mcu) {
   //SRM = 1.4922 * (MCU ^ 0.6859)
-  return (1.4922 * Math.pow(calcMcu(), 0.6859)).toFixed(1);
+  return (1.4922 * Math.pow(mcu, 0.6859)).toFixed(1);
 }
 
 //returns the hex value from the colour look-up table
@@ -163,26 +163,25 @@ function getWeightUnit(ingredientType) {
 
 //returns the calculated SG of the beer taking into account the
 //amount of malt, the efficiency of extraction and the batch size.
-//malts are stored as objects in the global object, gon.malts
-function calculateOg() {
+//malts passed as an array of malt hashes
+function calculateOg(malts) {
   var totalGravPoints = 0;
   var weight;
-  var ppg;
+  var malt;
   var efficiency = parseInt($('#efficiency').val()) / 100;
   var batchVolume = unitConverter[gon.userPref.volume]['G'](parseFloat($('#volume-display').val()));
 
-  if(batchVolume == 0 || isNaN(batchVolume) || isNaN(efficiency))
+  if(batchVolume == 0 || isNaN(batchVolume))
     return '1.000';
 
-  //cycle through malts and add the grav points produced by each to the total
-  Object.keys(gon.malts).forEach(function(key) {
-    weight = unitConverter[gon.userPref.weight_big]['I'](gon.malts[key].quantity) || 0;
-    ppg = gon.malts[key].ppg || 1;
+  malts.forEach(function(malt) {
+    weight = parseFloat(malt.qty) || 0;
+    weight = unitConverter[gon.userPref.weight_big]['I'](weight);
 
-    if(gon.malts[key].must_mash)
-      totalGravPoints += weight * ppgToGravPoints(ppg) * efficiency;
+    if(malt.must_mash)
+      totalGravPoints += weight * ppgToGravPoints(malt.ppg || 0) * efficiency;
     else
-      totalGravPoints += weight * ppgToGravPoints(ppg);
+      totalGravPoints += weight * ppgToGravPoints(malt.ppg || 0);
   });
 
   //convert from grav points to SG (float) and return
@@ -249,53 +248,6 @@ function getAbv(og, fgArray) {
 
 function ppgToGravPoints(ppg) {
   return Math.round((ppg - 1) * 1000);
-}
-
-function deleteGonIngredient(type, ingredientId) {
-  delete gon[type][ingredientId];
-}
-
-function setIngredientQty(type, ingredientId, quantity) {
-  gon[type][ingredientId]['quantity'] = quantity;
-}
-
-//sets ingredient data in the gon.malts or gon.hops global objects.
-function setIngredientData(type, key, ingredientData) {
-  gon[type][key] = ingredientData;
-}
-
-//removes the last '_PIECE' off the ID tag of the calling element
-function formatCallerId(callerId) {
-  callerId = callerId.split('_');
-  callerId.pop();
-  return callerId.join('_');
-}
-
-//uses ajax to fetch data on malt and hop ingredients needed for ABV, OG, IBU, colour, etc calc predictions
-//takes two args: type (string), either 'hops' or 'malts' which allows the server to figure out what to return,
-//and ingredient_id, which allows the server to fetch the data. callerId is the CSS id selector of the element
-//causing the function to be called, is required for storage of the returned data in gon.malts.CALLERID
-function fetchIngredientData(type, ingredientId, callerId, qty = null, lsCallback = null) {
-  $.ajax(
-    {
-      type: 'GET',
-      data: { ingredient_type: type, ingredient_id: ingredientId },
-      url: '/recipes/ingredient_data',
-      success: function(response) {
-        //set the new data for each returned ingredient
-        setIngredientData(type, callerId, response);
-        if(qty) { //if qty is passed, set that as well and update the calcs
-          setIngredientQty(type, callerId, qty);
-          updateCalcs();
-        }
-        if(lsCallback)
-          lsCallback(type, ingredientId, response);
-      },
-      error: function(response) {
-        failSilent(response);
-      }
-    }
-  );
 }
 
 function replaceAttr(elem, attr, toBeReplaced, replaceVal) {
@@ -448,12 +400,23 @@ function getRecipeStyleInfo(callback = false) {
   }
 }
 
-//calls all the prediction calculation functions and
+//calls the hop prediction calculation functions and
 //updates the display and model with the new values
-function updateCalcs() {
-  var og = calculateOg();
-  var srm = calcBeerSrm();
+function updateHopCalcs(hops) {
   var ibu = 0; //will call calcIbu when it's written, for now set to zero
+
+  //update the displays and models with
+  //the new values
+  $('.ibu-display').html(ibu);
+  $('.ibu-model').val(ibu);
+}
+
+//calls the malt prediction calculation functions and
+//updates the display and model with the new values
+//accepts an array of malt objects
+function updateMaltCalcs(malts) {
+  var og = calculateOg(malts);
+  var srm = calcBeerSrm(calcMcu(malts));
   var abv = getAbv(og, parseFg());
 
   //update the displays and models with
@@ -462,9 +425,8 @@ function updateCalcs() {
   $('.og-model').val(og);
   $('.srm-display').html(srm);
   $('.srm-model').val(srm);
+  $('.predicted-colour').attr('data', srm);
   $('.predicted-colour').css('background', srmToHex(srm));
-  $('.ibu-display').html(ibu);
-  $('.ibu-model').val(ibu);
   $('.abv-display').html(abv);
 }
 
@@ -497,10 +459,10 @@ function storageAvailable(type) {
 
 /*wraps access to the localStorage subsystem.
 
- localStorage.rb = {
-  "type" : {"name": "{your data}", "name": "{your data}"},
-  "type" : {"name": "{your data}", "name": "{your data}"}
-}
+  localStorage.rb = {
+    "type" : {"name": "{your data}", "name": "{your data}"},
+    "type" : {"name": "{your data}", "name": "{your data}"}
+  }
 arg: type (string), access first level of data
 arg: name (string), access the second level of data
 arg: object (object, optional), the object to be stored
@@ -509,14 +471,14 @@ function accessLocalStorage(type, name = null, object = null) {
   if(storageAvailable('localStorage')) {
     var rb = JSON.parse(localStorage.getItem('rb')) || {};
 
-    if(object == null) {//if passed obj == null, then get from rb
+    if(object == null) {//if obj == null, then get from rb
 
       if(!name)
-        return rb[type] || undefined
+        return rb[type];
       else if(!(name && rb[type]))
         return undefined;
       else
-        return rb[type][name] || undefined;
+        return rb[type][name];
 
     } else if(object && type && name) { //if obj has been passed, then add it to rb
       if(!rb[type])
@@ -536,20 +498,111 @@ function accessLocalStorage(type, name = null, object = null) {
   }
 }
 
-//retrieves ingredient data from localStorage, applies it to the gon global object
-function getIngredientData(type, ingredientId, callerId, qty = null) {
-  var ingredient = accessLocalStorage(type, ingredientId);
-  console.log('ingredient pulled from LS: ', ingredient);
+//returns an array of ingredient objects derived from the data in the form
+//the objects contain the qty, id and other pertinent data on the state of the form.
+//they are used in querying the db for more info and also in doing prediction calcs.
+//object: {id: "pale_ale_2_row", type: "malts", qty: "3000"}
+//pass a type string 'malts' or 'hops' for what to scrape
+function getIngredientList(type) {
+  var ingredients = [];
+  //remove the plural from type if present
+  //allows the use of the plural or singular by diff parts of the app
+  type = type.replace(/s$/, '');
+  type = '.' + type + '-input';
 
-  if(ingredient == undefined) {
-    //call fetchIngredientData to ajax for it, then store the result in gon AND localStorage
-    fetchIngredientData(type, ingredientId, callerId, qty, accessLocalStorage);
-  } else if(qty) {
-    setIngredientData(type, callerId, ingredient);
-    setIngredientQty(type, ingredientId, qty);
-    updateCalcs();
-  } else {
-    setIngredientData(type, callerId, ingredient);
+  $(type).each(function(index) {
+    var ingredient = {};
+    ingredient.id = $(this).find('.ingredient-select').val();
+
+    //if the id is empty or destroy set to true, then ignore and skip to next one
+    if($(this).find('.destroy').val() == 'true' || !ingredient.id)
+      return;
+
+    ingredient.type = $(this).find('.ingredient-select').attr('data');
+    ingredient.qty = $(this).find('.ingredient-qty-display').val();
+    if(ingredient.type == 'hops')
+      ingredient.boilTime = $(this).find('.boil-time').val();
+
+    //push ingredient obj to ingredients array
+    ingredients.push(ingredient);
+  });
+  return ingredients;
+}
+
+//uses ajax to fetch data on malt and hop ingredients needed for ABV, OG, IBU, colour, etc calc predictions
+//takes three args: type (string), either 'hops' or 'malts' which allows the server to figure out what hash to look in,
+//ingredient_id, which allows the server to find the actual ingredient data, and an optional callback to be run after
+//the data has been fetched. By default once the data's returned, it adds it to localStorage.rb to avoid fetching in future
+function fetchIngredientData(type, ingredientId, callback = null) {
+  $.ajax(
+    {
+      type: 'GET',
+      data: { ingredient_type: type, ingredient_id: ingredientId },
+      url: '/recipes/ingredient_data',
+      success: function(response) {
+        accessLocalStorage(type, ingredientId, response);
+        if(callback)
+          callback(response);
+      },
+      error: function(response) {
+        callback ? callback(response, true) : failSilent(response);
+      }
+    }
+  );
+}
+
+function getIngredientData(type, id, callback) {
+	//If cached, call the callback with the cached value.
+  //If not cached, call the callback with the AJAX call result.
+
+  var ingredient = accessLocalStorage(type, id);
+
+  if(ingredient)
+    callback(ingredient);
+  else
+    fetchIngredientData(type, id, callback);
+}
+
+function refreshResultPanel(type, callback = null) {
+  var ingredients = getIngredientList(type); //returns array of ingredients on page that match type
+  var ingredientHashes = [];
+
+  //Replace the prediction calcs div with a spinner.
+
+
+  //Loop through ingredients array, calling getIngredient on each... until the array of
+  //Ingredient hashes is filled
+  var ingredientHashes = [];
+  for (var i = 0; i < ingredients.length; i++) {
+  	var ingredient = ingredients[i];
+
+		getIngredientData(ingredient.type, ingredient.id, function(ingredientHash, error = null) {
+    	if (error) {
+        console.log('Error loading ingredient data via ajax', ingredientHash);
+        return;
+      }
+
+      ingredientHashes.push(ingredientHash);
+      if (ingredientHashes.length >= ingredients.length) {
+      	// got them all! Merge data in the arrays, then call the render callback fn on the retrieved hashes.
+        for(var i = 0; i < ingredients.length; i++) {
+          Object.keys(ingredients[i]).forEach(function(key) {
+            if(key != 'type') //avoids clash
+              ingredientHashes[i][key] = ingredients[i][key];
+          });
+        }
+
+        if(type == 'malts') {
+          updateMaltCalcs(ingredientHashes);
+          // console.log('update malt calcs called');
+        }
+        else if(type == 'hops')
+          updateHopCalcs(ingredientHashes);
+
+        if(callback)
+          callback(ingredientHashes);
+      }
+    });
   }
 }
 
@@ -580,6 +633,9 @@ $(document).on('turbolinks:load', function() {
     ));
   });
 
+  refreshResultPanel('malts');
+  refreshResultPanel('hops');
+
   //set background colour of glass(es)
   $('.predicted-colour').each(function() {
     $(this).css('background', srmToHex($(this).attr('data')));
@@ -587,7 +643,7 @@ $(document).on('turbolinks:load', function() {
 
   //do unit conversion and display qty on recipe show page
   $('.qty').each(function() {
-    var qty = parseFloat($(this).attr('data'));
+    var qty = parseFloat($(this).attr('data') || 0);
     var weightUnit = getWeightUnit($(this).attr('data-type'));
     qty = unitConverter['M'][weightUnit](qty);
 
@@ -628,65 +684,50 @@ $(document).on('turbolinks:load', function() {
   });
 
   $('.ingredient-select').change(function() {
-    var queryObject = {};
     var type = $(this).attr('data');
-    var ingredient = $(this).val();
-    var callerId = formatCallerId($(this).attr('id')); //the ID of the select element that called the function
-    var quantity = $(this).parent().parent().find('.ingredient-qty-display').val();
 
-    //check the value of the select elem. if it has one, then proceed to fetch ingredient data and update gon
-    //if not, the user has selected the prompt, so delete any existing gon ingredients with this id.
-    if(ingredient) {
-      if(quantity)
-        getIngredientData(type, ingredient, callerId, parseFloat(quantity));
-      else
-        getIngredientData(type, ingredient, callerId);
-    } else {
-      //if ingredient empty, del from gon
-      deleteGonIngredient(type, ingredient);
-    }
+    refreshResultPanel(type);
   });
 
   $('.ingredient-qty-display').change(function() {
-    var callerId = formatCallerId($(this).siblings('.ingredient-qty-model').attr('id'));
-    var quantity = parseFloat($(this).val());
+    var quantity = parseFloat($(this).val() || 0);
     var type = $(this).attr('data');
     var weightUnit = getWeightUnit(type);
 
-    //set the weight unit param first (big for MALTS, else small)
-
     //update the ingredient-qty-model with the new value in metric
-    $(this).siblings('.ingredient-qty-model').val(unitConverter[weightUnit]['M']($(this).val()));
+    $(this).siblings('.ingredient-qty-model').val(unitConverter[weightUnit]['M'](quantity));
 
-    //if the ingredient is present in gon.INGREDIENT, then update the qty there as well
-    //if not, then the ingredient select change event will update both ingredient id and qty
-    if(gon[type][callerId] != undefined) {
-      setIngredientQty(type, callerId, quantity);
-      updateCalcs();
-    }
+    //refresh the calcs
+    refreshResultPanel(type);
   });
 
-  $('.fg-model').change(updateCalcs);
+  $('.fg-model').change(function() {
+    refreshResultPanel('malts');
+    refreshResultPanel('hops');
+  });
 
-  $('#volume-display').change(updateCalcs);
+  $('#volume-display').change(function() {
+    refreshResultPanel('malts');
+    refreshResultPanel('hops');
+  });
 
-  $('#efficiency').change(updateCalcs);
+  $('#efficiency').change(function() {
+    refreshResultPanel('malts');
+  });
 
   $('.del-ingredient-btn').click(function() {
     //cannot remove elem from DOM as Rails needs to know it's being destroyed.
     //So, set destroy to true and hide element from view.
     var itemToRemove = $(this).parent().parent();
+    var type = $(itemToRemove).find('.ingredient-select').attr('data');
     $(itemToRemove).find('.destroy').val(true);
     $(itemToRemove).slideUp('fast');
 
-    //Then, remove its value from the gon.INGREDIENT global so it doesn't affect predictions
-    //traverse to the select elem, get its id and data attr and use them to delete gon.INGR_TYPE.INGREDIENT_ID
-    var ingredientSelect = $(itemToRemove).find('.ingredient-select');
-    var ingredientId = formatCallerId($(ingredientSelect).attr('id'));
-    var ingredientType = $(ingredientSelect).attr('data');
-
-    deleteGonIngredient(ingredientType, ingredientId);
-    updateCalcs();
+    if(type == 'malts') {
+      refreshResultPanel('malts');
+      refreshResultPanel('hops');
+    } else if(type == 'hops')
+      refreshResultPanel('hops');
   });
 
   //set current recipe style data if the data exists
@@ -724,7 +765,8 @@ $(document).on('turbolinks:load', function() {
     //get the style info and pre-fill the FG input element
     getRecipeStyleInfo(preFillFg);
     //if the FG has changed, the calcs need to be updated again
-    updateCalcs();
+    refreshResultPanel('malts');
+    refreshResultPanel('hops');
   });
 
   /*END FORM CHANGE EVENTS*/
