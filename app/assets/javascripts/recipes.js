@@ -122,6 +122,31 @@ const unitConverter = {
       }
 };
 
+//Tinsenth method of calculating IBU.
+//Takes an array of hop objects and the OG (float).
+function calcIbu(hops, og) {
+  var totalIbus = 0;
+  var bigness = 1.65 * Math.pow(0.000125, (og - 1));
+  var batchVol = unitConverter[gon.userPref.volume]['L'](parseFloat($('#volume-display').val() || 0));
+  if(!batchVol || !og)
+    return 0;
+
+  hops.forEach(function(hop) {
+    if(!hop.boilTime)
+      return;
+    hop.qty = unitConverter[gon.userPref.weight_small]['M'](hop.qty);
+    hop.aa = hop.aa / 100; //make it an actual % decimal
+    var boilTimeFactor = (1 - Math.pow(Math.E, (-0.04 * hop.boilTime))) / 4;
+    var utilisation = boilTimeFactor * bigness;
+    var mglAa = hop.aa * hop.qty * 1000 / batchVol;
+    var ibu = utilisation * mglAa;
+
+    totalIbus += ibu;
+  });
+
+  return totalIbus.toFixed(1);
+}
+
 function calcPercentage(malts) {
   var totalWeight = 0;
   var percentage;
@@ -423,7 +448,7 @@ function getRecipeStyleInfo(callback = false) {
 //calls the hop prediction calculation functions and
 //updates the display and model with the new values
 function updateHopCalcs(hops) {
-  var ibu = 0; //will call calcIbu when it's written, for now set to zero
+  var ibu = calcIbu(hops, gon.og); //will call calcIbu when it's written, for now set to zero
 
   //update the displays and models with
   //the new values
@@ -449,6 +474,7 @@ function updateMaltCalcs(malts) {
   $('.predicted-colour').attr('data', srm);
   $('.predicted-colour').css('background', srmToHex(srm));
   $('.abv-display').html(abv);
+  gon.og = og;
 }
 
 //checks if local browser storage is available. Lifted from MDN
