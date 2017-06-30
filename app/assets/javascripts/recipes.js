@@ -122,6 +122,22 @@ const unitConverter = {
       }
 };
 
+function calcPercentage(malts) {
+  var totalWeight = 0;
+  var percentage;
+
+  //get the total mass of the grain bill
+  malts.forEach(function(malt) {
+    totalWeight += malt.qty;
+  });
+
+  //figure out the percentages of each and update the relevant field
+  malts.forEach(function(malt) {
+    percentage = Math.round(malt.qty / totalWeight * 100);
+    $('#' + malt.formId).parent().parent().find('.malt-percent').html(percentage);
+  });
+}
+
 //returns the total malt colour units (MCU) of the beer, divided by batch size (in Gal)
 function calcMcu(malts) {
   var totalMcu = 0;
@@ -418,6 +434,7 @@ function updateMaltCalcs(malts) {
   var og = calculateOg(malts);
   var srm = calcBeerSrm(calcMcu(malts));
   var abv = getAbv(og, parseFg());
+  calcPercentage(malts);
 
   //update the displays and models with
   //the new values
@@ -678,6 +695,7 @@ $(document).on('turbolinks:load', function() {
         $(elem).val('');
     });
 
+    $($newIngredient).find('.malt-percent').html('0');
     $($newIngredient).hide();
     $($newIngredient).appendTo($ingredientsParent);
     $($newIngredient).slideDown('fast');

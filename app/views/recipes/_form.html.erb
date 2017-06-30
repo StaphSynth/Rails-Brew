@@ -91,6 +91,7 @@
           <%= malt.hidden_field :quantity, class: 'ingredient-qty-model', unit: @current_user_pref.weight_big %>
           <input type="number" step="0.5" min="0" class="ingredient-qty-display" data="malts" />
           <span><%= get_unit_symbol(@current_user_pref.weight_big) %></span>
+          <span class="malt-percent">0</span>%
         </div>
 
         <div class="field">
