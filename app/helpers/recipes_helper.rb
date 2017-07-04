@@ -59,4 +59,19 @@ module RecipesHelper
     }
     symbols[unit.to_sym]
   end
+
+  def minutes_array
+    minutes = []
+    val = 0
+
+    loop do
+      minutes.push([val, val])
+      val += 5
+      break if val == 65
+    end
+
+    minutes.push([90, 90])
+
+    return minutes
+  end
 end

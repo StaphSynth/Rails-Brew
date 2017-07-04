@@ -123,8 +123,9 @@ const unitConverter = {
 };
 
 //Tinsenth method of calculating IBU.
-//Takes an array of hop objects and the OG (float).
+//Takes an array of hop objects and the OG (which is a string thanks to .toFixed()).
 function calcIbu(hops, og) {
+  og = parseFloat(og);
   var totalIbus = 0;
   var bigness = 1.65 * Math.pow(0.000125, (og - 1));
   var batchVol = unitConverter[gon.userPref.volume]['L'](parseFloat($('#volume-display').val() || 0));
@@ -141,6 +142,10 @@ function calcIbu(hops, og) {
     var mglAa = hop.aa * hop.qty * 1000 / batchVol;
     var ibu = utilisation * mglAa;
 
+    //set the display for the individual hop IBU contribution
+    $('#' + hop.formId).parent().parent().find('.hop-ibus').html(ibu.toFixed(1));
+
+    //update the total
     totalIbus += ibu;
   });
 
@@ -448,7 +453,7 @@ function getRecipeStyleInfo(callback = false) {
 //calls the hop prediction calculation functions and
 //updates the display and model with the new values
 function updateHopCalcs(hops) {
-  var ibu = calcIbu(hops, gon.og); //will call calcIbu when it's written, for now set to zero
+  var ibu = calcIbu(hops, gon.og);
 
   //update the displays and models with
   //the new values
@@ -726,6 +731,7 @@ $(document).on('turbolinks:load', function() {
         $(elem).val('');
     });
 
+    $($newIngredient).find('label').remove();
     $($newIngredient).find('.malt-percent').html('0');
     $($newIngredient).hide();
     $($newIngredient).appendTo($ingredientsParent);
