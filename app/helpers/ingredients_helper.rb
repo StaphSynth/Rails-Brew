@@ -5,15 +5,19 @@ module IngredientsHelper
   def options_generator(ingredient_type)
     return if ingredients[ingredient_type] == nil
 
-    options = Array.new
+    options = []
 
     ingredients[ingredient_type].each do |key, value|
-      option = Array.new.tap do |option|
-        option.push value[:name]
-        option.push key
+
+      if(ingredient_type == :yeasts)
+        display_text = value[:number] + ' ' + value[:name]
+      else
+        display_text = value[:name]
       end
-      options.push option
+
+      options.push([display_text, key.to_s])
     end
+
     return options
   end
 
