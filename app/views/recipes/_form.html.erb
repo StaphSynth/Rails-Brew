@@ -83,7 +83,11 @@
       <div class="malt-input">
         <div class="field">
           <%= malt.label :malt, :value => "Malts and sugars" %>
-          <%= malt.select :malt, options_for_select(options_generator(:malts)), {prompt: 'Select a malt'}, class: 'ingredient-select', data: 'malts' %>
+          <%=
+            malt.select :malt,
+            options_for_select(options_generator(:malts), @recipe.recipe_malts[malt.index].malt),
+            { prompt: 'Select a malt' }, class: 'ingredient-select', data: 'malts', autocomplete: 'off'
+          %>
         </div>
 
         <div class="field">
@@ -114,12 +118,19 @@
 
         <div class="field">
           <%= hop.label :hop, :value => "Hops" %>
-          <%= hop.select :hop, options_for_select(options_generator(:hops)), {prompt: 'Select a hop'}, class: 'ingredient-select', data: 'hops' %>
+          <%=
+            hop.select :hop,
+            options_for_select(options_generator(:hops), @recipe.recipe_hops[hop.index].hop),
+            { prompt: 'Select a hop' }, class: 'ingredient-select', data: 'hops', autocomplete: 'off'
+          %>
         </div>
 
         <div class="field">
           <%= hop.label :boil_time %>
-          <%= hop.select :boil_time, options_for_select(minutes_array), {}, class: 'boil-time', data: 'hops'  %>
+          <%=
+            hop.select :boil_time, options_for_select(minutes_array, @recipe.recipe_hops[hop.index].boil_time),
+            {}, class: 'boil-time', data: 'hops', autocomplete: 'off'
+          %>
         </div>
 
         <div class="field">
@@ -151,7 +162,11 @@
 
         <div class="field">
           <%= yeast.label :yeast, :value => "Yeast" %>
-          <%= yeast.select :yeast, options_for_select(options_generator(:yeasts)), prompt: 'Select a yeast' %>
+          <%=
+            yeast.select :yeast,
+            options_for_select(options_generator(:yeasts), @recipe.recipe_yeasts[yeast.index].yeast),
+            { prompt: 'Select a yeast' }, autocomplete: 'off'
+          %>
         </div>
 
         <div class="field">
