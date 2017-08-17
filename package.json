@@ -1,0 +1,8 @@
+{
+  "name": "rails_brew",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "postinstall": "cd client && yarn install"
+  }
+}
