@@ -77,6 +77,7 @@ class RecipesController < ApplicationController
   def edit
     #set the current style data for use by page JS.
     gon.styleData = helpers.get_style(@recipe.style, :json)
+    @props = { recipe: @recipe.to_json }
   end
 
   #ingredient data retrieval API. Sends ingredient data to the front-end via AJAX
