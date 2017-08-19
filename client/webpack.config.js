@@ -63,6 +63,16 @@ const config = {
         use: 'babel-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(woff2?|jpe?g|png|gif|svg|ico)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            name: '[name]-[hash].[ext]',
+            limit: 10000,
+          },
+        },
+      }
     ],
   },
 };
