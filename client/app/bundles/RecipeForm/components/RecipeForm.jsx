@@ -58,13 +58,23 @@ class RecipePrediction extends React.Component {
     return (
       <div className="prediction-container">
         <div className="recipe-colour">
-          { this.props.recipe.colour }
+          <img
+            src={ glass }
+            style={ {backgroundColor: BrewCalc.srmToHex(this.props.recipe.colour)} }>
+          </img>
         </div>
 
         <div className="predictions">
           <div>
             <strong>OG: </strong><span className="og-display">{ this.props.recipe.OG }</span>
-            <strong>FG: </strong><input id="FG" value={ this.state.fgInput } onChange={ (e) => this.updateFg(e) } />
+            <strong>FG: </strong>
+            <input
+              id="FG"
+              className="fg-model"
+              value={ this.state.fgInput }
+              onChange={ (e) => this.updateFg(e) }
+              title="You may enter up to two gravity values, separated by a '-'. Eg: 1.009-1.012">
+            </input>
           </div>
 
           <div>
