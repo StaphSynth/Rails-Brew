@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import BrewCalc from '../brewCalcs';
+import glass from '../img/glass_small.png';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
