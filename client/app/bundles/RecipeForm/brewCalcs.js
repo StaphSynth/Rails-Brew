@@ -51,7 +51,7 @@ export default {
   },
 
   validateFg: function(fg) {
-    return fg.match(/^\s*1.[0-9]{3}\s*(\-\s*1.[0-9]{3}\s*)?$/);
+    return /^\s*1.[0-9]{3}\s*(\-\s*1.[0-9]{3}\s*)?$/.test(fg);
   },
 
   parseFg: function(fg) {
