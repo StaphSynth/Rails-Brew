@@ -39,3 +39,27 @@ header {
   /* Set the fixed height of the footer here */
   height: 50px;
 }
+
+.spinner {
+  margin: 0.5em;
+  border: 3px solid grey;
+  border-top: 3px solid dodgerblue;
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+.spinner-small {
+  width: 30px;
+  height: 30px;
+}
+
+.spinner-large {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
