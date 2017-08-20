@@ -1,4 +1,37 @@
+//unit conversion functions
+var noConv = function(v)        { return v; }
+var celToFar = function(v)      { return (v * 9 / 5) + 32; }
+var farToCel = function(v)      { return (v - 32) * 5 / 9; }
+var litToUsGal = function(v)    { return v / 3.785; }
+var litToImpGal = function(v)   { return v / 4.54609; }
+var impGalToUsGal = function(v) { return v / 0.832674188148; }
+var usGalToImpGal = function(v) { return v * 0.832674188148; }
+var usGalToLit = function(v)    { return v * 3.785; }
+var impGalToLit = function(v)   { return v * 4.546091879; }
+var gramToLbs = function(v)     { return v * 0.00220462262; }
+var lbsToGram = function(v)     { return v * 453.592; }
+var gramToOz = function(v)      { return v / 28.34952313; }
+var ozToGram = function(v)      { return v * 28.34952313; }
+var ozToLbs = function(v)       { return v / 16; }
+var lbsToOz = function(v)       { return v * 16; }
+var gToKg = function(v)         { return v / 1000; }
+var kgToG = function(v)         { return v * 1000; }
+var lbsToKg = function(v)       { return gToKg(lbsToGram(v)); }
+var kgToLbs = function(v)       { return gramToLbs(kgToG(v)); }
+
 export default {
+
+  units: {
+    I: 'lb',
+    O: 'oz',
+    M: 'g',
+    K: 'kg',
+    L: 'L',
+    G: 'Gal.',
+    B: 'Imp. Gal.',
+    F: '°F',
+    C: '°C'
+  },
 
   srmColourMap: {
     0:  '#ffffff',
@@ -23,6 +56,60 @@ export default {
     37: '#3F0708', 38: '#3B0607',
     39: '#3A070B', 40: '#36080A',
     'max': '#030403'
+  },
+
+  /*
+  Returns a function to convert a value from one unit to another
+  Usage: unitConverter['from']['to'](value)
+  KEYS: C = Celcius, F = fahrenheit, L = Litre, G = US Gallon, B = Imperial (British) Gallon,
+  I = pounds, O = ounces, M = grams, K = kilograms
+  */
+  unitConverter: {
+    C: {
+          C: noConv,
+          F: celToFar
+        },
+    F: {
+          C: farToCel,
+          F: noConv
+        },
+    L: {
+          G: litToUsGal,
+          B: litToImpGal,
+          L: noConv
+        },
+    G: {
+          G: noConv,
+          B: usGalToImpGal,
+          L: usGalToLit
+        },
+    B: {
+          G: impGalToUsGal,
+          B: noConv,
+          L: impGalToLit
+        },
+    M: {
+          I: gramToLbs,
+          M: noConv,
+          O: gramToOz,
+          K: gToKg
+        },
+    I: {
+          I: noConv,
+          M: lbsToGram,
+          O: lbsToOz,
+          K: lbsToKg
+        },
+    O:  {
+          I: ozToLbs,
+          M: ozToGram,
+          O: noConv
+        },
+    K:  {
+          I: kgToLbs,
+          M: kgToG,
+          K: noConv
+        }
   },
 
   calcAbv: function(og, fg) {

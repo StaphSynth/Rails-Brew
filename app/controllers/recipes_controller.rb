@@ -77,9 +77,13 @@ class RecipesController < ApplicationController
   def edit
     #set the current style data for use by page JS.
     gon.styleData = helpers.get_style(@recipe.style, :json)
+    @current_user_pref = UserPreference.find_by(user_id: @current_user.id)
     @props = {
       recipe: @recipe.to_json,
-      styles: helpers.generate_style_options
+      styles: helpers.generate_style_options,
+      malts: @recipe.recipe_malts,
+      hops: @recipe.recipe_hops,
+      userPref: @current_user_pref
     }
   end
 

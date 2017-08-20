@@ -5,6 +5,9 @@ import BrewCalc from '../lib/BrewCalcs'
 import RecipeStyle from '../components/RecipeStyle';
 import Ajax from '../lib/AjaxWrapper';
 import Spinner from '../components/Spinner';
+import Ingredient from '../components/Ingredient';
+import Malt from '../components/Malt';
+import BatchVolume from '../components/BatchVolume';
 
 ReactOnRails.register({
   RecipeForm,

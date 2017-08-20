@@ -3,6 +3,8 @@ import React from 'react';
 import BrewCalc from '../lib/BrewCalcs';
 import RecipeMetaPanel from './RecipeMetaPanel';
 import RecipeStyle from './RecipeStyle';
+import Malt from './Malt';
+import BatchVolume from './BatchVolume';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
@@ -36,6 +38,11 @@ export default class RecipeForm extends React.Component {
       <div>
         <RecipeStyle styles={ this.props.styles } selected={ this.state.style } parentCallback={ (data) => this.childCallback(data) } />
         <RecipeMetaPanel recipe={ this.state } parentCallback={ (data) => this.childCallback(data) } />
+        <BatchVolume
+          userPref={ this.props.userPref }
+          volume={ this.props.batch_volume || this.props.userPref.default_batch_volume }
+          parentCallback={ (data) => this.childCallback(data) }>
+        </BatchVolume>
       </div>
     );
   }
