@@ -23,6 +23,12 @@ export default class RecipeForm extends React.Component {
     this.setState(data, () => this.updateCalcs());
   }
 
+  handleChange(key, e) {
+    var newState = {};
+    newState[key] = e.target.value;
+    this.setState(newState);
+  }
+
   updateCalcs() {
     var fgArray = BrewCalc.parseFg(this.state.FG || '0');
     var abv = BrewCalc.getAbv(this.state.OG, fgArray);
@@ -36,13 +42,38 @@ export default class RecipeForm extends React.Component {
   render() {
     return (
       <div>
-        <RecipeStyle styles={ this.props.styles } selected={ this.state.style } parentCallback={ (data) => this.childCallback(data) } />
-        <RecipeMetaPanel recipe={ this.state } parentCallback={ (data) => this.childCallback(data) } />
+
+        <div>
+          <label htmlFor="name">Recipe Name:</label>
+          <input onChange={ e => this.handleChange('name', e) } value={ this.state.name } />
+        </div>
+
+        <RecipeStyle
+          styles={ this.props.styles }
+          selected={ this.state.style }
+          parentCallback={ data => this.childCallback(data) }>
+        </RecipeStyle>
+
+        <RecipeMetaPanel
+          recipe={ this.state }
+          parentCallback={ data => this.childCallback(data) }>
+        </RecipeMetaPanel>
+
         <BatchVolume
           userPref={ this.props.userPref }
           volume={ this.props.batch_volume || this.props.userPref.default_batch_volume }
-          parentCallback={ (data) => this.childCallback(data) }>
+          parentCallback={ data => this.childCallback(data) }>
         </BatchVolume>
+
+        <div className="method field">
+          <label htmlFor="method">Method:</label>
+          <textarea
+            id="method"
+            onChange={ e => this.handleChange('method', e) }
+            value={ this.state.method }>
+          </textarea>
+        </div>
+
       </div>
     );
   }
