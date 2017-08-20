@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import BrewCalc from '../brewCalcs';
+import BrewCalc from '../lib/BrewCalcs';
 import RecipeMetaPanel from './RecipeMetaPanel';
+import RecipeStyle from './RecipeStyle';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
@@ -32,7 +33,10 @@ export default class RecipeForm extends React.Component {
 
   render() {
     return (
-      <RecipeMetaPanel recipe={ this.state } parentCallback={ (data) => this.childCallback(data) } />
+      <div>
+        <RecipeStyle styles={ this.props.styles } selected={ this.state.style } parentCallback={ (data) => this.childCallback(data) } />
+        <RecipeMetaPanel recipe={ this.state } parentCallback={ (data) => this.childCallback(data) } />
+      </div>
     );
   }
 }

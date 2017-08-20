@@ -1,5 +1,5 @@
 import React from 'react';
-import BrewCalc from '../brewCalcs';
+import BrewCalc from '../lib/BrewCalcs';
 import glass from '../img/glass_small.png';
 
 export default class RecipeMetaPanel extends React.Component {
