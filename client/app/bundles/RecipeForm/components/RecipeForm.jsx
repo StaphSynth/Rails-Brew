@@ -4,7 +4,7 @@ import BrewCalc from '../lib/BrewCalcs';
 import RecipeMetaPanel from './RecipeMetaPanel';
 import RecipeStyle from './RecipeStyle';
 import Malt from './Malt';
-import BatchVolume from './BatchVolume';
+import VolumeAndEfficiency from './VolumeAndEfficiency';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
@@ -59,11 +59,12 @@ export default class RecipeForm extends React.Component {
           parentCallback={ data => this.childCallback(data) }>
         </RecipeMetaPanel>
 
-        <BatchVolume
+        <VolumeAndEfficiency
           userPref={ this.props.userPref }
           volume={ this.props.batch_volume || this.props.userPref.default_batch_volume }
+          efficiency={ this.props.efficiency || this.props.userPref.default_efficiency }
           parentCallback={ data => this.childCallback(data) }>
-        </BatchVolume>
+        </VolumeAndEfficiency>
 
         <div className="method field">
           <label htmlFor="method">Method:</label>

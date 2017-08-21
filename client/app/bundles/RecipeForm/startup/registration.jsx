@@ -7,7 +7,7 @@ import Ajax from '../lib/AjaxWrapper';
 import Spinner from '../components/Spinner';
 import Ingredient from '../components/Ingredient';
 import Malt from '../components/Malt';
-import BatchVolume from '../components/BatchVolume';
+import VolumeAndEfficiency from '../components/VolumeAndEfficiency';
 
 ReactOnRails.register({
   RecipeForm,
