@@ -8,18 +8,26 @@ export default class BatchVolume extends React.Component {
     var userUnit = this.props.userPref.volume;
 
     this.state = {
-      volume: BrewCalc.unitConverter['L'][userUnit](volume)
+      volume: BrewCalc.unitConverter['L'][userUnit](volume),
+      valid: this.validVolume(volume)
     };
+  }
+
+  validVolume(volume) {
+    return /^[0-9]+(\.[0-9]+)?$/.test(volume);
   }
 
   updateVolume(e) {
     var volume = e.target.value;
-    console.log(volume);
-    //convert to L before sending to the parent for storage in DB
-    var volInLitres = BrewCalc.unitConverter[this.props.userPref.volume]['L'](volume);
 
-    this.setState({ volume: volume }, () => {
-      this.props.parentCallback({ batch_volume: volInLitres });
+    this.setState({
+      volume: volume,
+      valid: this.validVolume(volume)
+    }, () => {
+      if(this.state.valid) {
+        let volInLitres = BrewCalc.unitConverter[this.props.userPref.volume]['L'](volume);
+        this.props.parentCallback({ batch_volume: volInLitres });
+      }
     });
   }
 
@@ -27,8 +35,12 @@ export default class BatchVolume extends React.Component {
     return (
       <div>
         <strong>Batch Volume: </strong>
-        <input onChange={ (e) => this.updateVolume(e) } value={ this.state.volume } />
-        <span> { BrewCalc.units[this.props.userPref.volume] }</span>
+        <input
+          onChange={ e => this.updateVolume(e) }
+          value={ this.state.volume }
+          style={ {color: this.state.valid ? 'inherit' : 'red'} }>
+        </input>
+        <span> { BrewCalc.unitSymbol[this.props.userPref.volume] }</span>
         <label htmlFor="lock">Lock ingredients to batch size</label>
         <input id="lock" type="checkbox"></input>
       </div>
