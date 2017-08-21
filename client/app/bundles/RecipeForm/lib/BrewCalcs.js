@@ -21,7 +21,7 @@ var kgToLbs = function(v)       { return gramToLbs(kgToG(v)); }
 
 export default {
 
-  units: {
+  unitSymbol: {
     I: 'lb',
     O: 'oz',
     M: 'g',
