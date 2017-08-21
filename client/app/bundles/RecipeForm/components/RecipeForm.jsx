@@ -5,6 +5,7 @@ import RecipeMetaPanel from './RecipeMetaPanel';
 import RecipeStyle from './RecipeStyle';
 import Malt from './Malt';
 import VolumeAndEfficiency from './VolumeAndEfficiency';
+import IngredientList from './IngredientList';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
@@ -13,6 +14,8 @@ export default class RecipeForm extends React.Component {
     var recipe = JSON.parse(this.props.recipe);
     recipe.fgArray = BrewCalc.parseFg(recipe.FG || '0');
     recipe.abv = BrewCalc.getAbv(recipe.OG, recipe.fgArray);
+    recipe.malts = this.props.malts || [];
+    recipe.hops = this.props.hops || [];
 
     this.state = recipe;
   }
@@ -65,6 +68,13 @@ export default class RecipeForm extends React.Component {
           efficiency={ this.props.efficiency || this.props.userPref.default_efficiency }
           parentCallback={ data => this.childCallback(data) }>
         </VolumeAndEfficiency>
+
+        <IngredientList
+          type='malt'
+          ingredients={ this.state.malts }
+          rawOptions={ this.props.ingredientOptions.malts }
+          parentCallback={ data => this.childCallback(data) }>
+        </IngredientList>
 
         <div className="method field">
           <label htmlFor="method">Method:</label>

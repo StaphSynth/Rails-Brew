@@ -83,7 +83,12 @@ class RecipesController < ApplicationController
       styles: helpers.generate_style_options,
       malts: @recipe.recipe_malts,
       hops: @recipe.recipe_hops,
-      userPref: @current_user_pref
+      userPref: @current_user_pref,
+      ingredientOptions: {
+        malts: helpers.options_generator(:malts),
+        hops: helpers.options_generator(:hops),
+        yeasts: helpers.options_generator(:yeasts)
+      }
     }
   end
 

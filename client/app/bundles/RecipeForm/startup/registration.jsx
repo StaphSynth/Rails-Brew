@@ -8,6 +8,8 @@ import Spinner from '../components/Spinner';
 import Ingredient from '../components/Ingredient';
 import Malt from '../components/Malt';
 import VolumeAndEfficiency from '../components/VolumeAndEfficiency';
+import IngredientList from '../components/IngredientList';
+import Input from '../components/Input';
 
 ReactOnRails.register({
   RecipeForm,
