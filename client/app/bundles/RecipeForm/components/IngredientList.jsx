@@ -15,6 +15,10 @@ export default class IngredientList extends React.Component {
     let tempValue;
 
     for(let i = 0; i < this.state.ingredients.length; i++) {
+      //keep them in the list, but don't display them
+      if(this.state.ingredients[i]._destroy)
+        continue;
+
       tempValue = this.state.ingredients[i];
       //set a reference to its position in the list
       //so it can be used to modify state later
@@ -49,12 +53,23 @@ export default class IngredientList extends React.Component {
   getNewTemplate() {
     switch(this.props.type) {
       case 'malt':
-        return new Object({ malt: '', quantity: 0 });
+        return { malt: '', quantity: '', _destroy: false };
       case 'hop':
         return;
       case 'yeast':
         return;
     }
+  }
+
+  //removes an ingredient item from the passed ingredients array
+  //if that item is marked as _destroy: true && it does not have
+  //an id (provided by the back end). Items with an id need to be
+  //retained in the list so the back-end knows to remove them
+  //from the DB on form submission
+  filterDestroyedIngredients(ingredients) {
+    return ingredients.filter(item => {
+      return !(item._destroy && !item.id)
+    });
   }
 
   createNewIngredient() {
@@ -68,10 +83,18 @@ export default class IngredientList extends React.Component {
   handleChange(data) {
     let ingredients = this.state.ingredients;
     let refType = this.props.type + 's';
+
     //replace the old data value with the new one using the ref given in list generation
     ingredients[data.ref] = data;
+
+    //check if the change is to destroy, if so filter the list
+    if(data._destroy)
+      ingredients = this.filterDestroyedIngredients(ingredients);
+
     this.setState({ ingredients: ingredients }, () => {
-      this.props.parentCallback({ refType: ingredients });
+      let newState = {};
+      newState[refType] = ingredients
+      this.props.parentCallback(newState);
     });
   }
 

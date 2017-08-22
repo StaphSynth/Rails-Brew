@@ -16,16 +16,6 @@ export default class Malt extends Ingredient {
     return this.decimalNumberRegex().test(qty);
   }
 
-  handleChange(key, value) {
-    var newState = {};
-    newState[key] = value;
-
-    this.setState(newState, () => {
-      this.props.parentCallback(this.state);
-    });
-  }
-
-
   render() {
     return (
       <div className="malt-input">
@@ -44,6 +34,7 @@ export default class Malt extends Ingredient {
           fireChange={ v => this.handleChange('quantity', v) }
           value={ this.state.quantity } />
         <span> g</span>
+        <button onClick={ e => this.handleChange('_destroy', true) }>x</button>
       </div>
     );
   }

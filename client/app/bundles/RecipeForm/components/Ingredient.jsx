@@ -22,12 +22,13 @@ export default class Ingredient extends React.Component {
     return options;
   }
 
-  handleChange(key, e, callback = null) {
-    var value = e.target.value;
+  handleChange(key, value) {
     var newState = {};
     newState[key] = value;
 
-    this.setState(newState, callback);
+    this.setState(newState, () => {
+      this.props.parentCallback(this.state);
+    });
   }
 
   render() {
