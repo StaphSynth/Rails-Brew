@@ -12,24 +12,19 @@ export default class IngredientList extends React.Component {
   generateList() {
     let list = [];
     let Ingredient = this.getType();
-    let tempValue;
 
     for(let i = 0; i < this.state.ingredients.length; i++) {
       //keep them in the list, but don't display them
       if(this.state.ingredients[i]._destroy)
         continue;
 
-      tempValue = this.state.ingredients[i];
-      //set a reference to its position in the list
-      //so it can be used to modify state later
-      tempValue.ref = i;
-
       list.push(
         <li key={ i }>
           <Ingredient
-            ingredient={ tempValue }
+            position={ i }
+            ingredient={ this.state.ingredients[i] }
             rawOptions={ this.props.rawOptions }
-            parentCallback={ data => this.handleChange(data) }
+            parentCallback={ packet => this.handleChange(packet) }
           />
         </li>
       );
@@ -80,20 +75,21 @@ export default class IngredientList extends React.Component {
     this.setState({ ingredients: currentList });
   }
 
-  handleChange(data) {
+  handleChange(packet) {
     let ingredients = this.state.ingredients;
-    let refType = this.props.type + 's';
+    let typeReference = this.props.type + 's';
 
-    //replace the old data value with the new one using the ref given in list generation
-    ingredients[data.ref] = data;
+    //replace the old data value with the new one
+    //using the position ref given in list generation
+    ingredients[packet.position] = packet.data;
 
     //check if the change is to destroy, if so filter the list
-    if(data._destroy)
+    if(packet.data._destroy)
       ingredients = this.filterDestroyedIngredients(ingredients);
 
     this.setState({ ingredients: ingredients }, () => {
       let newState = {};
-      newState[refType] = ingredients
+      newState[typeReference] = ingredients;
       this.props.parentCallback(newState);
     });
   }
