@@ -27,22 +27,12 @@ export default class Ingredient extends React.Component {
   handleChange(key, value) {
     let newState = {};
     newState[key] = value;
-    
+
     this.setState(newState, () => {
       let packet = {};
       packet.data = this.state;
       packet.position = this.props.position;
       this.props.parentCallback(packet);
     });
-  }
-
-  render() {
-    return (
-      <div>
-        <select>
-          { this.generateOptions() }
-        </select>
-      </div>
-    );
   }
 }
