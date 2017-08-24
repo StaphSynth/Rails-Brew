@@ -4,5 +4,8 @@
   "dependencies": {},
   "scripts": {
     "postinstall": "cd client && yarn install"
+  },
+  "devDependencies": {
+    "immutability-helper": "^2.3.1"
   }
 }
