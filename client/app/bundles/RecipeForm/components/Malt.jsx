@@ -18,24 +18,31 @@ export default class Malt extends Ingredient {
 
   render() {
     return (
-      <div className="malt-input">
-        <label htmlFor="malt">Malts and Sugars</label>
-        <select
-          id="malt"
-          value={ this.state.malt }
-          onChange={ e => this.handleChange('malt', e.target.value) }>
-          { this.generateOptions() }
-        </select>
+      <tr>
+        <td>
+          <select
+            id="malt"
+            value={ this.state.malt }
+            onChange={ e => this.handleChange('malt', e.target.value) }>
+            { this.generateOptions() }
+          </select>
+        </td>
 
-        <label htmlFor="qty">Qty</label>
-        <Input
-          id="qty"
-          valid={ v => this.validateQty(v) }
-          fireChange={ v => this.handleChange('quantity', v) }
-          value={ this.state.quantity } />
-        <span> g</span>
-        <button onClick={ e => this.handleChange('_destroy', true) }>x</button>
-      </div>
+        <td>
+          <Input
+            id="qty"
+            valid={ v => this.validateQty(v) }
+            fireChange={ v => this.handleChange('quantity', v) }
+            value={ this.state.quantity } />
+          <span>
+            g
+          </span>
+        </td>
+
+        <td>
+          <button onClick={ e => this.handleChange('_destroy', true) }>x</button>
+        </td>
+      </tr>
     );
   }
 }

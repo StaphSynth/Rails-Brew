@@ -19,14 +19,14 @@ export default class IngredientList extends React.Component {
         continue;
 
       list.push(
-        <li key={ i }>
-          <Ingredient
-            position={ i }
-            ingredient={ this.state.ingredients[i] }
-            rawOptions={ this.props.rawOptions }
-            parentCallback={ packet => this.handleChange(packet) }
-          />
-        </li>
+        <Ingredient
+          key={ i }
+          position={ i }
+          ingredient={ this.state.ingredients[i] }
+          rawOptions={ this.props.rawOptions }
+          userPref={ this.props.userPref }
+          parentCallback={ packet => this.handleChange(packet) }
+        />
       );
     }
     return list;
@@ -49,6 +49,17 @@ export default class IngredientList extends React.Component {
     switch(this.props.type) {
       case 'malt':
         return { malt: '', quantity: '', _destroy: false };
+      case 'hop':
+        return;
+      case 'yeast':
+        return;
+    }
+  }
+
+  getTableHeader() {
+    switch(this.props.type) {
+      case 'malt':
+        return <tr><th>Malts and Sugars</th><th>Qty</th><th>Remove</th></tr>;
       case 'hop':
         return;
       case 'yeast':
@@ -97,9 +108,14 @@ export default class IngredientList extends React.Component {
   render() {
     return (
       <div>
-        <ul className={ this.props.type + '-inputs'}>
-          { this.generateList() }
-        </ul>
+        <table>
+          <thead>
+            { this.getTableHeader() }
+          </thead>
+          <tbody>
+            { this.generateList() }
+          </tbody>
+        </table>
         <button onClick={ () => this.createNewIngredient() }>+</button>
       </div>
     );
