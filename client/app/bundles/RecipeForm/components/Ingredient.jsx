@@ -24,15 +24,15 @@ export default class Ingredient extends React.Component {
 
   //sets its own state, then updates the parent with
   //its new state and position via a packet object
-  handleChange(key, value) {
-    let newState = {};
-    newState[key] = value;
-
-    this.setState(newState, () => {
-      let packet = {};
-      packet.data = this.state;
-      packet.position = this.props.position;
-      this.props.parentCallback(packet);
+  handleChange(change) {
+    this.setState(change, () => {
+      //only update the parent if it has both these important values
+      if(this.state.malt && this.state.quantity) {
+        let packet = {};
+        packet.data = this.state;
+        packet.position = this.props.position;
+        this.props.parentCallback(packet);
+      }
     });
   }
 }

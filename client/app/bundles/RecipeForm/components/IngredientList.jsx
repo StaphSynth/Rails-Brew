@@ -1,5 +1,6 @@
 import React from 'react';
 import Malt from './Malt';
+import update from 'immutability-helper';
 
 export default class IngredientList extends React.Component {
   constructor(props) {
@@ -25,8 +26,8 @@ export default class IngredientList extends React.Component {
           ingredient={ this.state.ingredients[i] }
           rawOptions={ this.props.rawOptions }
           userPref={ this.props.userPref }
-          parentCallback={ packet => this.handleChange(packet) }
-        />
+          parentCallback={ packet => this.handleChange(packet) }>
+        </Ingredient>
       );
     }
     return list;
@@ -79,29 +80,28 @@ export default class IngredientList extends React.Component {
   }
 
   createNewIngredient() {
-    let currentList = this.state.ingredients;
-    let newIngredient = this.getNewTemplate(currentList.length);
-    currentList.push(newIngredient);
+    let newIngredient = this.getNewTemplate(this.state.ingredients.length);
+    //use concat rather than push so as not to mutate the current state
+    let ingredients = this.state.ingredients.concat(newIngredient);
 
-    this.setState({ ingredients: currentList });
+    this.setState({ingredients: ingredients});
   }
 
   handleChange(packet) {
+    let ingredientType = this.props.type + 's';
     let ingredients = this.state.ingredients;
-    let typeReference = this.props.type + 's';
-
     //replace the old data value with the new one
     //using the position ref given in list generation
-    ingredients[packet.position] = packet.data;
-
+    ingredients = update(ingredients, {$splice: [[packet.position, 1, packet.data]]});
     //check if the change is to destroy, if so filter the list
-    if(packet.data._destroy)
-      ingredients = this.filterDestroyedIngredients(ingredients);
+    if(packet.data._destroy) {
+      ingredients = update(ingredients, {$set: this.filterDestroyedIngredients(ingredients)});
+    }
 
-    this.setState({ ingredients: ingredients }, () => {
-      let newState = {};
-      newState[typeReference] = ingredients;
-      this.props.parentCallback(newState);
+    this.setState({ingredients: ingredients}, () => {
+      let packet = {};
+      packet[ingredientType] = this.state.ingredients;
+      this.props.parentCallback(packet);
     });
   }
 

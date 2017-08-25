@@ -20,16 +20,16 @@ export default class RecipeForm extends React.Component {
     this.state = recipe;
   }
 
-  //sets state with updates sent from child Components,
-  //then updates prediction calcs
+  //handles state changes provided by child components,
+  //then updates prediction calcs.
   childCallback(data = {}) {
+    //should put some logic in the decision to run updateCalcs.
     this.setState(data, () => this.updateCalcs());
   }
 
-  handleChange(key, e) {
-    var newState = {};
-    newState[key] = e.target.value;
-    this.setState(newState);
+  //handles interanal state changes
+  handleChange(change) {
+    this.setState(change);
   }
 
   updateCalcs() {
@@ -48,7 +48,11 @@ export default class RecipeForm extends React.Component {
 
         <div>
           <label htmlFor="name">Recipe Name:</label>
-          <input onChange={ e => this.handleChange('name', e) } value={ this.state.name } />
+          <input
+            id="name"
+            onChange={ e => this.handleChange({name: e.target.value}) }
+            value={ this.state.name }>
+          </input>
         </div>
 
         <RecipeStyle
@@ -73,14 +77,15 @@ export default class RecipeForm extends React.Component {
           type='malt'
           ingredients={ this.state.malts }
           rawOptions={ this.props.ingredientOptions.malts }
-          parentCallback={ data => this.childCallback(data) }>
+          parentCallback={ data => this.childCallback(data) }
+          userPref={ this.props.userPref }>
         </IngredientList>
 
         <div className="method field">
           <label htmlFor="method">Method:</label>
           <textarea
             id="method"
-            onChange={ e => this.handleChange('method', e) }
+            onChange={ e => this.handleChange({method: e.target.value}) }
             value={ this.state.method }>
           </textarea>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Ingredient from './Ingredient';
 import Input from './Input';
+import BrewCalc from '../lib/BrewCalcs';
 
 export default class Malt extends Ingredient {
   constructor(props) {
