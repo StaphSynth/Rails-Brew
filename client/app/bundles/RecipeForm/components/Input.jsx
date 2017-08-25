@@ -35,6 +35,10 @@ export default class Input extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.input !== nextState.input;
+  }
+
   render() {
     return (
       <input
