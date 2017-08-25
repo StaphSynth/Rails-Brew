@@ -35,7 +35,7 @@ export default class VolumeAndEfficiency extends React.Component {
       volume: volume,
       validVolume: this.validVolume(volume)
     }, () => {
-      if(this.state.valid) {
+      if(this.state.validVolume) {
         let volInLitres = BrewCalc.unitConverter[this.props.userPref.volume]['L'](volume);
         this.props.parentCallback({ batch_volume: volInLitres });
       }
