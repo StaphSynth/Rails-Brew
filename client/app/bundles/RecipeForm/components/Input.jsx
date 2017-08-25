@@ -29,6 +29,12 @@ export default class Input extends React.Component {
     }
   }
 
+  invalidColor() {
+    if(!this.state.valid && this.state.input.length) {
+      return {color: this.props.invalidColor || 'red'};
+    }
+  }
+
   render() {
     return (
       <input
@@ -36,7 +42,7 @@ export default class Input extends React.Component {
         className={ this.props.className }
         onChange={ e => this.handleChange(e) }
         value={ this.state.input }
-        style={ {color: this.state.valid ? 'inherit' : 'red'} }>
+        style={ this.invalidColor() }>
       </input>
     );
   }
