@@ -46,7 +46,6 @@ export default class VolumeAndEfficiency extends React.Component {
   }
 
   render() {
-    console.log('VolumeAndEfficiency render update');
     return (
       <div>
         <div>
