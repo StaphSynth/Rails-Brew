@@ -17,6 +17,15 @@ export default class Malt extends Ingredient {
     return this.decimalNumberRegex().test(qty);
   }
 
+  updateQty(value) {
+    value = BrewCalc.unitConverter[this.props.userPref.weight_big]['M'](value);
+    this.handleChange({quantity: value});
+  }
+
+  displayQty() {
+    return BrewCalc.unitConverter['M'][this.props.userPref.weight_big](this.state.quantity);
+  }
+
   render() {
     return (
       <tr>
@@ -24,7 +33,7 @@ export default class Malt extends Ingredient {
           <select
             id="malt"
             value={ this.state.malt }
-            onChange={ e => this.handleChange('malt', e.target.value) }>
+            onChange={ e => this.handleChange({malt: e.target.value}) }>
             { this.generateOptions() }
           </select>
         </td>
@@ -33,15 +42,16 @@ export default class Malt extends Ingredient {
           <Input
             id="qty"
             valid={ v => this.validateQty(v) }
-            fireChange={ v => this.handleChange('quantity', v) }
-            value={ this.state.quantity } />
+            fireChange={ v => this.updateQty(v) }
+            value={ this.displayQty() }>
+          </Input>
           <span>
-            g
+            { BrewCalc.unitSymbol[this.props.userPref.weight_big] }
           </span>
         </td>
 
         <td>
-          <button onClick={ e => this.handleChange('_destroy', true) }>x</button>
+          <button onClick={ e => this.handleChange({_destroy: true}) }>x</button>
         </td>
       </tr>
     );
