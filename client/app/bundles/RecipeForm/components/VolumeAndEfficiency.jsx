@@ -1,17 +1,16 @@
 import React from 'react';
 import BrewCalc from '../lib/BrewCalcs';
+import Input from './Input';
 
 export default class VolumeAndEfficiency extends React.Component {
   constructor(props) {
     super(props);
-    var volume = this.props.volume;
-    var userUnit = this.props.userPref.volume;
 
+    let volume = this.props.volume;
     this.state = {
-      volume: BrewCalc.unitConverter['L'][userUnit](volume),
-      validVolume: this.validVolume(volume),
+      volumeActual: volume, //the real value in SI units
+      volumeDisplay: BrewCalc.unitConverter['L'][this.props.userPref.volume](volume), //in the user's units
       efficiency: this.props.efficiency,
-      validEfficiency: this.validEfficiency(this.props.efficiency)
     };
   }
 
@@ -28,56 +27,51 @@ export default class VolumeAndEfficiency extends React.Component {
     return this.decimalNumberRegex().test(volume);
   }
 
-  updateVolume(e) {
-    var volume = e.target.value;
-
-    this.setState({
-      volume: volume,
-      validVolume: this.validVolume(volume)
-    }, () => {
-      if(this.state.validVolume) {
-        let volInLitres = BrewCalc.unitConverter[this.props.userPref.volume]['L'](volume);
-        this.props.parentCallback({ batch_volume: volInLitres });
-      }
+  handleChange(change) {
+    this.setState(change, () => {
+      this.props.parentCallback(change);
     });
   }
 
-  updateEfficiency(e) {
-    var efficiency = e.target.value;
-
-    this.setState({
-      efficiency: efficiency,
-      validEfficiency: this.validEfficiency(efficiency)
-    }, () => {
-      if(this.state.validEfficiency)
-        this.props.parentCallback({ efficiency: efficiency });
+  updateVolume(volumeDisplay) {
+    this.setState({volumeDisplay: volumeDisplay}, () => {
+      //convert volume back to SI units before calling parent
+      let volumeActual = BrewCalc.unitConverter[this.props.userPref.volume]['L'](volumeDisplay);
+      this.handleChange({batch_volume: volumeActual});
     });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
   }
 
   render() {
+    console.log('VolumeAndEfficiency render update');
     return (
       <div>
         <div>
           <label htmlFor="volume">Batch Volume:</label>
-          <input
+          <Input
             id="volume"
-            onChange={ e => this.updateVolume(e) }
-            value={ this.state.volume }
-            style={ {color: this.state.validVolume ? 'inherit' : 'red'} }>
-          </input>
-          <span> { BrewCalc.unitSymbol[this.props.userPref.volume] }</span>
+            fireChange={ v => this.updateVolume(parseFloat(v) || 0) }
+            valid={ v => this.validVolume(v) }
+            value={ this.state.volumeDisplay }>
+          </Input>
+          <span>
+            { BrewCalc.unitSymbol[this.props.userPref.volume] }
+          </span>
           <label htmlFor="lock">Lock ingredients to batch size</label>
           <input id="lock" type="checkbox"></input>
         </div>
 
         <div>
           <label htmlFor="efficiency">Efficiency:</label>
-          <input
+          <Input
             id="efficiency"
-            onChange={ e => this.updateEfficiency(e) }
+            fireChange={ v => this.handleChange({efficiency: parseFloat(v) || 0}) }
             value={ this.state.efficiency }
-            style={ {color: this.state.validEfficiency ? 'inherit' : 'red' } }>
-          </input>
+            valid={ v => this.validEfficiency(v) }>
+          </Input>
           <span> %</span>
         </div>
       </div>
