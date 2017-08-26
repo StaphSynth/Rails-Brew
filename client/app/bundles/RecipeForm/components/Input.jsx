@@ -46,7 +46,8 @@ export default class Input extends React.Component {
         className={ this.props.className }
         onChange={ e => this.handleChange(e) }
         value={ this.state.input }
-        style={ this.invalidColor() }>
+        style={ this.invalidColor() }
+        title={ this.props.title }>
       </input>
     );
   }
