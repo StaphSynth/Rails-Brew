@@ -46,28 +46,6 @@ export default class IngredientList extends React.Component {
     }
   }
 
-  getNewTemplate() {
-    switch(this.props.type) {
-      case 'malt':
-        return { malt: '', quantity: '', _destroy: false };
-      case 'hop':
-        return;
-      case 'yeast':
-        return;
-    }
-  }
-
-  getTableHeader() {
-    switch(this.props.type) {
-      case 'malt':
-        return <tr><th>Malts and Sugars</th><th>Qty</th><th>Remove</th></tr>;
-      case 'hop':
-        return;
-      case 'yeast':
-        return;
-    }
-  }
-
   //removes an ingredient item from the passed ingredients array
   //if that item is marked as _destroy: true && it does not have
   //an id (provided by the back end). Items with an id need to be
@@ -75,12 +53,12 @@ export default class IngredientList extends React.Component {
   //from the DB on form submission
   filterDestroyedIngredients(ingredients) {
     return ingredients.filter(item => {
-      return !(item._destroy && !item.id)
+      return !(item._destroy && !item.id);
     });
   }
 
   createNewIngredient() {
-    let newIngredient = this.getNewTemplate(this.state.ingredients.length);
+    let newIngredient = this.getType().dataTemplate();
     //use concat rather than push so as not to mutate the current state
     let ingredients = this.state.ingredients.concat(newIngredient);
 
@@ -110,7 +88,7 @@ export default class IngredientList extends React.Component {
       <div>
         <table>
           <thead>
-            { this.getTableHeader() }
+            { this.getType().markupTemplate() }
           </thead>
           <tbody>
             { this.generateList() }

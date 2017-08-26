@@ -57,3 +57,11 @@ export default class Malt extends Ingredient {
     );
   }
 }
+
+Malt.markupTemplate = function() {
+  return (<tr><th>Malts and Sugars</th><th>Qty</th><th>Remove</th></tr>);
+}
+
+Malt.dataTemplate = function() {
+  return {malt: '', quantity: '', _destroy: false};
+}
