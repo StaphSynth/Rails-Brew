@@ -1,38 +1,20 @@
 import React from 'react';
 import BrewCalc from '../lib/BrewCalcs';
 import glass from '../img/glass_small.png';
+import Input from './Input';
 
 export default class RecipeMetaPanel extends React.Component {
-  constructor(props) {
-    super(props);
-    var fg = this.props.recipe.FG || '0';
-
-    this.state = {
-      fgPrevious: fg,  //the last known good fg value
-      fgInput: fg,     //the fg value displayed in the field
-      fgValid: true
-    }
+  valid(value) {
+    return BrewCalc.validateFg(value) && this.props.recipe.OG > value;
   }
 
-  //updates the state with a new valid FG value is entered
-  //passes the new FG value up to the parent RecipeForm Component
-  updateFg(e) {
-    var fg = e.target.value;
-    var valid = BrewCalc.validateFg(fg) && (this.props.recipe.OG > fg);
-
-    this.setState({
-      fgInput: fg,
-      fgValid: valid
-    });
-
-    fg = fg.trim();
-
-    //is it (valid? || zero?) && different? then update
-    if((valid || fg.length == 0) && fg != this.state.fgPrevious) {
-      this.setState({ fgPrevious: fg }, () => {
-        this.props.parentCallback({FG: fg});
-      });
-    }
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.props.IBU !== nextProps.IBU ||
+      this.props.recipe.OG !== nextProps.recipe.OG ||
+      this.props.recipe.colour !== nextProps.recipe.colour ||
+      this.props.recipe.abv !== nextProps.recipe.abv
+    );
   }
 
   render() {
@@ -49,14 +31,14 @@ export default class RecipeMetaPanel extends React.Component {
           <div>
             <strong>OG: </strong><span className="og-display">{ this.props.recipe.OG }</span>
             <strong>FG: </strong>
-            <input
+            <Input
               id="FG"
               className="fg-model"
-              value={ this.state.fgInput }
-              onChange={ (e) => this.updateFg(e) }
-              title="You may enter up to two gravity values, separated by a '-'. Eg: 1.009-1.012"
-              style={ {color: this.state.fgValid ? 'inherit' : 'red'} }>
-            </input>
+              value={ this.props.recipe.FG || '0' }
+              fireChange={ v => this.props.parentCallback({FG: v}) }
+              valid={ v => this.valid(v) }
+              title="You may enter up to two gravity values, separated by a '-'. Eg: 1.009-1.012">
+            </Input>
           </div>
 
           <div>
