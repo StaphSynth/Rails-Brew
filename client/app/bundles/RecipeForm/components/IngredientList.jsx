@@ -36,15 +36,13 @@ export default class IngredientList extends React.Component {
   }
 
   getType() {
-    let Ingredient;
-
     switch(this.props.type) {
       case 'malt':
-        return Ingredient = Malt;
+        return Malt;
       case 'yeast':
-        return Ingredient = Yeast;
+        return Yeast;
       case 'hop':
-        return Ingredient = Hop;
+        return Hop;
     }
   }
 
