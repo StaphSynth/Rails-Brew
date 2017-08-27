@@ -81,6 +81,16 @@ export default class RecipeForm extends React.Component {
           userPref={ this.props.userPref }>
         </IngredientList>
 
+        <br />
+
+        <IngredientList
+          type='hop'
+          ingredients={ this.state.hops }
+          rawOptions={ this.props.ingredientOptions.hops }
+          parentCallback={ data => this.childCallback(data) }
+          userPref={ this.props.userPref }>
+        </IngredientList>
+
         <div className="method field">
           <label htmlFor="method">Method:</label>
           <textarea

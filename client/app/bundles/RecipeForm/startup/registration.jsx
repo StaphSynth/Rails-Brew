@@ -10,6 +10,8 @@ import Malt from '../components/Malt';
 import VolumeAndEfficiency from '../components/VolumeAndEfficiency';
 import IngredientList from '../components/IngredientList';
 import Input from '../components/Input';
+import Hop from '../components/Hop';
+import Utils from '../lib/Utils';
 
 ReactOnRails.register({
   RecipeForm,

@@ -4,26 +4,21 @@ import Input from './Input';
 import BrewCalc from '../lib/BrewCalcs';
 
 export default class Malt extends Ingredient {
-  constructor(props) {
-    super(props);
-    this.state = this.props.ingredient;
-  }
-
-  decimalNumberRegex(){
-    return /^[0-9]+(\.[0-9]+)?$/;
-  }
-
-  validateQty(qty) {
-    return this.decimalNumberRegex().test(qty);
-  }
 
   updateQty(value) {
     value = BrewCalc.unitConverter[this.props.userPref.weight_big]['M'](value);
-    this.handleChange({quantity: value});
+    this.handleChange({quantity: value}, this.notifyParent);
   }
 
   displayQty() {
     return BrewCalc.unitConverter['M'][this.props.userPref.weight_big](this.state.quantity);
+  }
+
+  //returns true if the parent needs to be
+  //notified about an internal state change
+  //To do: make this useful...
+  notifyParent() {
+    return this.state.malt;
   }
 
   render() {
@@ -32,9 +27,9 @@ export default class Malt extends Ingredient {
         <td>
           <select
             id="malt"
-            value={ this.state.malt }
-            onChange={ e => this.handleChange({malt: e.target.value}) }>
-            { this.generateOptions() }
+            value={ this.state.malt || 0 }
+            onChange={ e => this.handleChange({malt: e.target.value}, this.notifyParent) }>
+            { this.generateOptions('malt') }
           </select>
         </td>
 

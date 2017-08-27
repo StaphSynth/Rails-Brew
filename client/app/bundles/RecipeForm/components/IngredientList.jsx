@@ -1,5 +1,6 @@
 import React from 'react';
 import Malt from './Malt';
+import Hop from './Hop';
 import update from 'immutability-helper';
 
 export default class IngredientList extends React.Component {
@@ -42,7 +43,7 @@ export default class IngredientList extends React.Component {
       case 'yeast':
         return;
       case 'hop':
-        return;
+        return Ingredient = Hop;
     }
   }
 
