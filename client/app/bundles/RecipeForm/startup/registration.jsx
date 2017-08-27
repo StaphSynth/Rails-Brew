@@ -12,6 +12,7 @@ import IngredientList from '../components/IngredientList';
 import Input from '../components/Input';
 import Hop from '../components/Hop';
 import Utils from '../lib/Utils';
+import Yeast from '../components/Yeast';
 
 ReactOnRails.register({
   RecipeForm,

@@ -1,6 +1,7 @@
 import React from 'react';
 import Malt from './Malt';
 import Hop from './Hop';
+import Yeast from './Yeast';
 import update from 'immutability-helper';
 
 export default class IngredientList extends React.Component {
@@ -41,7 +42,7 @@ export default class IngredientList extends React.Component {
       case 'malt':
         return Ingredient = Malt;
       case 'yeast':
-        return;
+        return Ingredient = Yeast;
       case 'hop':
         return Ingredient = Hop;
     }
@@ -84,6 +85,12 @@ export default class IngredientList extends React.Component {
     });
   }
 
+  createButton() {
+    if(this.props.type !== 'yeast') {
+      return (<button onClick={ () => this.createNewIngredient() }>+</button>);
+    }
+  }
+
   render() {
     return (
       <div>
@@ -95,7 +102,7 @@ export default class IngredientList extends React.Component {
             { this.generateList() }
           </tbody>
         </table>
-        <button onClick={ () => this.createNewIngredient() }>+</button>
+        { this.createButton() }
       </div>
     );
   }

@@ -16,6 +16,7 @@ export default class RecipeForm extends React.Component {
     recipe.abv = BrewCalc.getAbv(recipe.OG, recipe.fgArray);
     recipe.malts = this.props.malts || [];
     recipe.hops = this.props.hops || [];
+    recipe.yeasts = this.props.yeasts || [];
 
     this.state = recipe;
   }
@@ -73,6 +74,8 @@ export default class RecipeForm extends React.Component {
           parentCallback={ data => this.childCallback(data) }>
         </VolumeAndEfficiency>
 
+        <br />
+
         <IngredientList
           type='malt'
           ingredients={ this.state.malts }
@@ -90,6 +93,17 @@ export default class RecipeForm extends React.Component {
           parentCallback={ data => this.childCallback(data) }
           userPref={ this.props.userPref }>
         </IngredientList>
+
+        <br />
+
+        <IngredientList
+          type='yeast'
+          ingredients={ this.state.yeasts }
+          rawOptions={ this.props.ingredientOptions.yeasts }
+          parentCallback={ data => this.childCallback(data) }>
+        </IngredientList>
+
+        <br />
 
         <div className="method field">
           <label htmlFor="method">Method:</label>
