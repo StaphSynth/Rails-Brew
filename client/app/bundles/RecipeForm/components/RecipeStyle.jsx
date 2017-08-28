@@ -18,8 +18,12 @@ export default class RecipeStyle extends React.Component {
   }
 
   getStyleData(style) {
-    Ajax.get(`/recipes/styles?style_id=${style}`, 'json', (data) => {
-      this.setState({ styleData: data });
+    Ajax.get({
+      url: '/recipes/styles',
+      data: {style_id: style},
+      return: 'json',
+      success: data => { this.setState({styleData: data}); },
+      failure: data => { console.log('Ajax get style failure: ', data); }
     });
   }
 
