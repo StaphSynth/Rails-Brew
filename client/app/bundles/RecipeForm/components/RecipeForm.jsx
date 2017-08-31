@@ -39,9 +39,6 @@ export default class RecipeForm extends React.Component {
     Utils.buildIngredientMeta('malts', this.state.malts, malts => {
       this.maltCalcs(malts);
     });
-    Utils.buildIngredientMeta('hops', this.state.hops, hops => {
-      this.hopsCalcs(hops);
-    });
   }
 
   maltCalcs(malts) {
@@ -56,16 +53,24 @@ export default class RecipeForm extends React.Component {
     let mcu = BrewCalc.calcMcu(malts, batchVolume);
     let srm = BrewCalc.calcBeerSrm(mcu);
 
-    this.setState({
-      fgArray: fgArray,
-      abv: abv,
-      OG: og,
-      colour: srm
+    this.setState(
+      {
+        fgArray: fgArray,
+        abv: abv,
+        OG: og,
+        colour: srm
+      },
+      () => {
+        Utils.buildIngredientMeta('hops', this.state.hops, hops => {
+        this.hopsCalcs(hops);
+      });
     });
   }
 
   hopsCalcs(hops) {
-    //put the hops calcs in here
+    let totalIbu = BrewCalc.getTotalIbu(hops, this.state.OG, this.state.batch_volume);
+
+    this.setState({IBU: totalIbu});
   }
 
   render() {

@@ -193,7 +193,7 @@ export default {
 
     //loop through the malts, multiply colour (in SRM)
     //with amount (in lbs) for each, then add to total mcu
-    malts.forEach(function(malt) {
+    malts.forEach(malt => {
       amount = this.unitConverter['M']['I'](malt.quantity);
       colour = malt.colour || 0;
 
@@ -213,4 +213,45 @@ export default {
     srm = Math.round(srm);
     return srm > 40 ? this.srmColourMap['max'] : srmColourMap[srm];
   },
+
+
+  //Tinsenth method of calculating IBU.
+  //Takes a hop opbject, the OG
+  //(which is a string thanks to .toFixed()),
+  //and the batch volume.
+  //The Tinsenth method is in SI units, so vol is in L and hop weight in g.
+  calcIbu: function(hop, og, batchVolume) {
+    og = parseFloat(og);
+    batchVolume = parseFloat(batchVolume);
+
+    if(!hop.boil_time || !batchVolume ||
+      isNaN(batchVolume) || !og || isNaN(og)) {
+
+      return 0;
+    }
+
+    let bigness = 1.65 * Math.pow(0.000125, (og - 1));
+    let aa = hop.aa / 100; //make it an actual % decimal
+    let boilTimeFactor = (1 - Math.pow(Math.E, (-0.04 * hop.boil_time))) / 4;
+    let utilisation = boilTimeFactor * bigness;
+    let mglAa = aa * hop.quantity * 1000 / batchVolume;
+    let ibu = utilisation * mglAa;
+
+    return ibu;
+  },
+
+  //returns a total ibu value by repeatedly calling
+  //calcIbu on an array of hops
+  getTotalIbu: function(hops, og, batchVolume) {
+    og = parseFloat(og);
+    var totalIbus = 0;
+
+    if(!batchVolume || !og) { return 0; }
+
+    hops.forEach(hop => {
+      totalIbus += this.calcIbu(hop, og, batchVolume);
+    });
+
+    return totalIbus.toFixed(1);
+  }
 }

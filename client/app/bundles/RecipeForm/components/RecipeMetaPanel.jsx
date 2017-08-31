@@ -10,7 +10,7 @@ export default class RecipeMetaPanel extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      this.props.IBU !== nextProps.IBU ||
+      this.props.recipe.IBU !== nextProps.recipe.IBU ||
       this.props.recipe.OG !== nextProps.recipe.OG ||
       this.props.recipe.FG !== nextProps.recipe.FG ||
       this.props.recipe.colour !== nextProps.recipe.colour ||
@@ -44,7 +44,7 @@ export default class RecipeMetaPanel extends React.Component {
           </div>
 
           <div>
-            <strong>IBUs: </strong><span className="ibu-display">{ this.props.IBU }</span>
+            <strong>IBUs: </strong><span className="ibu-display">{ this.props.recipe.IBU }</span>
             <strong>SRM: </strong><span className="srm-display">{ this.props.recipe.colour }</span>
             <strong>ABV: </strong><span className="abv-display">{ this.props.recipe.abv }</span>%
           </div>
