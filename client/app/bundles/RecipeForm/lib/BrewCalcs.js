@@ -120,7 +120,7 @@ export default {
     var output = '0';
     var fg = fgArray[0];
     var og = parseFloat(og);
-    var abv = calcAbv(og, fg);
+    var abv = this.calcAbv(og, fg);
 
 
     if(abv > 0)
@@ -154,6 +154,58 @@ export default {
     }
 
     return parsedValue;
+  },
+
+  /*returns the calculated SG of the beer taking into account the
+  amount of malt, the efficiency of extraction and the batch size.
+  malts passed as an array of malt objects, efficiency as a decimal
+  float value and batchVolume as a float in gallons*/
+  calcOg: function(malts, batchVolume, efficiency) {
+    var totalGravPoints = 0;
+
+    if(batchVolume == 0 || isNaN(batchVolume)) { return '1.000'; }
+
+    malts.forEach(malt => {
+      let weight = this.unitConverter['M']['I'](malt.quantity);
+
+      if(malt.must_mash) {
+        totalGravPoints += weight * this.ppgToGravPoints(malt.ppg || 0) * efficiency;
+      } else {
+        totalGravPoints += weight * this.ppgToGravPoints(malt.ppg || 0);
+      }
+    });
+
+    //convert from grav points to Specific Gravity and return
+    return (((Math.round(totalGravPoints / batchVolume)) / 1000) + 1).toFixed(3);
+  },
+
+  ppgToGravPoints: function(ppg) {
+    return Math.round((ppg - 1) * 1000);
+  },
+
+  //returns the total malt colour units (MCU) of the beer, divided by batch size (in Gal)
+  calcMcu: function(malts, batchVolume) {
+    var totalMcu = 0;
+    var amount;
+    var colour;
+
+    if(batchVolume == 0 || isNaN(batchVolume)) { return 0; }
+
+    //loop through the malts, multiply colour (in SRM)
+    //with amount (in lbs) for each, then add to total mcu
+    malts.forEach(function(malt) {
+      amount = this.unitConverter['M']['I'](malt.quantity);
+      colour = malt.colour || 0;
+
+      totalMcu += amount * colour;
+    });
+
+    return totalMcu / batchVolume;
+  },
+
+  //calc beer colour in SRM
+  calcBeerSrm: function(mcu) {
+    return (1.4922 * Math.pow(mcu, 0.6859)).toFixed(1);
   },
 
   //returns the hex value from the srm colour look-up table

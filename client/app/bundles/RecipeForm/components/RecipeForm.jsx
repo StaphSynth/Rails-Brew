@@ -6,6 +6,8 @@ import RecipeStyle from './RecipeStyle';
 import Malt from './Malt';
 import VolumeAndEfficiency from './VolumeAndEfficiency';
 import IngredientList from './IngredientList';
+import Utils from '../lib/Utils';
+import update from 'immutability-helper';
 
 export default class RecipeForm extends React.Component {
   constructor(props) {
@@ -34,13 +36,36 @@ export default class RecipeForm extends React.Component {
   }
 
   updateCalcs() {
-    var fgArray = BrewCalc.parseFg(this.state.FG || '0');
-    var abv = BrewCalc.getAbv(this.state.OG, fgArray);
+    Utils.buildIngredientMeta('malts', this.state.malts, malts => {
+      this.maltCalcs(malts);
+    });
+    Utils.buildIngredientMeta('hops', this.state.hops, hops => {
+      this.hopsCalcs(hops);
+    });
+  }
+
+  maltCalcs(malts) {
+    let batchProps = {};
+    let efficiency = (this.state.efficiency || this.props.userPref.efficiency) / 100;
+    //batch volume in gallons (these calcs all rely on imperial units)
+    let batchVolume = BrewCalc.unitConverter['L']['G'](this.state.batch_volume);
+
+    let og = BrewCalc.calcOg(malts, batchVolume, efficiency);
+    let fgArray = BrewCalc.parseFg(this.state.FG || '0');
+    let abv = BrewCalc.getAbv(og, fgArray);
+    let mcu = BrewCalc.calcMcu(malts, batchVolume);
+    let srm = BrewCalc.calcBeerSrm(mcu);
 
     this.setState({
       fgArray: fgArray,
-      abv: abv
+      abv: abv,
+      OG: og,
+      colour: srm
     });
+  }
+
+  hopsCalcs(hops) {
+    //put the hops calcs in here
   }
 
   render() {
