@@ -18,7 +18,7 @@ export default class Malt extends Ingredient {
   //notified about an internal state change
   //To do: make this useful...
   notifyParent() {
-    return this.state.malt;
+    return this.state.handle;
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class Malt extends Ingredient {
         <td>
           <select
             id="malt"
-            value={ this.state.malt || 0 }
+            value={ this.state.handle || 0 }
             onChange={ e => this.handleChange({malt: e.target.value}, this.notifyParent) }>
             { this.generateOptions('malt') }
           </select>

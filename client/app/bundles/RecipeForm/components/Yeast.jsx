@@ -12,7 +12,7 @@ export default class Yeast extends Ingredient {
       <tr>
         <td>
           <select
-            value={ this.state.yeast || '0' }
+            value={ this.state.handle || '0' }
             onChange={ e => this.handleChange({yeast: e.target.value}) }>
             { this.generateOptions('yeast') }
           </select>

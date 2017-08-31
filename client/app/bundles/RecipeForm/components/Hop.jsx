@@ -35,7 +35,7 @@ export default class Hop extends Ingredient {
   //notified about an internal state change
   //must remember to make this useful...
   notifyParent() {
-    return this.state.hop;
+    return this.state.handle;
   }
 
   render() {
@@ -43,7 +43,7 @@ export default class Hop extends Ingredient {
       <tr>
         <td>
           <select
-            value={ this.state.hop || 0 }
+            value={ this.state.handle || 0 }
             onChange={ e => this.handleChange({hop: e.target.value}, this.notifyParent) }>
             { this.generateOptions('hop') }
           </select>
