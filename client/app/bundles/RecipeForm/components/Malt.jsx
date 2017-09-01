@@ -7,18 +7,23 @@ export default class Malt extends Ingredient {
 
   updateQty(value) {
     value = BrewCalc.unitConverter[this.props.userPref.weight_big]['M'](value);
-    this.handleChange({quantity: value}, this.notifyParent);
+    this.handleChange({quantity: value});
   }
 
   displayQty() {
     return BrewCalc.unitConverter['M'][this.props.userPref.weight_big](this.state.quantity);
   }
 
-  //returns true if the parent needs to be
-  //notified about an internal state change
-  //To do: make this useful...
-  notifyParent() {
-    return this.state.handle;
+  getPercentContribution() {
+    let malts = this.props.contribution.ingredients;
+    let totalQty = 0;
+
+    malts.forEach(malt => {
+      if(malt._destroy) { return; }
+      totalQty += malt.quantity;
+    });
+
+    return ((this.state.quantity / totalQty) * 100).toFixed(1);
   }
 
   render() {
@@ -28,7 +33,7 @@ export default class Malt extends Ingredient {
           <select
             id="malt"
             value={ this.state.handle || 0 }
-            onChange={ e => this.handleChange({malt: e.target.value}, this.notifyParent) }>
+            onChange={ e => this.handleChange({malt: e.target.value}) }>
             { this.generateOptions('malt') }
           </select>
         </td>
@@ -40,9 +45,10 @@ export default class Malt extends Ingredient {
             fireChange={ v => this.updateQty(v) }
             value={ this.displayQty() }>
           </Input>
-          <span>
-            { BrewCalc.unitSymbol[this.props.userPref.weight_big] }
-          </span>
+        </td>
+
+        <td>
+          { this.getPercentContribution.bind(this)() }
         </td>
 
         <td>
@@ -53,8 +59,15 @@ export default class Malt extends Ingredient {
   }
 }
 
-Malt.markupTemplate = function() {
-  return (<tr><th>Malts and Sugars</th><th>Qty</th><th>Remove</th></tr>);
+Malt.markupTemplate = function(userPref) {
+  return (
+    <tr>
+      <th>Malts and Sugars</th>
+      <th>Quantity ({ BrewCalc.unitSymbol[userPref.weight_big] })</th>
+      <th>%</th>
+      <th>Remove</th>
+    </tr>
+  );
 }
 
 Malt.dataTemplate = function() {

@@ -4,7 +4,6 @@ import Utils from '../lib/Utils';
 export default class Ingredient extends React.Component {
   constructor(props) {
     super(props);
-    this.notifyParent = this.notifyParent.bind(this);
     this.state = this.props.ingredient;
   }
 
@@ -31,19 +30,18 @@ export default class Ingredient extends React.Component {
 
   //sets its own state, then updates the parent with
   //its new state and position via a packet object.
-  //takes optional callback which is used to decide if the
-  //parent needs to be updated with the new state or not.
+  //takes optional callback which can be used for whatevs.
   handleChange(change, callback) {
-    callback = callback || function(){return true;};
+    callback = callback || function(){};
 
     this.setState(change, () => {
-      //only update the parent if required
-      if(this.state._destroy || callback()) {
-        let packet = {};
-        packet.data = this.state;
-        packet.position = this.props.position;
-        this.props.parentCallback(packet);
-      }
+      //execute the callback
+      callback();
+      //update the parent
+      let packet = {};
+      packet.data = this.state;
+      packet.position = this.props.position;
+      this.props.parentCallback(packet);
     });
   }
 }

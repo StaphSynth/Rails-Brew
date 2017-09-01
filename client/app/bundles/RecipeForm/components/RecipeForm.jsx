@@ -15,7 +15,7 @@ export default class RecipeForm extends React.Component {
 
     var recipe = JSON.parse(this.props.recipe);
     recipe.fgArray = BrewCalc.parseFg(recipe.FG || '0');
-    recipe.abv = BrewCalc.getAbv(recipe.OG, recipe.fgArray);
+    recipe.abv = BrewCalc.getAbv(recipe.OG || 1, recipe.fgArray);
     recipe.malts = this.props.malts || [];
     recipe.hops = this.props.hops || [];
     recipe.yeasts = this.props.yeasts || [];
@@ -42,7 +42,6 @@ export default class RecipeForm extends React.Component {
   }
 
   maltCalcs(malts) {
-    let batchProps = {};
     let efficiency = (this.state.efficiency || this.props.userPref.efficiency) / 100;
     //batch volume in gallons (these calcs all rely on imperial units)
     let batchVolume = BrewCalc.unitConverter['L']['G'](this.state.batch_volume);
@@ -118,6 +117,7 @@ export default class RecipeForm extends React.Component {
 
         <IngredientList
           type='hop'
+          batch={ {og: this.state.OG, volume: this.state.batch_volume} }
           ingredients={ this.state.hops }
           rawOptions={ this.props.ingredientOptions.hops }
           parentCallback={ data => this.childCallback(data) }

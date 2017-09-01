@@ -249,6 +249,7 @@ export default {
     if(!batchVolume || !og) { return 0; }
 
     hops.forEach(hop => {
+      if(hop._destroy) { return; }
       totalIbus += this.calcIbu(hop, og, batchVolume);
     });
 

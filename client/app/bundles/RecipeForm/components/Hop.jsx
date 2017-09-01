@@ -2,12 +2,23 @@ import Ingredient from './Ingredient';
 import Input from './Input';
 import React from 'react';
 import BrewCalc from '../lib/BrewCalcs';
+import Utils from '../lib/Utils';
+import Spinner from './Spinner';
 
 export default class Hop extends Ingredient {
+  constructor(props) {
+    super(props);
+    this.getIbuContribution = this.getIbuContribution.bind(this);
+
+    let ingredient = this.props.ingredient;
+    ingredient.ibu = null;
+    this.state = ingredient;
+  }
 
   generateBoilOptions() {
     let options = [];
 
+    //for every five minutes of the hour
     for(let i = 0; i <= 60; i += 5) {
       options.push(
         <option
@@ -28,14 +39,20 @@ export default class Hop extends Ingredient {
 
   updateQty(value) {
     value = BrewCalc.unitConverter[this.props.userPref.weight_small]['M'](value);
-    this.handleChange({quantity: value}, this.notifyParent);
+    this.handleChange({quantity: value, ibu: null}, this.getIbuContribution);
   }
 
-  //returns true if the parent needs to be
-  //notified about an internal state change
-  //must remember to make this useful...
-  notifyParent() {
-    return this.state.handle;
+  getIbuContribution() {
+    Utils.buildIngredientMeta('hops', [this.state], hops => {
+      let og = this.props.contribution.batch.og;
+      let volume = this.props.contribution.batch.volume;
+      let ibu = BrewCalc.getTotalIbu(hops, og, volume);
+      this.setState({ibu: ibu});
+    });
+  }
+
+  componentWillMount() {
+    this.getIbuContribution();
   }
 
   render() {
@@ -44,7 +61,7 @@ export default class Hop extends Ingredient {
         <td>
           <select
             value={ this.state.handle || 0 }
-            onChange={ e => this.handleChange({hop: e.target.value}, this.notifyParent) }>
+            onChange={ e => this.handleChange({handle: e.target.value, ibu: null}, this.getIbuContribution) }>
             { this.generateOptions('hop') }
           </select>
         </td>
@@ -52,7 +69,7 @@ export default class Hop extends Ingredient {
         <td>
           <select
             value={ this.state.boil_time }
-            onChange={ e => this.handleChange({boil_time: e.target.value}, this.notifyParent) }>
+            onChange={ e => this.handleChange({boil_time: e.target.value, ibu: null}, this.getIbuContribution) }>
             { this.generateBoilOptions() }
           </select>
         </td>
@@ -63,9 +80,10 @@ export default class Hop extends Ingredient {
             fireChange={ v => this.updateQty(v) }
             value={ this.displayQty() }>
           </Input>
-          <span>
-            { BrewCalc.unitSymbol[this.props.userPref.weight_small] }
-          </span>
+        </td>
+
+        <td>
+          { this.state.ibu ? this.state.ibu : <Spinner size='small' /> }
         </td>
 
         <td>
@@ -76,8 +94,16 @@ export default class Hop extends Ingredient {
   }
 }
 
-Hop.markupTemplate = function() {
-  return <tr><th>Hops</th><th>Boil Time</th><th>Qty</th><th>Remove</th></tr>
+Hop.markupTemplate = function(userPref) {
+  return (
+    <tr>
+      <th>Hops</th>
+      <th>Boil Time</th>
+      <th>Quantity ({ BrewCalc.unitSymbol[userPref.weight_small] })</th>
+      <th>IBU</th>
+      <th>Remove</th>
+    </tr>
+  );
 }
 
 Hop.dataTemplate = function() {

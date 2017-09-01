@@ -13,8 +13,6 @@ export default class RecipeStyle extends React.Component {
       selected: this.props.selected,
       styleData: null
     }
-
-    this.getStyleData(this.props.selected);
   }
 
   getStyleData(style) {
@@ -25,6 +23,10 @@ export default class RecipeStyle extends React.Component {
       success: data => { this.setState({styleData: data}); },
       failure: data => { console.log('Ajax get style failure: ', data); }
     });
+  }
+
+  componentWillMount() {
+    this.getStyleData(this.props.selected);
   }
 
   generateOptions() {

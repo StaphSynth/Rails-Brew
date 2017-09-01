@@ -18,8 +18,7 @@ export default class IngredientList extends React.Component {
 
     for(let i = 0; i < this.state.ingredients.length; i++) {
       //keep them in the list, but don't display them
-      if(this.state.ingredients[i]._destroy)
-        continue;
+      if(this.state.ingredients[i]._destroy) { continue; }
 
       list.push(
         <Ingredient
@@ -28,6 +27,7 @@ export default class IngredientList extends React.Component {
           ingredient={ this.state.ingredients[i] }
           rawOptions={ this.props.rawOptions }
           userPref={ this.props.userPref }
+          contribution={ {ingredients: this.state.ingredients, batch: this.props.batch} }
           parentCallback={ packet => this.handleChange(packet) }>
         </Ingredient>
       );
@@ -94,7 +94,7 @@ export default class IngredientList extends React.Component {
       <div>
         <table>
           <thead>
-            { this.getType().markupTemplate() }
+            { this.getType().markupTemplate(this.props.userPref) }
           </thead>
           <tbody>
             { this.generateList() }
