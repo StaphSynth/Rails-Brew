@@ -84,8 +84,8 @@
         <div class="field">
           <%= malt.label :malt, :value => "Malts and sugars" %>
           <%=
-            malt.select :malt,
-            options_for_select(options_generator(:malts), @recipe.recipe_malts[malt.index].malt),
+            malt.select :handle,
+            options_for_select(options_generator(:malts), @recipe.recipe_malts[malt.index].handle),
             { prompt: 'Select a malt' }, class: 'ingredient-select', data: 'malts', autocomplete: 'off'
           %>
         </div>
@@ -119,8 +119,8 @@
         <div class="field">
           <%= hop.label :hop, :value => "Hops" %>
           <%=
-            hop.select :hop,
-            options_for_select(options_generator(:hops), @recipe.recipe_hops[hop.index].hop),
+            hop.select :handle,
+            options_for_select(options_generator(:hops), @recipe.recipe_hops[hop.index].handle),
             { prompt: 'Select a hop' }, class: 'ingredient-select', data: 'hops', autocomplete: 'off'
           %>
         </div>
@@ -163,8 +163,8 @@
         <div class="field">
           <%= yeast.label :yeast, :value => "Yeast" %>
           <%=
-            yeast.select :yeast,
-            options_for_select(options_generator(:yeasts), @recipe.recipe_yeasts[yeast.index].yeast),
+            yeast.select :handle,
+            options_for_select(options_generator(:yeasts), @recipe.recipe_yeasts[yeast.index].handle),
             { prompt: 'Select a yeast' }, autocomplete: 'off'
           %>
         </div>
