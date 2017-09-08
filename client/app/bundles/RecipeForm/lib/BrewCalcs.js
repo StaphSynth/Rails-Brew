@@ -1,3 +1,5 @@
+import Utils from './Utils';
+
 //unit conversion functions
 var noConv = function(v)        { return v; }
 var celToFar = function(v)      { return (v * 9 / 5) + 32; }
@@ -254,5 +256,39 @@ export default {
     });
 
     return totalIbus.toFixed(1);
+  },
+
+  //returns an object of malt contribution data
+  getMaltContributions: function(malts) {
+    let totalWeight = 0;
+    let contributions = {};
+
+    malts.forEach(malt => {
+      if(!malt._destroy) {
+        totalWeight += malt.quantity;
+      }
+    });
+
+    malts.forEach(malt => {
+      if(!malt._destroy) {
+        contributions[malt.handle] = (malt.quantity / totalWeight * 100).toFixed(1);
+      }
+    });
+
+    return contributions;
+  },
+
+  //returns an object of hop contribution data
+  getHopContributions: function(hopsList, og, batchVolume) {
+    let contributions = {};
+
+    Utils.buildIngredientMeta('hops', hopsList, hops => {
+      hops.forEach(hop => {
+        let ibu = this.calcIbu(hop, og, batchVolume);
+        contributions[hop.handle] = ibu.toFixed(1);
+      });
+    });
+
+    return contributions;
   }
 }

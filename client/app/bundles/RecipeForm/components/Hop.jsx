@@ -8,7 +8,6 @@ import Spinner from './Spinner';
 export default class Hop extends Ingredient {
   constructor(props) {
     super(props);
-    this.getIbuContribution = this.getIbuContribution.bind(this);
 
     let ingredient = this.props.ingredient;
     ingredient.ibu = null;
@@ -42,19 +41,6 @@ export default class Hop extends Ingredient {
     this.handleChange({quantity: value, ibu: null}, this.getIbuContribution);
   }
 
-  getIbuContribution() {
-    Utils.buildIngredientMeta('hops', [this.state], hops => {
-      let og = this.props.contribution.batch.og;
-      let volume = this.props.contribution.batch.volume;
-      let ibu = BrewCalc.getTotalIbu(hops, og, volume);
-      this.setState({ibu: ibu});
-    });
-  }
-
-  componentWillMount() {
-    this.getIbuContribution();
-  }
-
   render() {
     return (
       <tr>
@@ -83,7 +69,7 @@ export default class Hop extends Ingredient {
         </td>
 
         <td>
-          { this.state.ibu ? this.state.ibu : <Spinner size='small' /> }
+          { this.props.contribution }
         </td>
 
         <td>

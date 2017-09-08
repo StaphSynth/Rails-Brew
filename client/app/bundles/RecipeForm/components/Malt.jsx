@@ -48,7 +48,7 @@ export default class Malt extends Ingredient {
         </td>
 
         <td>
-          { this.getPercentContribution.bind(this)() }
+          { this.props.contribution }
         </td>
 
         <td>
