@@ -12,6 +12,7 @@ import update from 'immutability-helper';
 export default class RecipeForm extends React.Component {
   constructor(props) {
     super(props);
+    this.updateCalcs = this.updateCalcs.bind(this);
 
     var recipe = JSON.parse(this.props.recipe);
     recipe.fgArray = BrewCalc.parseFg(recipe.FG || '0');
@@ -27,7 +28,7 @@ export default class RecipeForm extends React.Component {
   //then updates prediction calcs.
   childCallback(data = {}) {
     //should put some logic in the decision to run updateCalcs.
-    this.setState(data, () => this.updateCalcs());
+    this.setState(data, this.updateCalcs);
   }
 
   //handles interanal state changes
@@ -43,7 +44,7 @@ export default class RecipeForm extends React.Component {
 
   maltCalcs(malts) {
     let efficiency = (this.state.efficiency || this.props.userPref.efficiency) / 100;
-    //batch volume in gallons (these calcs all rely on imperial units)
+    //batch volume in gallons (malt calcs all rely on imperial units)
     let batchVolume = BrewCalc.unitConverter['L']['G'](this.state.batch_volume);
 
     let og = BrewCalc.calcOg(malts, batchVolume, efficiency);
@@ -72,7 +73,17 @@ export default class RecipeForm extends React.Component {
     this.setState({IBU: totalIbu});
   }
 
+  componentWillMount() {
+    this.updateCalcs();
+  }
+
   render() {
+    let malts = this.state.malts;
+    let hops = this.state.hops;
+    let og = this.state.OG;
+    let batchVolume = this.state.batch_volume;
+    let userPref = this.props.userPref;
+
     return (
       <div>
 
@@ -97,7 +108,7 @@ export default class RecipeForm extends React.Component {
         </RecipeMetaPanel>
 
         <VolumeAndEfficiency
-          userPref={ this.props.userPref }
+          userPref={ userPref }
           volume={ this.props.batch_volume || this.props.userPref.default_batch_volume }
           efficiency={ this.props.efficiency || this.props.userPref.default_efficiency }
           parentCallback={ data => this.childCallback(data) }>
@@ -107,21 +118,22 @@ export default class RecipeForm extends React.Component {
 
         <IngredientList
           type='malt'
-          ingredients={ this.state.malts }
+          ingredients={ malts }
           rawOptions={ this.props.ingredientOptions.malts }
           parentCallback={ data => this.childCallback(data) }
-          userPref={ this.props.userPref }>
+          userPref={ userPref }
+          contributions={ BrewCalc.getMaltContributions(malts) }>
         </IngredientList>
 
         <br />
 
         <IngredientList
           type='hop'
-          batch={ {og: this.state.OG, volume: this.state.batch_volume} }
-          ingredients={ this.state.hops }
+          ingredients={ hops }
           rawOptions={ this.props.ingredientOptions.hops }
           parentCallback={ data => this.childCallback(data) }
-          userPref={ this.props.userPref }>
+          userPref={ userPref }
+          contributions={ BrewCalc.getHopContributions(hops, og, batchVolume) }>
         </IngredientList>
 
         <br />

@@ -15,19 +15,21 @@ export default class IngredientList extends React.Component {
   generateList() {
     let list = [];
     let Ingredient = this.getType();
+    let contributions = this.props.contributions;
+    let ingredients = this.state.ingredients;
 
-    for(let i = 0; i < this.state.ingredients.length; i++) {
+    for(let i = 0; i < ingredients.length; i++) {
       //keep them in the list, but don't display them
-      if(this.state.ingredients[i]._destroy) { continue; }
+      if(ingredients[i]._destroy) { continue; }
 
       list.push(
         <Ingredient
           key={ i }
           position={ i }
-          ingredient={ this.state.ingredients[i] }
+          ingredient={ ingredients[i] }
           rawOptions={ this.props.rawOptions }
           userPref={ this.props.userPref }
-          contribution={ {ingredients: this.state.ingredients, batch: this.props.batch} }
+          contribution={ contributions ? contributions[ingredients[i].handle] : null }
           parentCallback={ packet => this.handleChange(packet) }>
         </Ingredient>
       );
