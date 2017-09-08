@@ -2,4 +2,6 @@
 
 <h1><%= "Editing #{@recipe.name}" %></h1>
 
-<%= render 'form', recipe: @recipe %>
+<!-- # <%= render 'form', recipe: @recipe %> -->
+
+<%= react_component('RecipeForm', props: @props, prerender: false) %>

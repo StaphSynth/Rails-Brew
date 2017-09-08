@@ -76,7 +76,21 @@ class RecipesController < ApplicationController
   # GET /recipes/1/edit
   def edit
     #set the current style data for use by page JS.
-    gon.styleData = helpers.get_style(@recipe.style, :json)
+    # gon.styleData = helpers.get_style(@recipe.style, :json)
+    @current_user_pref = UserPreference.find_by(user_id: @current_user.id)
+    @props = {
+      recipe: @recipe.to_json,
+      styles: helpers.generate_style_options,
+      malts: @recipe.recipe_malts,
+      hops: @recipe.recipe_hops,
+      yeasts: @recipe.recipe_yeasts,
+      userPref: @current_user_pref,
+      ingredientOptions: {
+        malts: helpers.options_generator(:malts),
+        hops: helpers.options_generator(:hops),
+        yeasts: helpers.options_generator(:yeasts)
+      }
+    }
   end
 
   #ingredient data retrieval API. Sends ingredient data to the front-end via AJAX
