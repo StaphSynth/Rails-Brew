@@ -47,7 +47,7 @@ export default class Hop extends Ingredient {
         <td>
           <select
             value={ this.state.handle || 0 }
-            onChange={ e => this.handleChange({handle: e.target.value, ibu: null}, this.getIbuContribution) }>
+            onChange={ e => this.handleChange({handle: e.target.value, ibu: null}) }>
             { this.generateOptions('hop') }
           </select>
         </td>
@@ -55,7 +55,7 @@ export default class Hop extends Ingredient {
         <td>
           <select
             value={ this.state.boil_time }
-            onChange={ e => this.handleChange({boil_time: e.target.value, ibu: null}, this.getIbuContribution) }>
+            onChange={ e => this.handleChange({boil_time: e.target.value, ibu: null}) }>
             { this.generateBoilOptions() }
           </select>
         </td>

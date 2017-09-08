@@ -33,7 +33,7 @@ export default class Malt extends Ingredient {
           <select
             id="malt"
             value={ this.state.handle || 0 }
-            onChange={ e => this.handleChange({malt: e.target.value}) }>
+            onChange={ e => this.handleChange({handle: e.target.value}) }>
             { this.generateOptions('malt') }
           </select>
         </td>
