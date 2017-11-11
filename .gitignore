@@ -21,6 +21,7 @@
 .byebug_history
 # React on Rails
 npm-debug.log*
+client/node_modules
 node_modules
 
 # Generated js bundles

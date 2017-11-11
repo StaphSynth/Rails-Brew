@@ -13,7 +13,9 @@ import Input from '../components/Input';
 import Hop from '../components/Hop';
 import Utils from '../lib/Utils';
 import Yeast from '../components/Yeast';
+import StyleGuide from '../components/StyleGuide';
 
 ReactOnRails.register({
   RecipeForm,
+  StyleGuide,
 });

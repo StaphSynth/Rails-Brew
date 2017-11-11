@@ -3,54 +3,16 @@ class RecipesController < ApplicationController
   before_action :set_current_user, only: [:show, :edit, :update, :destroy]
   before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy]
   before_action :valid_user, only: [:edit, :update, :destroy]
-  before_action :set_gon
+  before_action :initialize_gon
+  before_action :setup_rating, only: :show
 
-  # GET /recipes
-  # GET /recipes.json
   def index
     @recipes = Recipe.paginate(page: params[:page])
-
-    #set the star ratings to display only for recipe index
-    gon.ratingData = {
-      dispOnly: true
-    }
+    gon.ratingData = { dispOnly: true }
   end
 
-  # GET /recipes/1
-  # GET /recipes/1.json
   def show
-
-    if(logged_in? && (@recipe.user != @current_user))
-      #don't add to the view count if user looking at their own recipes
-      @recipe.update_attribute(:views, @recipe.views + 1)
-
-      #use gon gem to provide parameters for jQ ajax req function
-      if(helpers.rated?(@current_user, @recipe))
-        gon.ratingData = {
-          dispOnly: false,
-          action: "update",
-          rating: {
-            id: Rating.find_by(:recipe_id => @recipe.id, :user_id => @current_user.id).id,
-            user_id: @current_user.id,
-            recipe_id: @recipe.id
-          }
-        }
-      else  #if not already rated, a rating needs to be created
-        gon.ratingData = {
-          dispOnly: false,
-          action: "create",
-          rating: {
-            id: nil,
-            user_id: @current_user.id,
-            recipe_id: @recipe.id
-          }
-        }
-      end
-    else #if not logged in or recipe owner, set ratings to display only
-      gon.ratingData = {
-        dispOnly: true
-      }
-    end
+    @recipe.update_attribute(:views, @recipe.views + 1) unless own_recipe?
   end
 
   #deals with AJAX req for style properties to display once a style has been selected
@@ -62,10 +24,9 @@ class RecipesController < ApplicationController
 
   #index of BJCP beer styles
   def style_guide
-    @styles = helpers.generate_style_array
+    @props = {styles: helpers.generate_style_array}
   end
 
-  # GET /recipes/new
   def new
     @recipe = Recipe.new
     @recipe.recipe_malts.build
@@ -100,8 +61,6 @@ class RecipesController < ApplicationController
     end
   end
 
-  # POST /recipes
-  # POST /recipes.json
   def create
     @recipe = Recipe.new(recipe_params)
 
@@ -116,8 +75,6 @@ class RecipesController < ApplicationController
     end
   end #/create
 
-  # PATCH/PUT /recipes/1
-  # PATCH/PUT /recipes/1.json
   def update
     respond_to do |format|
       if @recipe.update(recipe_params)
@@ -130,8 +87,6 @@ class RecipesController < ApplicationController
     end
   end
 
-  # DELETE /recipes/1
-  # DELETE /recipes/1.json
   def destroy
     @recipe.destroy
     respond_to do |format|
@@ -151,11 +106,12 @@ class RecipesController < ApplicationController
     end
 
     def valid_user
-      redirect_to @current_user, notice: "You may only modify or delete your own recipes" unless @current_user == @recipe.user
+      redirect_to @current_user,
+        notice: "You may only modify or delete your own recipes" unless @current_user == @recipe.user
     end
 
-    def set_gon
-      if(logged_in?)
+    def initialize_gon
+      if logged_in?
         @current_user_pref = UserPreference.find_by(user_id: @current_user.id)
         gon.userPref = @current_user_pref
       else
@@ -168,6 +124,47 @@ class RecipesController < ApplicationController
 
     def set_current_user
       @current_user = current_user if logged_in?
+    end
+
+    def own_recipe?
+      return false unless logged_in?
+      @recipe.user == @current_user
+    end
+
+    def can_rate?
+      !own_recipe? && logged_in?
+    end
+
+    def rated?
+      helpers.rated?(@current_user, @recipe)
+    end
+
+    def setup_rating
+      if can_rate?
+        if rated?
+          gon.ratingData = {
+            dispOnly: false,
+            action: "update",
+            rating: {
+              id: Rating.find_by(recipe_id: @recipe.id, user_id: @current_user.id).id,
+              user_id: @current_user.id,
+              recipe_id: @recipe.id
+            }
+          }
+        else
+          gon.ratingData = {
+            dispOnly: false,
+            action: "create",
+            rating: {
+              id: nil,
+              user_id: @current_user.id,
+              recipe_id: @recipe.id
+            }
+          }
+        end
+      else
+        gon.ratingData = { dispOnly: true }
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

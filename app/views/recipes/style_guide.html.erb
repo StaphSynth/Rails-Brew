@@ -8,10 +8,6 @@
   Remember, "if it tastes good, it <i>is</i> good!"
 </p>
 
-<ul class="style-list">
-  <% @styles.each_with_index do |style, index| %>
-    <li class="style-list-item">
-      <%= render 'style_info', style: style, index: index %>
-    </li>
-  <% end %>
-</ul>
+
+
+<%= react_component('StyleGuide', props: @props, prerender: false) %>

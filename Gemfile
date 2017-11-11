@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://railscamp.local/rubygems'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -47,6 +47,7 @@ gem 'json'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rspec'
 end
 
 group :development do
