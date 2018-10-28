@@ -42,10 +42,8 @@ class UsersController < ApplicationController
                       redirect_to root_url,
                       notice: "Welcome aboard, #{@user.name}. Please check your email to activate your account."
                     }
-        format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -81,7 +79,13 @@ class UsersController < ApplicationController
     end
 
     def preference_defaults(user_id)
-      {:user_id => user_id, :volume => 'L', :temp => 'C', :weight => 'M'}
+      {
+        user_id: user_id,
+        volume: 'L',
+        temp: 'C',
+        weight_big: 'K',
+        weight_small: 'M'
+      }
     end
 
     def logged_in_user
