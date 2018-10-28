@@ -1,5 +1,5 @@
 GEM
-  remote: http://railscamp.local/rubygems/
+  remote: https://rubygems.org/
   specs:
     actioncable (5.0.1)
       actionpack (= 5.0.1)
@@ -251,4 +251,4 @@ DEPENDENCIES
   will_paginate (= 3.1.0)
 
 BUNDLED WITH
-   1.16.0
+   1.16.6
